@@ -1,10 +1,10 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { Header } from './components/Header';
-import { Footer } from './components/Footer';
+import Header from './components/Header';
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import ProductsPage from './components/ProductsPage';
-  import ContactPage from './components/ContactPage';
+import ContactPage from './components/ContactPage';
 
 function App() {
   return (

@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { Layout } from '@/components/layout'
 import { Button } from '@/components/ui/button'
 
-export default function Home() {
+ function Home() {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-12">

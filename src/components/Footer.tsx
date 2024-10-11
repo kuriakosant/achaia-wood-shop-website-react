@@ -1,7 +1,6 @@
 import React from 'react'
-import Link from 'next/link'
+import { Link } from 'react-router-dom'
 import { Facebook, Instagram } from 'lucide-react'
-import Image from 'next/image'
 
 export function Footer() {
   return (
@@ -10,7 +9,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center">
           {/* Left Image */}
           <div className="mb-4 md:mb-0">
-            <Image
+            <img
               src="/src/assets/footer-left.png"
               alt="Footer Left"
               width={150}
@@ -41,7 +40,7 @@ export function Footer() {
                   <li>Πάτρα, Τ.Κ 264 42</li>
                   <li>Τηλ. Κέντρο / Fax: 2610434377 </li>
                   <li>
-                    <Link href="mailto:antoniadis_oe@yahoo.gr" className="hover:text-green-400">
+                    <Link to="mailto:antoniadis_oe@yahoo.gr" className="hover:text-green-400">
                       antoniades_oe@yahoo.gr
                     </Link>
                   </li>
@@ -52,10 +51,10 @@ export function Footer() {
               <div>
                 <h3 className="text-green-400 font-semibold mb-4">ΑΚΟΛΟΥΘΗΣΤΕ ΜΑΣ</h3>
                 <div className="flex space-x-4">
-                  <Link href="#" className="hover:text-green-400">
+                  <Link to="#" className="hover:text-green-400">
                     <Facebook size={24} />
                   </Link>
-                  <Link href="#" className="hover:text-green-400">
+                  <Link to="#" className="hover:text-green-400">
                     <Instagram size={24} />
                   </Link>
                 </div>
@@ -65,7 +64,7 @@ export function Footer() {
 
           {/* Right Image */}
           <div>
-            <Image
+            <img
               src="/src/assets/footer-right.png"
               alt="Footer Right"
               width={150}

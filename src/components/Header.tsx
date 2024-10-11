@@ -1,30 +1,22 @@
-import React from 'react'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import Image from 'next/image'
-import { Menu, X } from 'lucide-react'
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 
-export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+ function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const menuItems = [
-    { title: 'ΕΠΙΚΑΛΥΨΕΙΣ', href: '/epikalypseis' },
-    { title: 'ΠΟΡΤΑΚΙΑ - ΠΑΓΚΟΙ', href: '/portakia' },
-    { title: 'ΣΥΡΟΜΕΝΗ ΝΤΟΥΛΑΠΑ', href: '/ntoulapa' },
-    { title: 'ΥΛΙΚΑ ΕΠΙΠΛΟΠΟΙΙΑΣ', href: '/ylika' },
-    { title: 'ΞΥΛΕΙΑ ΚΑΙ ΠΡΟΪΟΝΤΑ ΞΥΛΟΥ', href: '/ksyleia' },
-    { title: 'ΞΥΛΙΝΟ ΚΟΥΦΩΜΑ', href: '/koufoma' },
-    { title: 'ΠΟΡΤΕΣ', href: '/portes' },
-    { title: 'ΕΞΟΠΛΙΣΜΟΣ ΞΕΝΟΔΟΧΕΙΩΝ', href: '/hotels' },
-    { title: 'ΠΡΟΤΑΣΕΙΣ', href: '/protaseis' },
-  ]
+    { title: 'Home', href: '/' },
+    { title: 'Products', href: '/products' },
+    { title: 'Contact', href: '/contact' },
+  ];
 
   return (
     <header className="bg-[#1a1a1a] text-white">
       <nav className="container mx-auto px-4 py-4 flex flex-col items-center lg:flex-row lg:justify-between">
         {/* Logo */}
         <div className="flex justify-center w-full lg:w-1/3 mb-4 lg:mb-0">
-          <Image
+          <img
             src="/src/assets/header-logo.png"
             alt="ΑΝΤΩΝΙΑΔΗΣ ΟΕ"
             width={200}
@@ -38,7 +30,7 @@ export function Header() {
           {menuItems.map((item) => (
             <Link
               key={item.href}
-              href={item.href}
+              to={item.href}
               className="text-sm hover:text-green-400 transition-colors"
             >
               {item.title}
@@ -61,7 +53,7 @@ export function Header() {
             {menuItems.map((item) => (
               <Link
                 key={item.href}
-                href={item.href}
+                to={item.href}
                 className="block py-2 text-sm hover:text-green-400 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -72,7 +64,7 @@ export function Header() {
         )}
       </nav>
     </header>
-  )
+  );
 }
 
 export default Header;
