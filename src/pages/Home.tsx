@@ -1,8 +1,8 @@
-import Image from 'next/image'
-import { Layout } from '@/components/layout'
-import { Button } from '@/components/ui/button'
+import React from 'react';
+import Layout from '../components/Layout';
+import Button from '../components/ui/Button';
 
- function Home() {
+function Home() {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-12">
@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <div className="text-center">
             <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-              <Image
+              <img
                 src="/placeholder.svg"
                 alt="Επώνυμες Συνεργασίες"
                 width={32}
@@ -25,7 +25,7 @@ import { Button } from '@/components/ui/button'
 
           <div className="text-center">
             <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-              <Image
+              <img
                 src="/placeholder.svg"
                 alt="Ευέλικτη Εξυπηρέτηση"
                 width={32}
@@ -40,7 +40,7 @@ import { Button } from '@/components/ui/button'
 
           <div className="text-center">
             <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-              <Image
+              <img
                 src="/placeholder.svg"
                 alt="Μαζί με τον Πελάτη"
                 width={32}
@@ -67,10 +67,9 @@ import { Button } from '@/components/ui/button'
               </Button>
             </div>
             <div className="relative h-64">
-              <Image
+              <img
                 src="/placeholder.svg"
                 alt="Company Office"
-                fill
                 className="object-cover rounded-lg"
               />
             </div>
@@ -78,7 +77,7 @@ import { Button } from '@/components/ui/button'
         </section>
       </div>
     </Layout>
-  )
+  );
 }
 
 export default Home;
