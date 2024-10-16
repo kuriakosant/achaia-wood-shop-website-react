@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import SearchBar from '../components/SearchBar';
-import ProductCard from '../components/ProductCard';
+import SearchBar from '../components/ui/SearchBar';
+import ProductCard from './ui/ProductCard';
 
 // Mock data for products and categories
 const categories = ['Όλα', 'Επικαλύψεις', 'Υλικά Επιπλοποιίας', 'Ξυλεία', 'Πορτάκια'];
