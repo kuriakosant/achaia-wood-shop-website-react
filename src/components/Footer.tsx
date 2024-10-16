@@ -51,10 +51,10 @@ export function Footer() {
               <div>
                 <h3 className="text-green-400 font-semibold mb-4">ΑΚΟΛΟΥΘΗΣΤΕ ΜΑΣ</h3>
                 <div className="flex space-x-4">
-                  <Link to="#" className="hover:text-green-400">
+                  <Link to="https://www.facebook.com" target="_blank" className="hover:text-green-400">
                     <Facebook size={24} />
                   </Link>
-                  <Link to="#" className="hover:text-green-400">
+                  <Link to="https://www.instagram.com" target="_blank" className="hover:text-green-400">
                     <Instagram size={24} />
                   </Link>
                 </div>
