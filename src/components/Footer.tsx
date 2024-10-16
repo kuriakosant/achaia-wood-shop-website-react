@@ -64,13 +64,15 @@ export function Footer() {
 
           {/* Right Image */}
           <div>
-            <img
-              src="/src/assets/footer-right.png"
-              alt="Footer Right"
-              width={150}
-              height={100}
-              className="h-20 w-auto"
-            />
+            <Link to="/path/to/document.pdf" target="_blank">
+              <img
+                src="/src/assets/footer-right.png"
+                alt="Footer Right"
+                width={150}
+                height={100}
+                className="h-20 w-auto"
+              />
+            </Link>
           </div>
         </div>
       </div>
