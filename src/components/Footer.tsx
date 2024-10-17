@@ -1,7 +1,7 @@
-import React, { useState } from 'react' 
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Facebook, Instagram } from 'lucide-react'
-import PDFViewer from './PDFViewer'
+import ESPAViewer from '../components/ESPAViewer'
 
 export function Footer() {
   const [isPDFViewerOpen, setIsPDFViewerOpen] = useState(false)
@@ -13,7 +13,7 @@ export function Footer() {
           {/* Left Image */}
           <div className="mb-4 md:mb-0">
             <img
-              src="/src/assets/footer-left.png"
+              src="/src/assets/ANTONIADIS-BLUE.png"
               alt="Footer Left"
               width={150}
               height={100}
@@ -81,7 +81,8 @@ export function Footer() {
       </div>
 
       {isPDFViewerOpen && (
-        <PDFViewer
+        <ESPAViewer
+          imageUrl="/src/assets/ESPA-RIGHT-FOOTER.jpg"
           pdfUrl="/src/assets/ESPA-ACHAIA-WOOD.pdf"
           onClose={() => setIsPDFViewerOpen(false)}
         />
