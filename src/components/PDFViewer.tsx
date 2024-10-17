@@ -18,7 +18,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ pdfUrl, onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-xl font-semibold">Document Viewer</h2>
@@ -35,7 +35,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ pdfUrl, onClose }) => {
             <Page pageNumber={pageNumber} />
           </Document>
         </div>
-        <div className="flex justify-between items-center p-4 border-t">
+        <div className="flex flex-col sm:flex-row justify-between items-center p-4 border-t gap-4">
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setPageNumber(page => Math.max(page - 1, 1))}
@@ -58,7 +58,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ pdfUrl, onClose }) => {
           <a
             href={pdfUrl}
             download
-            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md flex items-center space-x-2 transition duration-300"
+            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md flex items-center space-x-2 transition duration-300 w-full sm:w-auto justify-center"
           >
             <Download size={20} />
             <span>Download</span>
