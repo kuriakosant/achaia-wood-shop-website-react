@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react' 
 import { Link } from 'react-router-dom'
 import { Facebook, Instagram } from 'lucide-react'
+import PDFViewer from './PDFViewer'
 
 export function Footer() {
+  const [isPDFViewerOpen, setIsPDFViewerOpen] = useState(false)
+
   return (
     <footer className="bg-[#1a1a1a] text-white py-8">
       <div className="container mx-auto px-4">
@@ -64,18 +67,25 @@ export function Footer() {
 
           {/* Right Image */}
           <div>
-            <Link to="/pdf">
+            <button onClick={() => setIsPDFViewerOpen(true)}>
               <img
-                src="/src/assets/footer-right.png"
+                src="/src/assets/ESPA-RIGHT-FOOTER.jpg"
                 alt="Footer Right"
                 width={150}
                 height={100}
                 className="h-20 w-auto"
               />
-            </Link>
+            </button>
           </div>
         </div>
       </div>
+
+      {isPDFViewerOpen && (
+        <PDFViewer
+          pdfUrl="/src/assets/ESPA-ACHAIA-WOOD.pdf"
+          onClose={() => setIsPDFViewerOpen(false)}
+        />
+      )}
     </footer>
   )
 }
