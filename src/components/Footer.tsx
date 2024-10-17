@@ -64,7 +64,7 @@ export function Footer() {
 
           {/* Right Image */}
           <div>
-            <Link to="/path/to/document.pdf" target="_blank">
+            <Link to="/pdf">
               <img
                 src="/src/assets/footer-right.png"
                 alt="Footer Right"
