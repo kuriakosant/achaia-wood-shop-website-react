@@ -1,24 +1,26 @@
 import React from 'react';
 import { X, Download } from 'lucide-react';
 
+// Import the image directly
+import EspaImage from 'assets/ESPA-IMAGE.png';
+
 interface ESPAViewerProps {
-  imageUrl: string;
   pdfUrl: string;
   onClose: () => void;
 }
 
-const ESPAViewer: React.FC<ESPAViewerProps> = ({ imageUrl, pdfUrl, onClose }) => {
+const ESPAViewer: React.FC<ESPAViewerProps> = ({ pdfUrl, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl h-[90vh] flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
-          <h2 className="text-xl font-semibold">ESPA Viewer</h2>
+          <h2 className="text-2xl font-bold text-gray-800">ESPA DOCUMENT</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
             <X size={24} />
           </button>
         </div>
         <div className="flex-grow overflow-hidden flex justify-center items-center">
-          <img src={imageUrl} alt="ESPA Image" className="max-w-full max-h-full" />
+          <img src={EspaImage} alt="ESPA Image" className="max-w-full max-h-full" />
         </div>
         <div className="flex justify-between items-center p-4 border-t">
           <a
