@@ -12,9 +12,9 @@ const featuredProducts = [
 
 function Home() {
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 pt-28 pb-12">
       {/* Hero Section with Blurry Background */}
-      <section className="relative bg-cover bg-center rounded-lg p-8 mb-16 overflow-hidden" style={{ backgroundImage: "url('/src/assets/hero-background.jpg')" }}>
+      <section className="relative bg-cover bg-center rounded-lg p-8 mb-16 overflow-hidden min-h-[500px] flex items-center" style={{ backgroundImage: "url('/src/assets/hero-background.jpg')" }}>
         <div className="absolute inset-0 bg-black opacity-50 backdrop-blur-md"></div>
         <div className="relative z-10 max-w-3xl mx-auto text-center text-white">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Καλώς ήρθατε στην ΑΝΤΩΝΙΑΔΗΣ ΟΕ</h1>

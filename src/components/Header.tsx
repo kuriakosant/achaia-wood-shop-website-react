@@ -37,15 +37,15 @@ function Header() {
   }, [location]);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white text-gray-800 shadow-md' : 'bg-transparent text-white'}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-gray-900 text-white' : 'bg-black bg-opacity-75 text-white'}`}>
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <img
-              src="/src/assets/header-logo.png"
+              src="/assets/ANTONIADIS-BLACK.png"
               alt="ΑΝΤΩΝΙΑΔΗΣ ΟΕ"
-              className={`h-12 w-auto transition-all duration-300 ${isScrolled ? 'brightness-0' : 'brightness-100'}`}
+              className="h-12 w-auto"
             />
           </Link>
 
@@ -70,12 +70,12 @@ function Header() {
                   </Link>
                 )}
                 {item.subItems && (
-                  <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-lg overflow-hidden transition-all duration-300 opacity-0 invisible group-hover:opacity-100 group-hover:visible">
+                  <div className="absolute top-full left-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg overflow-hidden transition-all duration-300 opacity-0 invisible group-hover:opacity-100 group-hover:visible">
                     {item.subItems.map((subItem) => (
                       <Link
                         key={subItem.href}
                         to={subItem.href}
-                        className="block px-4 py-2 text-sm text-gray-800 hover:bg-green-50 hover:text-green-600 transition-colors"
+                        className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-green-400 transition-colors"
                       >
                         {subItem.title}
                       </Link>
@@ -88,10 +88,10 @@ function Header() {
 
           {/* Search and Cart Icons */}
           <div className="hidden lg:flex items-center space-x-4">
-            <button className="text-2xl hover:text-green-400 transition-colors">
+            <button className="text-2xl hover:text-green-400 transition-colors" aria-label="Search">
               <Search size={24} />
             </button>
-            <button className="text-2xl hover:text-green-400 transition-colors">
+            <button className="text-2xl hover:text-green-400 transition-colors" aria-label="Shopping Cart">
               <ShoppingCart size={24} />
             </button>
           </div>
@@ -108,13 +108,13 @@ function Header() {
 
         {/* Mobile Menu */}
         <div
-          className={`lg:hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50 transition-opacity duration-300 ${
+          className={`lg:hidden fixed inset-0 bg-black bg-opacity-50 z-50 transition-opacity duration-300 ${
             isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
           }`}
           onClick={() => setIsMenuOpen(false)}
         >
           <div
-            className={`absolute top-0 right-0 w-64 h-full bg-white transform transition-transform duration-300 ease-in-out ${
+            className={`absolute top-0 right-0 w-64 h-full bg-gray-900 transform transition-transform duration-300 ease-in-out ${
               isMenuOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
             onClick={(e) => e.stopPropagation()}
@@ -126,7 +126,7 @@ function Header() {
                     <div>
                       <button
                         onClick={() => setIsProductsOpen(!isProductsOpen)}
-                        className="flex items-center justify-between w-full text-left text-gray-800 hover:text-green-600 transition-colors"
+                        className="flex items-center justify-between w-full text-left text-white hover:text-green-400 transition-colors"
                       >
                         <span>{item.title}</span>
                         <ChevronDown size={16} className={`transform transition-transform duration-300 ${isProductsOpen ? 'rotate-180' : ''}`} />
@@ -137,7 +137,7 @@ function Header() {
                             <Link
                               key={subItem.href}
                               to={subItem.href}
-                              className="block text-sm text-gray-600 hover:text-green-600 transition-colors"
+                              className="block text-sm text-gray-300 hover:text-green-400 transition-colors"
                             >
                               {subItem.title}
                             </Link>
@@ -148,7 +148,7 @@ function Header() {
                   ) : (
                     <Link
                       to={item.href}
-                      className="block text-gray-800 hover:text-green-600 transition-colors"
+                      className="block text-white hover:text-green-400 transition-colors"
                     >
                       {item.title}
                     </Link>
@@ -156,10 +156,10 @@ function Header() {
                 </div>
               ))}
               <div className="pt-4 flex items-center space-x-4">
-                <button className="text-2xl text-gray-800 hover:text-green-600 transition-colors">
+                <button className="text-2xl text-white hover:text-green-400 transition-colors" aria-label="Search">
                   <Search size={24} />
                 </button>
-                <button className="text-2xl text-gray-800 hover:text-green-600 transition-colors">
+                <button className="text-2xl text-white hover:text-green-400 transition-colors" aria-label="Shopping Cart">
                   <ShoppingCart size={24} />
                 </button>
               </div>
