@@ -13,9 +13,10 @@ const featuredProducts = [
 function Home() {
   return (
     <div className="container mx-auto px-4 py-12">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-green-500 to-green-700 text-white rounded-lg p-8 mb-16">
-        <div className="max-w-3xl mx-auto text-center">
+      {/* Hero Section with Blurry Background */}
+      <section className="relative bg-cover bg-center rounded-lg p-8 mb-16 overflow-hidden" style={{ backgroundImage: "url('/src/assets/hero-background.jpg')" }}>
+        <div className="absolute inset-0 bg-black opacity-50 backdrop-blur-md"></div>
+        <div className="relative z-10 max-w-3xl mx-auto text-center text-white">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Καλώς ήρθατε στην ΑΝΤΩΝΙΑΔΗΣ ΟΕ</h1>
           <p className="text-xl mb-8">Ο αξιόπιστος συνεργάτης σας στον κόσμο της επιπλοποιίας και των δομικών υλικών</p>
           <Link to="/products" className="inline-flex items-center bg-white text-green-700 font-semibold py-3 px-6 rounded-full hover:bg-green-100 transition duration-300">
@@ -87,7 +88,7 @@ function Home() {
         </div>
       </section>
 
-      {/* Company Info Section */}
+      {/* Company Info Section with Multiple Images */}
       <section className="bg-gray-100 p-8 rounded-lg mb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div>
@@ -99,11 +100,26 @@ function Home() {
               ΠΕΡΙΣΣΟΤΕΡΑ ΓΙΑ ΤΗΝ ΕΤΑΙΡΕΙΑ
             </Button>
           </div>
-          <div className="relative h-64 md:h-auto">
+          <div className="grid grid-cols-2 gap-4">
             <img
               src="/src/assets/company-office.jpg"
               alt="Τα γραφεία της εταιρείας μας"
-              className="w-full h-full object-cover rounded-lg"
+              className="w-full h-48 object-cover rounded-lg"
+            />
+            <img
+              src="/src/assets/company-warehouse.jpg"
+              alt="Η αποθήκη μας"
+              className="w-full h-48 object-cover rounded-lg"
+            />
+            <img
+              src="/src/assets/company-showroom.jpg"
+              alt="Ο εκθεσιακός μας χώρος"
+              className="w-full h-48 object-cover rounded-lg"
+            />
+            <img
+              src="/src/assets/company-team.jpg"
+              alt="Η ομάδα μας"
+              className="w-full h-48 object-cover rounded-lg"
             />
           </div>
         </div>
