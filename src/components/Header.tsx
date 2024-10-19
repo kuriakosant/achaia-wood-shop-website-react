@@ -54,13 +54,13 @@ function Header() {
             {menuItems.map((item) => (
               <div key={item.href} className="relative group">
                 {item.subItems ? (
-                  <button
-                    onClick={() => setIsProductsOpen(!isProductsOpen)}
+                  <Link
+                    to={item.href}
                     className="flex items-center space-x-1 text-sm font-medium hover:text-green-400 transition-colors"
                   >
                     <span>{item.title}</span>
                     <ChevronDown size={16} />
-                  </button>
+                  </Link>
                 ) : (
                   <Link
                     to={item.href}
