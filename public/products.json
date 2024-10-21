@@ -1,27 +1,30 @@
 [
-    {
-      "id": 1,
-      "name": "Επικάλυψη Α",
-      "category": "Wood",
-      "price": 19.99,
-      "image": "/images/product1.jpg",
-      "description": "High-quality wood coating for furniture."
-    },
-    {
-      "id": 2,
-      "name": "Υλικό Επιπλοποιία Β",
-      "category": "Metal",
-      "price": 29.99,
-      "image": "/images/product2.jpg",
-      "description": "Durable metal material for construction."
-    },
-    {
-      "id": 3,
-      "name": "Ξυλεία Γ",
-      "category": "Wood",
-      "price": 39.99,
-      "image": "/images/product3.jpg",
-      "description": "Premium lumber for building projects."
-    }
-    
-  ]
+  {
+    "id": 1,
+    "name": "Επικάλυψη Α",
+    "category": "Επικαλύψεις",
+    "price": 19.99,
+    "image": "/assets/products/999-empotismeni-xuleia-2000x2000.jpg",
+    "description": "Υψηλής ποιότητας επικάλυψη για επαγγελματική χρήση.",
+    "features": ["Ανθεκτική", "Εύκολη εφαρμογή", "Διαθέσιμη σε πολλά χρώματα"]
+  },
+  {
+    "id": 2,
+    "name": "Υλικό Επιπλοποιίας Β",
+    "category": "Υλικά Επιπλοποιίας",
+    "price": 29.99,
+    "image": "/assets/products/Screenshot from 2024-12-06 16-16-49.png",
+    "description": "Κορυφαίο υλικό για κατασκευή επίπλων υψηλής ποιότητας.",
+    "features": ["Ανθεκτικό στη φθορά", "Εύκολο στην επεξεργασία", "Οικολογικό"]
+  },
+  {
+    "id": 3,
+    "name": "Ξυλεία Γ",
+    "category": "Ξυλεία",
+    "price": 39.99,
+    "image": "/assets/products/Screenshot from 2024-12-06 16-17-02.png",
+    "description": "Πρώτης ποιότητας ξυλεία για κάθε είδους κατασκευή.",
+    "features": ["Φυσικό προϊόν", "Ποικιλία ειδών", "Κατάλληλο για εσωτερική και εξωτερική χρήση"]
+  }
+
+]
