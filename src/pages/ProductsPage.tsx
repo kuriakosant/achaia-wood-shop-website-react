@@ -2,14 +2,21 @@ import React, { useState } from 'react';
 import SearchBar from '../components/ui/SearchBar';
 import ProductCard from '../components/ProductCard';
 
+// Import images
+import image1 from '../assets/products/999-empotismeni-xuleia-2000x2000.jpg';
+import image2 from '../assets/products/Screenshot from 2024-12-06 16-16-49.png';
+import image3 from '../assets/products/Screenshot from 2024-12-06 16-17-02.png';
+import image4 from '../assets/products/Screenshot from 2024-12-06 16-17-09.png';
+
+
 // Mock data for products
 const products = [
-  { id: 1, name: 'Επικάλυψη Α', image: '/src/assets/product1.jpg', price: 19.99, category: 'Επικαλύψεις' },
-  { id: 2, name: 'Υλικό Επιπλοποιίας Β', image: '/src/assets/product2.jpg', price: 29.99, category: 'Υλικά Επιπλοποιίας' },
-  { id: 3, name: 'Ξυλεία Γ', image: '/src/assets/product3.jpg', price: 39.99, category: 'Ξυλεία' },
-  { id: 4, name: 'Πορτάκι Δ', image: '/src/assets/product4.jpg', price: 49.99, category: 'Πορτάκια' },
-  { id: 5, name: 'Επικάλυψη Ε', image: '/src/assets/product5.jpg', price: 59.99, category: 'Επικαλύψεις' },
-  { id: 6, name: 'Υλικό Επιπλοποιίας Ζ', image: '/src/assets/product6.jpg', price: 69.99, category: 'Υλικά Επιπλοποιίας' },
+  { id: 1, name: 'Επικάλυψη Α', image: image1, price: 19.99, category: 'Επικαλύψεις' },
+  { id: 2, name: 'Υλικό Επιπλοποιίας Β', image: image2, price: 29.99, category: 'Υλικά Επιπλοποιίας' },
+  { id: 3, name: 'Ξυλεία Γ', image: image3, price: 39.99, category: 'Ξυλεία' },
+  { id: 4, name: 'Πορτάκι Δ', image: image4, price: 49.99, category: 'Πορτάκια' },
+  { id: 5, name: 'Επικάλυψη Ε', image: image1, price: 59.99, category: 'Επικαλύψεις' },
+  { id: 6, name: 'Υλικό Επιπλοποιίας Ζ', image: image2, price: 69.99, category: 'Υλικά Επιπλοποιίας' },
 ];
 
 const categories = ['Όλα', 'Επικαλύψεις', 'Υλικά Επιπλοποιίας', 'Ξυλεία', 'Πορτάκια'];

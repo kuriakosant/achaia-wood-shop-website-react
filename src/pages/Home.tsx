@@ -11,11 +11,14 @@ import companyOffice from '../assets/company-office.png';
 import companyWarehouse from '../assets/company-warehouse.png';
 import companyShowroom from '../assets/company-showroom.jpg';
 import companyTeam from '../assets/company-team.jpg';
+import image1 from '../assets/products/999-empotismeni-xuleia-2000x2000.jpg';
+import image2 from '../assets/products/Screenshot from 2024-12-06 16-16-49.png';
+import image3 from '../assets/products/Screenshot from 2024-12-06 16-17-02.png';
 
 const featuredProducts = [
-  { id: 1, name: 'Επικάλυψη Α', image: '/src/assets/product1.jpg', price: 19.99 },
-  { id: 2, name: 'Υλικό Επιπλοποιίας Β', image: '/src/assets/product2.jpg', price: 29.99 },
-  { id: 3, name: 'Ξυλεία Γ', image: '/src/assets/product3.jpg', price: 39.99 },
+  { id: 1, name: 'Επικάλυψη Α', image: image1, price: 19.99 },
+  { id: 2, name: 'Υλικό Επιπλοποιία Β', image: image2, price: 29.99 },
+  { id: 3, name: 'Ξυλεία Γ', image: image3, price: 39.99 },
 ];
 
 function Home() {
@@ -77,7 +80,11 @@ function Home() {
         <h2 className="text-3xl font-bold mb-8 text-center">Προτεινόμενα Προϊόντα</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {featuredProducts.map((product) => (
-            <ProductCard key={product.id} {...product} />
+            <ProductCard 
+              key={product.id} 
+              {...product} 
+              image={product.image}
+            />
           ))}
         </div>
         <div className="text-center mt-8">
@@ -138,7 +145,7 @@ function Home() {
           <p className="text-gray-600 mb-4 italic">
             "Η ΑΝΤΩΝΙΑΔΗΣ ΟΕ είναι ο απόλυτος συνεργάτης για τις ανάγκες της επιχείρησής μου. Η ποιότητα των προϊόντων και η εξυπηρέτηση είναι πάντα άψογες."
           </p>
-          <p className="font-semibold">- Γιώργος Κ., Ιδιοκτήτης Επιπλοποιείου</p>
+          <p className="font-semibold">- Γιώργος Κ., Ιδιοκτήσης Επιπλοποιείου</p>
         </div>
       </section>
     </div>

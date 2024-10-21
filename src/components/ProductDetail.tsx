@@ -2,6 +2,12 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart } from 'lucide-react';
 
+// Import images
+import image1 from '../assets/products/999-empotismeni-xuleia-2000x2000.jpg';
+import image2 from '../assets/products/Screenshot from 2024-12-06 16-16-49.png';
+import image3 from '../assets/products/Screenshot from 2024-12-06 16-17-02.png';
+
+// Define the Product interface
 interface Product {
   id: number;
   name: string;
@@ -11,12 +17,12 @@ interface Product {
   features: string[];
 }
 
-// This would typically come from an API or database
+// Product data with imported images
 const products: Product[] = [
   {
     id: 1,
     name: 'Επικάλυψη Α',
-    image: '/src/assets/product1.jpg',
+    image: image1,
     price: 19.99,
     description: 'Υψηλής ποιότητας επικάλυψη για επαγγελματική χρήση.',
     features: ['Ανθεκτική', 'Εύκολη εφαρμογή', 'Διαθέσιμη σε πολλά χρώματα']
@@ -24,18 +30,42 @@ const products: Product[] = [
   {
     id: 2,
     name: 'Υλικό Επιπλοποιίας Β',
-    image: '/src/assets/product2.jpg',
+    image: image2,
     price: 29.99,
-    description: 'Κορυφαίο υλικό για κατασκευή επίπλων υψηλής ποιότητας.',
+    description: 'Κορυφαίο υλικό για κατασκευή επίπ��ων υψηλής ποιότητας.',
     features: ['Ανθεκτικό στη φθορά', 'Εύκολο στην επεξεργασία', 'Οικολογικό']
   },
   {
     id: 3,
     name: 'Ξυλεία Γ',
-    image: '/src/assets/product3.jpg',
+    image: image3,
     price: 39.99,
     description: 'Πρώτης ποιότητας ξυλεία για κάθε είδους κατασκευή.',
     features: ['Φυσικό προϊόν', 'Ποικιλία ειδών', 'Κατάλληλο για εσωτερική και εξωτερική χρήση']
+  },
+  {
+    id: 4,
+    name: 'Πορτάκι Δ',
+    image: image1,
+    price: 49.99,
+    description: 'Πορτάκι υψηλής ποιότητας για κάθε χρήση.',
+    features: ['Ανθεκτικό', 'Εύκολη εγκατάσταση', 'Διαθέσιμο σε πολλά σχέδια']
+  },
+  {
+    id: 5,
+    name: 'Επικάλυψη Ε',
+    image: image2,
+    price: 59.99,
+    description: 'Επικάλυψη για επαγγελματική χρήση με αντοχή.',
+    features: ['Ανθεκτική', 'Εύκολη εφαρμογή', 'Διαθέσιμη σε πολλά χρώματα']
+  },
+  {
+    id: 6,
+    name: 'Υλικό Επιπλοποιίας Ζ',
+    image: image3,
+    price: 69.99,
+    description: 'Υλικό επιπλοποιίας για κατασκευή επίπλων.',
+    features: ['Ανθεκτικό στη φθορά', 'Εύκολο στην επεξεργασία', 'Οικολογικό']
   },
 ];
 
