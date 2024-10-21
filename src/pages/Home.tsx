@@ -3,6 +3,14 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Star } from 'lucide-react';
 import Button from '../components/ui/Button';
 import ProductCard from '../components/ProductCard';
+import heroBackground from '../assets/hero-background.jpg';
+import iconPartnerships from '../assets/icon-partnerships.jpg';
+import iconService from '../assets/icon-service.png';
+import iconCustomer from '../assets/icon-customer.png';
+import companyOffice from '../assets/company-office.png';
+import companyWarehouse from '../assets/company-warehouse.png';
+import companyShowroom from '../assets/company-showroom.jpg';
+import companyTeam from '../assets/company-team.jpg';
 
 const featuredProducts = [
   { id: 1, name: 'Επικάλυψη Α', image: '/src/assets/product1.jpg', price: 19.99 },
@@ -14,7 +22,7 @@ function Home() {
   return (
     <div className="container mx-auto px-4 pt-28 pb-12">
       {/* Hero Section with Blurry Background */}
-      <section className="relative bg-cover bg-center rounded-lg p-8 mb-16 overflow-hidden min-h-[500px] flex items-center" style={{ backgroundImage: "url('/src/assets/hero-background.jpg')" }}>
+      <section className="relative bg-cover bg-center rounded-lg p-8 mb-16 overflow-hidden min-h-[500px] flex items-center" style={{ backgroundImage: `url(${heroBackground})` }}>
         <div className="absolute inset-0 bg-black opacity-50 backdrop-blur-md"></div>
         <div className="relative z-10 max-w-3xl mx-auto text-center text-white">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Καλώς ήρθατε στην ΑΝΤΩΝΙΑΔΗΣ ΟΕ</h1>
@@ -28,14 +36,11 @@ function Home() {
       {/* Features Section */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
         <div className="text-center bg-white p-6 rounded-lg shadow-md">
-          <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
-            <img
-              src="/src/assets/icon-partnerships.svg"
-              alt="Επώνυμες Συνεργασίες"
-              width={32}
-              height={32}
-            />
-          </div>
+          <img
+            src={iconPartnerships}
+            alt="Επώνυμες Συνεργασίες"
+            className="w-full h-32 object-cover mb-4 rounded-lg"
+          />
           <h3 className="text-xl font-semibold mb-2">ΕΠΩΝΥΜΕΣ ΣΥΝΕΡΓΑΣΙΕΣ</h3>
           <p className="text-gray-600">
             Διαθέτουμε μεγάλη γκάμα προϊόντων και αποκλειστικές προτάσεις για κάθε ανάγκη του σύγχρονου επαγγελματία.
@@ -43,14 +48,11 @@ function Home() {
         </div>
 
         <div className="text-center bg-white p-6 rounded-lg shadow-md">
-          <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
-            <img
-              src="/src/assets/icon-service.svg"
-              alt="Ευέλικτη Εξυπηρέτηση"
-              width={32}
-              height={32}
-            />
-          </div>
+          <img
+            src={iconService}
+            alt="Ευέλικτη Εξυπηρέτηση"
+            className="w-full h-32 object-cover mb-4 rounded-lg"
+          />
           <h3 className="text-xl font-semibold mb-2">ΕΥΕΛΙΚΤΗ ΕΞΥΠΗΡΕΤΗΣΗ</h3>
           <p className="text-gray-600">
             Φιλική και άμεση εξυπηρέτηση από εξειδικευμένο προσωπικό. Είμαστε εδώ για να καλύψουμε κάθε σας ανάγκη.
@@ -58,14 +60,11 @@ function Home() {
         </div>
 
         <div className="text-center bg-white p-6 rounded-lg shadow-md">
-          <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
-            <img
-              src="/src/assets/icon-customer.svg"
-              alt="Μαζί με τον Πελάτη"
-              width={32}
-              height={32}
-            />
-          </div>
+          <img
+            src={iconCustomer}
+            alt="Μαζί με τον Πελάτη"
+            className="w-full h-32 object-cover mb-4 rounded-lg"
+          />
           <h3 className="text-xl font-semibold mb-2">ΜΑΖΙ ΜΕ ΤΟΝ ΠΕΛΑΤΗ</h3>
           <p className="text-gray-600">
             Είμαστε δίπλα σας για κάθε ανάγκη και απορία σας. Η ικανοποίησή σας είναι η προτεραιότητά μας.
@@ -102,22 +101,22 @@ function Home() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <img
-              src="/src/assets/company-office.jpg"
+              src={companyOffice}
               alt="Τα γραφεία της εταιρείας μας"
               className="w-full h-48 object-cover rounded-lg"
             />
             <img
-              src="/src/assets/company-warehouse.jpg"
+              src={companyWarehouse}
               alt="Η αποθήκη μας"
               className="w-full h-48 object-cover rounded-lg"
             />
             <img
-              src="/src/assets/company-showroom.jpg"
+              src={companyShowroom}
               alt="Ο εκθεσιακός μας χώρος"
               className="w-full h-48 object-cover rounded-lg"
             />
             <img
-              src="/src/assets/company-team.jpg"
+              src={companyTeam}
               alt="Η ομάδα μας"
               className="w-full h-48 object-cover rounded-lg"
             />

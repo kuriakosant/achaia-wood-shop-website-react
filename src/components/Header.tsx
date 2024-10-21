@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, Search, ShoppingCart } from 'lucide-react';
+import antoniadisBlack from '../assets/ANTONIADIS-BLACK.png';
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,12 +14,6 @@ function Header() {
     {
       title: 'Προϊόντα',
       href: '/products',
-      subItems: [
-        { title: 'Επικαλύψεις', href: '/products/epikalypseis' },
-        { title: 'Υλικά Επιπλοποιίας', href: '/products/ylika-epiplopias' },
-        { title: 'Ξυλεία', href: '/products/xyleia' },
-        { title: 'Πορτάκια', href: '/products/portakia' },
-      ],
     },
     { title: 'Επικοινωνία', href: '/contact' },
   ];
@@ -43,7 +38,7 @@ function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <img
-              src="/assets/ANTONIADIS-BLACK.png"
+              src={antoniadisBlack}
               alt="ΑΝΤΩΝΙΑΔΗΣ ΟΕ"
               className="h-12 w-auto"
             />
@@ -52,37 +47,13 @@ function Header() {
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center space-x-8">
             {menuItems.map((item) => (
-              <div key={item.href} className="relative group">
-                {item.subItems ? (
-                  <Link
-                    to={item.href}
-                    className="flex items-center space-x-1 text-sm font-medium hover:text-green-400 transition-colors"
-                  >
-                    <span>{item.title}</span>
-                    <ChevronDown size={16} />
-                  </Link>
-                ) : (
-                  <Link
-                    to={item.href}
-                    className="text-sm font-medium hover:text-green-400 transition-colors"
-                  >
-                    {item.title}
-                  </Link>
-                )}
-                {item.subItems && (
-                  <div className="absolute top-full left-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg overflow-hidden transition-all duration-300 opacity-0 invisible group-hover:opacity-100 group-hover:visible">
-                    {item.subItems.map((subItem) => (
-                      <Link
-                        key={subItem.href}
-                        to={subItem.href}
-                        className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-green-400 transition-colors"
-                      >
-                        {subItem.title}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <Link
+                key={item.href}
+                to={item.href}
+                className="text-sm font-medium hover:text-green-400 transition-colors"
+              >
+                {item.title}
+              </Link>
             ))}
           </div>
 
@@ -122,37 +93,12 @@ function Header() {
             <div className="p-6 space-y-4">
               {menuItems.map((item) => (
                 <div key={item.href}>
-                  {item.subItems ? (
-                    <div>
-                      <button
-                        onClick={() => setIsProductsOpen(!isProductsOpen)}
-                        className="flex items-center justify-between w-full text-left text-white hover:text-green-400 transition-colors"
-                      >
-                        <span>{item.title}</span>
-                        <ChevronDown size={16} className={`transform transition-transform duration-300 ${isProductsOpen ? 'rotate-180' : ''}`} />
-                      </button>
-                      {isProductsOpen && (
-                        <div className="mt-2 ml-4 space-y-2">
-                          {item.subItems.map((subItem) => (
-                            <Link
-                              key={subItem.href}
-                              to={subItem.href}
-                              className="block text-sm text-gray-300 hover:text-green-400 transition-colors"
-                            >
-                              {subItem.title}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <Link
-                      to={item.href}
-                      className="block text-white hover:text-green-400 transition-colors"
-                    >
-                      {item.title}
-                    </Link>
-                  )}
+                  <Link
+                    to={item.href}
+                    className="block text-white hover:text-green-400 transition-colors"
+                  >
+                    {item.title}
+                  </Link>
                 </div>
               ))}
               <div className="pt-4 flex items-center space-x-4">
