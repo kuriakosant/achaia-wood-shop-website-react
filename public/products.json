@@ -1,0 +1,27 @@
+[
+    {
+      "id": 1,
+      "name": "Επικάλυψη Α",
+      "category": "Wood",
+      "price": 19.99,
+      "image": "/images/product1.jpg",
+      "description": "High-quality wood coating for furniture."
+    },
+    {
+      "id": 2,
+      "name": "Υλικό Επιπλοποιία Β",
+      "category": "Metal",
+      "price": 29.99,
+      "image": "/images/product2.jpg",
+      "description": "Durable metal material for construction."
+    },
+    {
+      "id": 3,
+      "name": "Ξυλεία Γ",
+      "category": "Wood",
+      "price": 39.99,
+      "image": "/images/product3.jpg",
+      "description": "Premium lumber for building projects."
+    }
+    
+  ]
