@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SearchBar from '../components/SearchBar';
+import SearchBar from '../components/ui/SearchBar';
 import ProductCard from '../components/ProductCard';
 
 // Mock data for products
