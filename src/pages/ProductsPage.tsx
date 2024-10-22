@@ -1,28 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SearchBar from '../components/ui/SearchBar';
 import ProductCard from '../components/ProductCard';
 
-// Import images
-import image1 from '../assets/products/999-empotismeni-xuleia-2000x2000.jpg';
-import image2 from '../assets/products/Screenshot from 2024-12-06 16-16-49.png';
-import image3 from '../assets/products/Screenshot from 2024-12-06 16-17-02.png';
-import image4 from '../assets/products/Screenshot from 2024-12-06 16-17-09.png';
-
-
-// Mock data for products
-const products = [
-  { id: 1, name: 'Επικάλυψη Α', image: image1, price: 19.99, category: 'Επικαλύψεις' },
-  { id: 2, name: 'Υλικό Επιπλοποιίας Β', image: image2, price: 29.99, category: 'Υλικά Επιπλοποιίας' },
-  { id: 3, name: 'Ξυλεία Γ', image: image3, price: 39.99, category: 'Ξυλεία' },
-  { id: 4, name: 'Πορτάκι Δ', image: image4, price: 49.99, category: 'Πορτάκια' },
-  { id: 5, name: 'Επικάλυψη Ε', image: image1, price: 59.99, category: 'Επικαλύψεις' },
-  { id: 6, name: 'Υλικό Επιπλοποιίας Ζ', image: image2, price: 69.99, category: 'Υλικά Επιπλοποιίας' },
-];
-
-const categories = ['Όλα', 'Επικαλύψεις', 'Υλικά Επιπλοποιίας', 'Ξυλεία', 'Πορτάκια'];
-
 const ProductsPage: React.FC = () => {
+  const [products, setProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('Όλα');
+
+  useEffect(() => {
+    fetch('/products.json')
+      .then((response) => response.json())
+      .then((data) => setProducts(data))
+      .catch((error) => console.error('Error fetching products:', error));
+  }, []);
 
   const filteredProducts = selectedCategory === 'Όλα'
     ? products
@@ -42,7 +31,7 @@ const ProductsPage: React.FC = () => {
         <div className="w-full lg:w-1/4 mb-6 lg:mb-0">
           <h2 className="text-xl font-semibold mb-4">Κατηγορίες</h2>
           <ul className="space-y-2">
-            {categories.map((category) => (
+            {['Όλα', 'Επικαλύψεις', 'Υλικά Επιπλοποιίας', 'Ξυλεία', 'Πορτάκια'].map((category) => (
               <li key={category}>
                 <button
                   onClick={() => setSelectedCategory(category)}
