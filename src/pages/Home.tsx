@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Star } from 'lucide-react';
 import Button from '../components/ui/Button';
@@ -11,17 +11,27 @@ import companyOffice from '../assets/company-office.png';
 import companyWarehouse from '../assets/company-warehouse.png';
 import companyShowroom from '../assets/company-showroom.jpg';
 import companyTeam from '../assets/company-team.jpg';
-import image1 from '../assets/products/999-empotismeni-xuleia-2000x2000.jpg';
-import image2 from '../assets/products/Screenshot from 2024-12-06 16-16-49.png';
-import image3 from '../assets/products/Screenshot from 2024-12-06 16-17-02.png';
 
-const featuredProducts = [
-  { id: 1, name: 'Επικάλυψη Α', image: image1, price: 19.99 },
-  { id: 2, name: 'Υλικό Επιπλοποιία Β', image: image2, price: 29.99 },
-  { id: 3, name: 'Ξυλεία Γ', image: image3, price: 39.99 },
-];
+interface Product {
+  id: number;
+  name: string;
+  image: string;
+  price: number;
+}
 
 function Home() {
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    fetch('/products.json')
+      .then((response) => response.json())
+      .then((data) => {
+        // Select the first three products as featured
+        setFeaturedProducts(data.slice(0, 3));
+      })
+      .catch((error) => console.error('Error fetching products:', error));
+  }, []);
+
   return (
     <div className="container mx-auto px-4 pt-28 pb-12">
       {/* Hero Section with Blurry Background */}
