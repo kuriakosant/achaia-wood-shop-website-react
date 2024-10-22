@@ -1,13 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart } from 'lucide-react';
 
-// Import images
-import image1 from '../assets/products/999-empotismeni-xuleia-2000x2000.jpg';
-import image2 from '../assets/products/Screenshot from 2024-12-06 16-16-49.png';
-import image3 from '../assets/products/Screenshot from 2024-12-06 16-17-02.png';
-
-// Define the Product interface
 interface Product {
   id: number;
   name: string;
@@ -17,61 +11,19 @@ interface Product {
   features: string[];
 }
 
-// Product data with imported images
-const products: Product[] = [
-  {
-    id: 1,
-    name: 'Επικάλυψη Α',
-    image: image1,
-    price: 19.99,
-    description: 'Υψηλής ποιότητας επικάλυψη για επαγγελματική χρήση.',
-    features: ['Ανθεκτική', 'Εύκολη εφαρμογή', 'Διαθέσιμη σε πολλά χρώματα']
-  },
-  {
-    id: 2,
-    name: 'Υλικό Επιπλοποιίας Β',
-    image: image2,
-    price: 29.99,
-    description: 'Κορυφαίο υλικό για κατασκευή επίπλων υψηλής ποιότητας.',
-    features: ['Ανθεκτικό στη φθορά', 'Εύκολο στην επεξεργασία', 'Οικολογικό']
-  },
-  {
-    id: 3,
-    name: 'Ξυλεία Γ',
-    image: image3,
-    price: 39.99,
-    description: 'Πρώτης ποιότητας ξυλεία για κάθε είδους κατασκευή.',
-    features: ['Φυσικό προϊόν', 'Ποικιλία ειδών', 'Κατάλληλο για εσωτερική και εξωτερική χρήση']
-  },
-  {
-    id: 4,
-    name: 'Πορτάκι Δ',
-    image: image1,
-    price: 49.99,
-    description: 'Πορτάκι υψηλής ποιότητας για κάθε χρήση.',
-    features: ['Ανθεκτικό', 'Εύκολη εγκατάσταση', 'Διαθέσιμο σε πολλά σχέδια']
-  },
-  {
-    id: 5,
-    name: 'Επικάλυψη Ε',
-    image: image2,
-    price: 59.99,
-    description: 'Επικάλυψη για επαγγελματική χρήση με αντοχή.',
-    features: ['Ανθεκτική', 'Εύκολη εφαρμογή', 'Διαθέσιμη σε πολλά χρώματα']
-  },
-  {
-    id: 6,
-    name: 'Υλικό Επιπλοποιίας Ζ',
-    image: image3,
-    price: 69.99,
-    description: 'Υλικό επιπλοποιίας για κατασκευή επίπλων.',
-    features: ['Ανθεκτικό στη φθορά', 'Εύκολο στην επεξεργασία', 'Οικολογικό']
-  },
-];
-
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const product = products.find(p => p.id === Number(id));
+  const [product, setProduct] = useState<Product | null>(null);
+
+  useEffect(() => {
+    fetch('/products.json')
+      .then((response) => response.json())
+      .then((data) => {
+        const foundProduct = data.find((p: Product) => p.id === Number(id));
+        setProduct(foundProduct);
+      })
+      .catch((error) => console.error('Error fetching product:', error));
+  }, [id]);
 
   if (!product) {
     return <div className="text-center py-12">Το προϊόν δεν βρέθηκε.</div>;
