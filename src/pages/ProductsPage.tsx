@@ -2,8 +2,18 @@ import React, { useState, useEffect } from 'react';
 import SearchBar from '../components/ui/SearchBar';
 import ProductCard from '../components/ProductCard';
 
+interface Product {
+  id: number;
+  name: string;
+  category: string;
+  price: number;
+  image: string;
+  description: string;
+  features: string[];
+}
+
 const ProductsPage: React.FC = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('Όλα');
 
   useEffect(() => {
