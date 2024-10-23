@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, Search, ShoppingCart } from 'lucide-react';
+import { Menu, X, ChevronDown, Search, ShoppingCart, Phone, Mail, MapPin } from 'lucide-react';
 import antoniadisBlack from '../assets/ANTONIADIS-BLACK.png';
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const [isContactOpen, setIsContactOpen] = useState(false);
   const location = useLocation();
 
   const menuItems = [
     { title: 'Αρχική', href: '/' },
-    {
-      title: 'Προϊόντα',
-      href: '/products',
-    },
+    { title: 'Προϊόντα', href: '/products' },
     { title: 'Επικοινωνία', href: '/contact' },
   ];
 
@@ -29,40 +26,68 @@ function Header() {
 
   useEffect(() => {
     setIsMenuOpen(false);
+    setIsContactOpen(false);
   }, [location]);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-gray-900 text-white' : 'bg-black bg-opacity-75 text-white'}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      isScrolled ? 'bg-gray-900 text-white shadow-lg' : 'bg-black bg-opacity-75 text-white'
+    }`}>
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2 group">
             <img
               src={antoniadisBlack}
               alt="ΑΝΤΩΝΙΑΔΗΣ ΟΕ"
-              className="h-12 w-auto"
+              className={`h-8 md:h-10 lg:h-12 w-auto transition-all duration-300 ${
+                isScrolled ? 'brightness-0 invert' : 'brightness-100'
+              } group-hover:scale-105`}
             />
           </Link>
 
-          {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center space-x-8">
+          {/* Desktop and Tablet Menu */}
+          <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
             {menuItems.map((item) => (
               <Link
                 key={item.href}
                 to={item.href}
-                className="text-sm font-medium hover:text-green-400 transition-colors"
+                className="text-sm lg:text-base font-medium hover:text-green-400 transition-colors relative group"
               >
                 {item.title}
+                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-green-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
               </Link>
             ))}
           </div>
 
-          {/* Search and Cart Icons */}
-          <div className="hidden lg:flex items-center space-x-4">
-            <button className="text-2xl hover:text-green-400 transition-colors" aria-label="Search">
+          {/* Contact Info and Icons */}
+          <div className="hidden md:flex items-center space-x-4">
+            <div className="relative">
+              <button
+                onClick={() => setIsContactOpen(!isContactOpen)}
+                className="text-sm lg:text-base font-medium hover:text-green-400 transition-colors flex items-center"
+                aria-expanded={isContactOpen}
+                aria-haspopup="true"
+              >
+                ΕΠΙΚΟΙΝΩΝΙΑ
+                <ChevronDown size={16} className={`ml-1 transform transition-transform duration-300 ${isContactOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {isContactOpen && (
+                <div className="absolute top-full right-0 mt-2 w-64 bg-gray-800 rounded-md shadow-lg overflow-hidden transition-all duration-300">
+                  <div className="p-4 space-y-2">
+                    <p className="flex items-center text-sm"><MapPin size={16} className="mr-2" /> Διοδώρου 128, Πάτρα, Τ.Κ 264 42</p>
+                    <p className="flex items-center text-sm"><Phone size={16} className="mr-2" /> 2610434377</p>
+                    <a href="mailto:antoniades_oe@yahoo.gr" className="flex items-center text-sm hover:text-green-400 transition-colors">
+                      <Mail size={16} className="mr-2" /> antoniades_oe@yahoo.gr
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
+            <button className="text-2xl hover:text-green-400 transition-colors transform hover:scale-110" aria-label="Search">
               <Search size={24} />
             </button>
-            <button className="text-2xl hover:text-green-400 transition-colors" aria-label="Shopping Cart">
+            <button className="text-2xl hover:text-green-400 transition-colors transform hover:scale-110" aria-label="Shopping Cart">
               <ShoppingCart size={24} />
             </button>
           </div>
@@ -70,8 +95,9 @@ function Header() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="lg:hidden p-2 focus:outline-none"
+            className="md:hidden p-2 focus:outline-none hover:text-green-400 transition-colors"
             aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -79,7 +105,7 @@ function Header() {
 
         {/* Mobile Menu */}
         <div
-          className={`lg:hidden fixed inset-0 bg-black bg-opacity-50 z-50 transition-opacity duration-300 ${
+          className={`md:hidden fixed inset-0 bg-black bg-opacity-50 z-50 transition-opacity duration-300 ${
             isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
           }`}
           onClick={() => setIsMenuOpen(false)}
@@ -95,12 +121,19 @@ function Header() {
                 <div key={item.href}>
                   <Link
                     to={item.href}
-                    className="block text-white hover:text-green-400 transition-colors"
+                    className="block text-white hover:text-green-400 transition-colors text-lg py-2"
                   >
                     {item.title}
                   </Link>
                 </div>
               ))}
+              <div className="pt-4 space-y-2">
+                <p className="flex items-center text-sm text-white"><MapPin size={16} className="mr-2" /> Διοδώρου 128, Πάτρα, Τ.Κ 264 42</p>
+                <p className="flex items-center text-sm text-white"><Phone size={16} className="mr-2" /> 2610434377</p>
+                <a href="mailto:antoniades_oe@yahoo.gr" className="flex items-center text-sm text-white hover:text-green-400 transition-colors">
+                  <Mail size={16} className="mr-2" /> antoniades_oe@yahoo.gr
+                </a>
+              </div>
               <div className="pt-4 flex items-center space-x-4">
                 <button className="text-2xl text-white hover:text-green-400 transition-colors" aria-label="Search">
                   <Search size={24} />
