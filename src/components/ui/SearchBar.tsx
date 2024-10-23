@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Search } from 'lucide-react';
 
-const SearchBar: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+interface SearchBarProps {
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+}
 
+const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, setSearchTerm }) => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // Implement search functionality here
     console.log('Searching for:', searchTerm);
   };
 
