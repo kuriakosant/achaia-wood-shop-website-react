@@ -15,6 +15,7 @@ interface Product {
 const ProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('Όλα');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetch('/products.json')
@@ -23,16 +24,17 @@ const ProductsPage: React.FC = () => {
       .catch((error) => console.error('Error fetching products:', error));
   }, []);
 
-  const filteredProducts = selectedCategory === 'Όλα'
-    ? products
-    : products.filter(product => product.category === selectedCategory);
+  const filteredProducts = products.filter(product => 
+    (selectedCategory === 'Όλα' || product.category === selectedCategory) &&
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <h1 className="text-3xl font-bold text-gray-800">Τα προϊόντα μας</h1>
         <div className="w-full sm:w-64">
-          <SearchBar />
+          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </div>
       </div>
 
