@@ -62,27 +62,33 @@ function Header() {
 
           {/* Contact Info and Icons */}
           <div className="hidden md:flex items-center space-x-4">
-            <div className="relative">
-              <button
-                onClick={() => setIsContactOpen(!isContactOpen)}
-                className="text-sm lg:text-base font-medium hover:text-green-400 transition-colors flex items-center"
-                aria-expanded={isContactOpen}
-                aria-haspopup="true"
-              >
-                ΕΠΙΚΟΙΝΩΝΙΑ
-                <ChevronDown size={16} className={`ml-1 transform transition-transform duration-300 ${isContactOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {isContactOpen && (
-                <div className="absolute top-full right-0 mt-2 w-64 bg-gray-800 rounded-md shadow-lg overflow-hidden transition-all duration-300">
-                  <div className="p-4 space-y-2">
-                    <p className="flex items-center text-sm"><MapPin size={16} className="mr-2" /> Διοδώρου 128, Πάτρα, Τ.Κ 264 42</p>
-                    <p className="flex items-center text-sm"><Phone size={16} className="mr-2" /> 2610434377</p>
-                    <a href="mailto:antoniades_oe@yahoo.gr" className="flex items-center text-sm hover:text-green-400 transition-colors">
-                      <Mail size={16} className="mr-2" /> antoniades_oe@yahoo.gr
-                    </a>
+            <div className="flex items-center space-x-4">
+              <a href="tel:2610434377" className="flex items-center bg-green-600 text-white px-3 py-1 rounded-full text-sm hover:bg-green-700 transition-colors duration-300">
+                <Phone size={16} className="mr-2" />
+                <span>2610434377</span>
+              </a>
+              <div className="relative">
+                <button
+                  onClick={() => setIsContactOpen(!isContactOpen)}
+                  className="text-sm lg:text-base font-medium hover:text-green-400 transition-colors flex items-center"
+                  aria-expanded={isContactOpen}
+                  aria-haspopup="true"
+                >
+                  ΕΠΙΚΟΙΝΩΝΙΑ
+                  <ChevronDown size={16} className={`ml-1 transform transition-transform duration-300 ${isContactOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {isContactOpen && (
+                  <div className="absolute top-full right-0 mt-2 w-64 bg-gray-800 rounded-md shadow-lg overflow-hidden transition-all duration-300">
+                    <div className="p-4 space-y-2">
+                      <p className="flex items-center text-sm"><MapPin size={16} className="mr-2" /> Διοδώρου 128, Πάτρα, Τ.Κ 264 42</p>
+                      <p className="flex items-center text-sm"><Phone size={16} className="mr-2" /> 2610434377</p>
+                      <a href="mailto:antoniades_oe@yahoo.gr" className="flex items-center text-sm hover:text-green-400 transition-colors">
+                        <Mail size={16} className="mr-2" /> antoniades_oe@yahoo.gr
+                      </a>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
             <button className="text-2xl hover:text-green-400 transition-colors transform hover:scale-110" aria-label="Search">
               <Search size={24} />
@@ -128,8 +134,10 @@ function Header() {
                 </div>
               ))}
               <div className="pt-4 space-y-2">
+                <a href="tel:2610434377" className="flex items-center text-sm text-white hover:text-green-400 transition-colors">
+                  <Phone size={16} className="mr-2" /> 2610434377
+                </a>
                 <p className="flex items-center text-sm text-white"><MapPin size={16} className="mr-2" /> Διοδώρου 128, Πάτρα, Τ.Κ 264 42</p>
-                <p className="flex items-center text-sm text-white"><Phone size={16} className="mr-2" /> 2610434377</p>
                 <a href="mailto:antoniades_oe@yahoo.gr" className="flex items-center text-sm text-white hover:text-green-400 transition-colors">
                   <Mail size={16} className="mr-2" /> antoniades_oe@yahoo.gr
                 </a>
