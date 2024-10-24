@@ -1,8 +1,6 @@
-## Achaia Wood Shop Website
+## Achaia Wood Shop Website - Frontend
 
-This is a freelance project for a local business in Greece. 
-currently everything is in progress including this readme
-
+This repository contains the frontend code for the Achaia Wood Shop website, a freelance project for a local business in Greece. The frontend is built using React, Tailwind CSS, and TypeScript.
 
 # Shop Website 
 
@@ -18,10 +16,10 @@ This project is a fully responsive website showcasing and providing contact info
 
 [](https://github.com/kuriakosant/achaia-wood-shop-website-react#features)
 
--   Landing page
--   Communication page
--   Service and product showcase
--   Responsive design
+- Landing page
+- Communication page
+- Service and product showcase
+- Responsive design
 
 ## Technologies
 
@@ -36,10 +34,12 @@ This project is a fully responsive website showcasing and providing contact info
 [](https://github.com/kuriakosant/achaia-wood-shop-website-react#frontend)
 
 -   **React.js**: A JavaScript library for building user interfaces.
--   **Typescipt**:
+-   **TypeScript**: A typed superset of JavaScript that compiles to plain JavaScript.
 -   **Axios**: A promise-based HTTP client used for making API requests.
 -   **React Router**: A library for routing in React applications.
--   **CSS**: Custom CSS for styling and ensuring a responsive design.
+-   **Tailwind CSS**: A utility-first CSS framework for styling.
+-   **Custom CSS**: Additional styling to ensure a responsive design.
+
 
 ## License
 
