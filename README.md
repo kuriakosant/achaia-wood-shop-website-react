@@ -1,4 +1,4 @@
-## Achaia Wood Shop Website - Frontend
+## Achaia Wood Shop Website - backup
 
 This repository contains the frontend code for the Achaia Wood Shop website, a freelance project for a local business in Greece. The frontend is built using React, Tailwind CSS, and TypeScript.
 
