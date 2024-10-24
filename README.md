@@ -4,7 +4,7 @@ This is a freelance project for a local business in Greece.
 currently everything is in progress including this readme
 
 
-# Shop Website
+# Shop Website 
 
 [](https://github.com/kuriakosant/achaia-wood-shop-website-react#shop-website)
 
