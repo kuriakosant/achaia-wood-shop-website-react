@@ -11,6 +11,18 @@ interface ProductFormData {
   image: string;
 }
 
+const response = await fetch('/api/products', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    ...formData,
+    price: parseFloat(formData.price),
+    features: formData.features.split(',').map(feature => feature.trim()),
+  }),
+});
+
 const AddProductForm: React.FC = () => {
   const [formData, setFormData] = useState<ProductFormData>({
     name: '',

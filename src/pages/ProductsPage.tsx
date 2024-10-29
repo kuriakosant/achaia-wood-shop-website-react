@@ -19,11 +19,12 @@ const ProductsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    fetch('/products.json')
-      .then((response) => response.json())
-      .then((data) => setProducts(data))
-      .catch((error) => console.error('Error fetching products:', error));
+    fetch('/api/products')
+      .then(response => response.json())
+      .then(data => setProducts(data))
+      .catch(error => console.error('Error fetching products:', error));
   }, []);
+  
 
   const filteredProducts = products.filter(product => 
     (selectedCategory === 'Όλα' || product.category === selectedCategory) &&
