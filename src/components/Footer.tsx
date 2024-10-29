@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Facebook, Instagram, Mail, Phone, MapPin, ChevronDown } from 'lucide-react'
 import ESPAViewer from './ESPAViewer'
 
@@ -11,6 +11,7 @@ export function Footer() {
   const [isPDFViewerOpen, setIsPDFViewerOpen] = useState(false)
   const [isProductsOpen, setIsProductsOpen] = useState(false)
   const [isContactOpen, setIsContactOpen] = useState(false)
+  const navigate = useNavigate()
 
   const productLinks = [
     { name: 'ΕΠΙΚΑΛΥΨΕΙΣ', href: '/products/epikalypseis' },
@@ -19,12 +20,20 @@ export function Footer() {
     { name: 'ΠΟΡΤΑΚΙΑ', href: '/products/portakia' },
   ]
 
+  const handleButtonClick = (route: string, setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
+    if (window.innerWidth < 768) {
+      setOpen(prev => !prev)
+    } else {
+      navigate(route)
+    }
+  }
+
   return (
     <footer className="bg-[#1a1a1a] text-white py-8">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col items-center space-y-8">
-          {/* Logo */}
-          <div className="flex-shrink-0">
+        <div className="flex flex-col lg:flex-row justify-between items-center lg:items-start space-y-8 lg:space-y-0 lg:space-x-8">
+          {/* Left Image */}
+          <div className="flex-shrink-0 order-1 lg:order-1">
             <img
               src={AntoniadisBlue}
               alt="ΑΝΤΩΝΙΑΔΗΣ ΟΕ"
@@ -32,13 +41,13 @@ export function Footer() {
             />
           </div>
 
-          {/* Content */}
-          <div className="w-full max-w-4xl">
+          {/* Center Content */}
+          <div className="flex-grow order-3 lg:order-2 w-full lg:w-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Products Section */}
               <div className="text-center md:text-left">
                 <button
-                  onClick={() => setIsProductsOpen(!isProductsOpen)}
+                  onClick={() => handleButtonClick('/products', setIsProductsOpen)}
                   className="flex items-center justify-center md:justify-start w-full text-green-400 font-semibold mb-4 text-lg hover:text-green-500 transition-colors duration-200"
                 >
                   ΠΡΟΪΟΝΤΑ
@@ -58,7 +67,7 @@ export function Footer() {
               {/* Contact Section */}
               <div className="text-center md:text-left">
                 <button
-                  onClick={() => setIsContactOpen(!isContactOpen)}
+                  onClick={() => handleButtonClick('/contact', setIsContactOpen)}
                   className="flex items-center justify-center md:justify-start w-full text-green-400 font-semibold mb-4 text-lg hover:text-green-500 transition-colors duration-200"
                 >
                   ΕΠΙΚΟΙΝΩΝΙΑ
@@ -104,8 +113,8 @@ export function Footer() {
             </div>
           </div>
 
-          {/* ESPA Logo */}
-          <div className="flex-shrink-0 mt-8">
+          {/* Right Image */}
+          <div className="flex-shrink-0 order-2 lg:order-3">
             <button 
               onClick={() => setIsPDFViewerOpen(true)}
               className="focus:outline-none focus:ring-2 focus:ring-green-400 rounded-lg transition-transform duration-200 hover:scale-105"
