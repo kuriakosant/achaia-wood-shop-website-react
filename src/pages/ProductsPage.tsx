@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import SearchBar from '../components/ui/SearchBar';
 import ProductCard from '../components/ProductCard';
 
@@ -33,8 +34,16 @@ const ProductsPage: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <h1 className="text-3xl font-bold text-gray-800">Τα προϊόντα μας</h1>
-        <div className="w-full sm:w-64">
-          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          <div className="w-full sm:w-64">
+            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          </div>
+          <Link
+            to="/products/add"
+            className="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 transition duration-300 text-center"
+          >
+            Προσθήκη Προϊόντος
+          </Link>
         </div>
       </div>
 
