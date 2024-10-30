@@ -16,14 +16,12 @@ const ProductDetail: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
 
   useEffect(() => {
-    fetch('/products.json')
-      .then((response) => response.json())
-      .then((data) => {
-        const foundProduct = data.find((p: Product) => p.id === Number(id));
-        setProduct(foundProduct);
-      })
-      .catch((error) => console.error('Error fetching product:', error));
+    fetch(`/api/products/${id}`)
+      .then(response => response.json())
+      .then(data => setProduct(data))
+      .catch(error => console.error('Error fetching product:', error));
   }, [id]);
+  
 
   if (!product) {
     return <div className="text-center py-12">Το προϊόν δεν βρέθηκε.</div>;
