@@ -11,18 +11,6 @@ interface ProductFormData {
   image: string;
 }
 
-const response = await fetch('/api/products', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    ...formData,
-    price: parseFloat(formData.price),
-    features: formData.features.split(',').map(feature => feature.trim()),
-  }),
-});
-
 const AddProductForm: React.FC = () => {
   const [formData, setFormData] = useState<ProductFormData>({
     name: '',
@@ -36,9 +24,11 @@ const AddProductForm: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,7 +46,9 @@ const AddProductForm: React.FC = () => {
         body: JSON.stringify({
           ...formData,
           price: parseFloat(formData.price),
-          features: formData.features.split(',').map(feature => feature.trim()),
+          features: formData.features
+            .split(',')
+            .map((feature) => feature.trim()),
         }),
       });
 
@@ -82,14 +74,20 @@ const AddProductForm: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Link to="/products" className="inline-flex items-center text-green-600 hover:text-green-700 mb-6">
+      <Link
+        to="/products"
+        className="inline-flex items-center text-green-600 hover:text-green-700 mb-6"
+      >
         <ArrowLeft className="mr-2" size={20} />
         Πίσω στα προϊόντα
       </Link>
       <h1 className="text-3xl font-bold mb-6">Προσθήκη Νέου Προϊόντος</h1>
       <form onSubmit={handleSubmit} className="max-w-2xl">
         <div className="mb-4">
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Όνομα Προϊόντος *
           </label>
           <input
@@ -103,7 +101,10 @@ const AddProductForm: React.FC = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="category"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Κατηγορία
           </label>
           <input
@@ -116,7 +117,10 @@ const AddProductForm: React.FC = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="price"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Τιμή
           </label>
           <input
@@ -130,7 +134,10 @@ const AddProductForm: React.FC = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Περιγραφή
           </label>
           <textarea
@@ -143,7 +150,10 @@ const AddProductForm: React.FC = () => {
           ></textarea>
         </div>
         <div className="mb-4">
-          <label htmlFor="features" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="features"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Χαρακτηριστικά (διαχωρισμένα με κόμμα)
           </label>
           <input
@@ -156,7 +166,10 @@ const AddProductForm: React.FC = () => {
           />
         </div>
         <div className="mb-6">
-          <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="image"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             URL Εικόνας
           </label>
           <input
@@ -169,7 +182,11 @@ const AddProductForm: React.FC = () => {
           />
         </div>
         {error && <p className="text-red-500 mb-4">{error}</p>}
-        {success && <p className="text-green-500 mb-4">Το προϊόν προστέθηκε με επιτυχία!</p>}
+        {success && (
+          <p className="text-green-500 mb-4">
+            Το προϊόν προστέθηκε με επιτυχία!
+          </p>
+        )}
         <button
           type="submit"
           disabled={isSubmitting}
@@ -183,4 +200,3 @@ const AddProductForm: React.FC = () => {
 };
 
 export default AddProductForm;
-
