@@ -29,8 +29,9 @@ export function Footer() {
   }
 
   return (
-    <footer className="bg-[#1a1a1a] text-white py-8">
-      <div className="container mx-auto px-4">
+    <footer className="bg-gray-950 border-t border-gray-900 text-white py-12 relative overflow-hidden">
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="container mx-auto px-4 lg:px-8 relative z-10">
         <div className="flex flex-col lg:flex-row justify-between items-center lg:items-start space-y-8 lg:space-y-0 lg:space-x-8">
           {/* Left Image */}
           <div className="flex-shrink-0 order-1 lg:order-1">
@@ -115,7 +116,7 @@ export function Footer() {
 
           {/* Right Image */}
           <div className="flex-shrink-0 order-2 lg:order-3">
-            <button 
+            <button
               onClick={() => setIsPDFViewerOpen(true)}
               className="focus:outline-none focus:ring-2 focus:ring-green-400 rounded-lg transition-transform duration-200 hover:scale-105"
               aria-label="Open ESPA PDF"

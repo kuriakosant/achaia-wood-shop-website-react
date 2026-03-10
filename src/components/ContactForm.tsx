@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Button from './ui/Button';
 
 interface FormData {
   name: string;
@@ -31,73 +32,82 @@ const ContactForm: React.FC = () => {
     setFormData({ name: '', phone: '', email: '', message: '' });
   };
 
+  const inputClasses = "w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all duration-300 outline-none placeholder-gray-400";
+
   return (
-    <div className="bg-white shadow-md rounded-lg p-8 max-w-2xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Επικοινωνήστε μαζί μας</h2>
+    <div className="w-full">
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-            Ονοματεπώνυμο
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label htmlFor="name" className="block text-sm font-semibold text-gray-700 ml-1">
+              Ονοματεπώνυμο <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="π.χ. Ιωάννης Παπαδόπουλος"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              className={inputClasses}
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 ml-1">
+              Τηλέφωνο <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="π.χ. 69XXXXXXX"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+              className={inputClasses}
+            />
+          </div>
         </div>
-        <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-            Τηλεφωνο
-          </label>
-          <input
-            type="text"
-            id="phone"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          />
-        </div>
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email
+
+        <div className="space-y-2">
+          <label htmlFor="email" className="block text-sm font-semibold text-gray-700 ml-1">
+            Email <span className="text-gray-400 font-normal">(Προαιρετικό)</span>
           </label>
           <input
             type="email"
             id="email"
             name="email"
+            placeholder="π.χ. user@example.com"
             value={formData.email}
             onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className={inputClasses}
           />
         </div>
-        <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-            Μήνυμα
+
+        <div className="space-y-2">
+          <label htmlFor="message" className="block text-sm font-semibold text-gray-700 ml-1">
+            Μήνυμα <span className="text-red-500">*</span>
           </label>
           <textarea
             id="message"
             name="message"
+            placeholder="Πώς μπορούμε να σας βοηθήσουμε;"
             value={formData.message}
             onChange={handleChange}
             required
-            rows={4}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            rows={5}
+            className={`${inputClasses} resize-none`}
           ></textarea>
         </div>
-        <div>
-          <button
+
+        <div className="pt-2">
+          <Button
             type="submit"
-            className="w-full bg-green-500 text-white font-bold py-2 px-4 rounded-md hover:bg-green-600 transition duration-300"
+            className="w-full md:w-auto px-10 py-4 rounded-full text-lg shadow-xl shadow-green-900/20"
           >
-            Αποστολή
-          </button>
+            Αποστολή Μηνύματος
+          </Button>
         </div>
       </form>
     </div>

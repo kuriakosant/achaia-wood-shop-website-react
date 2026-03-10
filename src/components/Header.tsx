@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, Search, ShoppingCart, Phone, Mail, MapPin } from 'lucide-react';
+import { Menu, X, ChevronDown, Search, Phone, Mail, MapPin } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { clsx } from 'clsx';
 import antoniadisBlack from '../assets/ANTONIADIS-BLACK.png';
 
 function Header() {
@@ -8,6 +10,9 @@ function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const location = useLocation();
+
+  const isHomePage = location.pathname === '/';
+  const isDarkHeader = isScrolled || !isHomePage;
 
   const menuItems = [
     { title: 'Αρχική', href: '/' },
@@ -19,7 +24,6 @@ function Header() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -30,131 +34,165 @@ function Header() {
   }, [location]);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-gray-900 text-white shadow-lg' : 'bg-black bg-opacity-75 text-white'
-    }`}>
-      <nav className="container mx-auto px-4 py-4">
+    <motion.header
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+      className={clsx(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+        isDarkHeader ? "glass-panel-dark py-3" : "bg-transparent py-5"
+      )}
+    >
+      <nav className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 group">
-            <img
-              src={antoniadisBlack}
-              alt="ΑΝΤΩΝΙΑΔΗΣ ΟΕ"
-              className={`h-8 md:h-10 lg:h-12 w-auto transition-all duration-300 ${
-                isScrolled ? 'brightness-0 invert' : 'brightness-100'
-              } group-hover:scale-105`}
-            />
+          <Link to="/" className="flex items-center outline-none group">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="overflow-hidden rounded-md bg-transparent"
+            >
+              <img
+                src={antoniadisBlack}
+                alt="ΑΝΤΩΝΙΑΔΗΣ ΟΕ"
+                className="h-10 md:h-12 w-auto object-contain drop-shadow-lg mix-blend-screen"
+                style={{
+                  filter: isDarkHeader ? 'drop-shadow(0 0 10px rgba(255,255,255,0.1))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))'
+                }}
+              />
+            </motion.div>
           </Link>
 
           {/* Desktop and Tablet Menu */}
-          <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
+          <div className="hidden md:flex items-center space-x-8">
             {menuItems.map((item) => (
               <Link
                 key={item.href}
                 to={item.href}
-                className="text-sm lg:text-base font-medium hover:text-green-400 transition-colors relative group"
+                className={clsx(
+                  "relative text-sm lg:text-base font-medium transition-colors outline-none",
+                  isDarkHeader ? "text-gray-200 hover:text-white" : "text-white/90 hover:text-white",
+                  location.pathname === item.href && "text-green-400 font-semibold"
+                )}
               >
                 {item.title}
-                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-green-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                {location.pathname === item.href && (
+                  <motion.div
+                    layoutId="underline"
+                    className="absolute left-0 right-0 bottom-[-4px] h-[2px] bg-green-400 rounded-full"
+                  />
+                )}
               </Link>
             ))}
           </div>
 
           {/* Contact Info and Icons */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-6">
             <div className="flex items-center space-x-4">
-              <a href="tel:2610434377" className="flex items-center bg-green-600 text-white px-3 py-1 rounded-full text-sm hover:bg-green-700 transition-colors duration-300">
-                <Phone size={16} className="mr-2" />
+              <a href="tel:2610434377" className="flex items-center bg-green-600/90 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-sm font-medium hover:bg-green-500 transition-colors shadow-lg shadow-green-900/20">
+                <Phone size={14} className="mr-2" />
                 <span>2610434377</span>
               </a>
-              <div className="relative">
+              <div
+                className="relative"
+                onMouseEnter={() => setIsContactOpen(true)}
+                onMouseLeave={() => setIsContactOpen(false)}
+              >
                 <button
-                  onClick={() => setIsContactOpen(!isContactOpen)}
-                  className="text-sm lg:text-base font-medium hover:text-green-400 transition-colors flex items-center"
-                  aria-expanded={isContactOpen}
-                  aria-haspopup="true"
+                  className={clsx(
+                    "flex items-center text-sm font-medium transition-colors outline-none",
+                    isDarkHeader ? "text-gray-200 hover:text-white" : "text-white/90 hover:text-white"
+                  )}
                 >
                   ΕΠΙΚΟΙΝΩΝΙΑ
-                  <ChevronDown size={16} className={`ml-1 transform transition-transform duration-300 ${isContactOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown size={14} className={clsx("ml-1 transition-transform duration-300", isContactOpen && "rotate-180")} />
                 </button>
-                {isContactOpen && (
-                  <div className="absolute top-full right-0 mt-2 w-64 bg-gray-800 rounded-md shadow-lg overflow-hidden transition-all duration-300">
-                    <div className="p-4 space-y-2">
-                      <p className="flex items-center text-sm"><MapPin size={16} className="mr-2" /> Διοδώρου 128, Πάτρα, Τ.Κ 264 42</p>
-                      <p className="flex items-center text-sm"><Phone size={16} className="mr-2" /> 2610434377</p>
-                      <a href="mailto:antoniades_oe@yahoo.gr" className="flex items-center text-sm hover:text-green-400 transition-colors">
-                        <Mail size={16} className="mr-2" /> antoniades_oe@yahoo.gr
-                      </a>
-                    </div>
-                  </div>
-                )}
+                <AnimatePresence>
+                  {isContactOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-full right-0 mt-4 w-72 glass-panel-dark rounded-xl shadow-2xl overflow-hidden border border-gray-700/50"
+                    >
+                      <div className="p-5 space-y-4">
+                        <div className="flex items-start text-sm text-gray-300">
+                          <MapPin size={18} className="mr-3 text-green-400 shrink-0 mt-0.5" />
+                          <span>Διοδώρου 128, Πάτρα, Τ.Κ 264 42</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-300">
+                          <Phone size={18} className="mr-3 text-green-400 shrink-0" />
+                          <span>2610434377</span>
+                        </div>
+                        <a href="mailto:antoniades_oe@yahoo.gr" className="flex items-center text-sm text-gray-300 hover:text-green-400 transition-colors group">
+                          <Mail size={18} className="mr-3 text-green-400 group-hover:text-green-300 shrink-0" />
+                          <span>antoniades_oe@yahoo.gr</span>
+                        </a>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
-            <button className="text-2xl hover:text-green-400 transition-colors transform hover:scale-110" aria-label="Search">
-              <Search size={24} />
-            </button>
-            <button className="text-2xl hover:text-green-400 transition-colors transform hover:scale-110" aria-label="Shopping Cart">
-              <ShoppingCart size={24} />
-            </button>
+            <div className="flex items-center space-x-3 border-l border-white/20 pl-6">
+              <button className="text-white/80 hover:text-white transition-colors p-1" aria-label="Search">
+                <Search size={20} />
+              </button>
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 focus:outline-none hover:text-green-400 transition-colors"
+            className="md:hidden p-2 text-white outline-none"
             aria-label="Toggle menu"
-            aria-expanded={isMenuOpen}
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
+      </nav>
 
-        {/* Mobile Menu */}
-        <div
-          className={`md:hidden fixed inset-0 bg-black bg-opacity-50 z-50 transition-opacity duration-300 ${
-            isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-          }`}
-          onClick={() => setIsMenuOpen(false)}
-        >
-          <div
-            className={`absolute top-0 right-0 w-64 h-full bg-gray-900 transform transition-transform duration-300 ease-in-out ${
-              isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-            }`}
-            onClick={(e) => e.stopPropagation()}
+      {/* Mobile Menu Area */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden glass-panel-dark border-t border-gray-700/50"
           >
-            <div className="p-6 space-y-4">
-              {menuItems.map((item) => (
-                <div key={item.href}>
+            <div className="px-4 py-6 space-y-6">
+              <div className="space-y-4">
+                {menuItems.map((item) => (
                   <Link
+                    key={item.href}
                     to={item.href}
-                    className="block text-white hover:text-green-400 transition-colors text-lg py-2"
+                    className={clsx(
+                      "block text-lg font-medium",
+                      location.pathname === item.href ? "text-green-400" : "text-gray-200"
+                    )}
                   >
                     {item.title}
                   </Link>
-                </div>
-              ))}
-              <div className="pt-4 space-y-2">
-                <a href="tel:2610434377" className="flex items-center text-sm text-white hover:text-green-400 transition-colors">
-                  <Phone size={16} className="mr-2" /> 2610434377
-                </a>
-                <p className="flex items-center text-sm text-white"><MapPin size={16} className="mr-2" /> Διοδώρου 128, Πάτρα, Τ.Κ 264 42</p>
-                <a href="mailto:antoniades_oe@yahoo.gr" className="flex items-center text-sm text-white hover:text-green-400 transition-colors">
-                  <Mail size={16} className="mr-2" /> antoniades_oe@yahoo.gr
-                </a>
+                ))}
               </div>
-              <div className="pt-4 flex items-center space-x-4">
-                <button className="text-2xl text-white hover:text-green-400 transition-colors" aria-label="Search">
-                  <Search size={24} />
-                </button>
-                <button className="text-2xl text-white hover:text-green-400 transition-colors" aria-label="Shopping Cart">
-                  <ShoppingCart size={24} />
-                </button>
+              <div className="pt-6 border-t border-gray-700/50 space-y-4">
+                <a href="tel:2610434377" className="flex items-center text-sm text-gray-300">
+                  <Phone size={18} className="mr-3 text-green-400" /> 2610434377
+                </a>
+                <p className="flex items-start text-sm text-gray-300">
+                  <MapPin size={18} className="mr-3 text-green-400 mt-0.5" /> Διοδώρου 128, Πάτρα, Τ.Κ 264 42
+                </p>
+                <a href="mailto:antoniades_oe@yahoo.gr" className="flex items-center text-sm text-gray-300">
+                  <Mail size={18} className="mr-3 text-green-400" /> antoniades_oe@yahoo.gr
+                </a>
               </div>
             </div>
-          </div>
-        </div>
-      </nav>
-    </header>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 }
 
