@@ -137,6 +137,9 @@ export function Footer() {
           onClose={() => setIsPDFViewerOpen(false)}
         />
       )}
+      <div className="absolute bottom-2 left-2 opacity-0 hover:opacity-10 transition-opacity">
+        <Link to="/admin/login" className="text-xs text-white">Admin Portal</Link>
+      </div>
     </footer>
   )
 }
