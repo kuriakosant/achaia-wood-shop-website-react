@@ -73,7 +73,7 @@ const AddProductForm: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 pt-32">
       <Link
         to="/products"
         className="inline-flex items-center text-green-600 hover:text-green-700 mb-6"

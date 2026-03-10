@@ -55,10 +55,7 @@ function Header() {
               <img
                 src={antoniadisBlack}
                 alt="ΑΝΤΩΝΙΑΔΗΣ ΟΕ"
-                className="h-10 md:h-12 w-auto object-contain drop-shadow-lg mix-blend-screen"
-                style={{
-                  filter: isDarkHeader ? 'drop-shadow(0 0 10px rgba(255,255,255,0.1))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))'
-                }}
+                className="h-10 md:h-12 w-auto object-contain brightness-0 invert drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
               />
             </motion.div>
           </Link>
