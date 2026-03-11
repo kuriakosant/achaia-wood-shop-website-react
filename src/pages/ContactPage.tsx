@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
+import { MapPin, Phone, Clock, Send } from 'lucide-react';
 import ContactForm from '../components/ContactForm';
 
 const fadeIn = {

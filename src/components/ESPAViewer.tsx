@@ -20,7 +20,7 @@ const ESPAViewer: React.FC<ESPAViewerProps> = ({ pdfUrl, onClose }) => {
           </button>
         </div>
         <div className="flex-grow overflow-hidden flex justify-center items-center">
-          <img src={EspaImage} alt="ESPA Image" className="max-w-full max-h-full" />
+          <img src={EspaImage} alt="ESPA" className="max-w-full max-h-full" />
         </div>
         <div className="flex justify-between items-center p-4 border-t">
           <a
