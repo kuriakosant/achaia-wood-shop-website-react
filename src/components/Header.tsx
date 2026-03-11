@@ -55,7 +55,7 @@ function Header() {
               <img
                 src={antoniadisBlack}
                 alt="ΑΝΤΩΝΙΑΔΗΣ ΟΕ"
-                className="h-10 md:h-12 w-auto object-contain brightness-0 invert drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
+                className="h-10 md:h-16 w-auto object-contain transition-all duration-300"
               />
             </motion.div>
           </Link>

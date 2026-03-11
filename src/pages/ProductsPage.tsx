@@ -39,8 +39,12 @@ const ProductsPage: React.FC = () => {
 
     // Simulate slight loading for smooth entrance
     setTimeout(() => {
-      fetch('/products.json')
-        .then(response => response.json())
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+      fetch(`${apiUrl}/products`)
+        .then(response => {
+          if (!response.ok) throw new Error('API fetch failed');
+          return response.json();
+        })
         .then(data => {
           setProducts(data);
           setLoading(false);
@@ -77,13 +81,6 @@ const ProductsPage: React.FC = () => {
             <div className="w-full sm:w-72">
               <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             </div>
-            {/* Kept Add Product for admin purposes, but made it stealthier */}
-            <Link
-              to="/products/add"
-              className="hidden md:flex text-gray-400 hover:text-green-500 text-sm font-medium transition-colors border border-transparent hover:border-green-200 hover:bg-green-50 px-3 py-1.5 rounded-full"
-            >
-              + Προσθήκη
-            </Link>
           </div>
         </motion.div>
 
@@ -105,8 +102,8 @@ const ProductsPage: React.FC = () => {
                     <button
                       onClick={() => setSelectedCategory(category)}
                       className={`w-full text-left py-3 px-5 rounded-xl transition duration-300 font-medium ${selectedCategory === category
-                          ? 'bg-green-600 text-white shadow-md shadow-green-900/20'
-                          : 'text-gray-600 hover:bg-gray-100'
+                        ? 'bg-green-600 text-white shadow-md shadow-green-900/20'
+                        : 'text-gray-600 hover:bg-gray-100'
                         }`}
                     >
                       {category}
