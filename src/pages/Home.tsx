@@ -37,12 +37,16 @@ function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    fetch('/products.json')
-      .then((response) => response.json())
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+    fetch(`${apiUrl}/products`)
+      .then((response) => {
+        if (!response.ok) throw new Error('Failed to fetch from live API');
+        return response.json();
+      })
       .then((data) => {
         setFeaturedProducts(data.slice(0, 3));
       })
-      .catch((error) => console.error('Error fetching products:', error));
+      .catch((error) => console.error('Error fetching live products:', error));
   }, []);
 
   return (
