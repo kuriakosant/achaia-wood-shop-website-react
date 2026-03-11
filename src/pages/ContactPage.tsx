@@ -11,10 +11,11 @@ const fadeIn = {
 const ContactPage: React.FC = () => {
   return (
     <div className="bg-gray-50 min-h-screen pt-32 pb-24">
-      {/* Header Background */}
-      <div className="absolute top-0 left-0 right-0 h-96 bg-gray-950 overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-green-500/10 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none" />
+      {/* Modern, fresh, sweeping background gradient */}
+      <div className="absolute top-0 left-0 right-0 h-[600px] overflow-hidden bg-gradient-to-br from-green-50/50 via-teal-50/30 to-white">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-green-100/40 rounded-full blur-[100px] pointer-events-none -translate-y-1/3 translate-x-1/3" />
+        <div className="absolute top-40 left-0 w-[600px] h-[600px] bg-emerald-50/50 rounded-full blur-[100px] pointer-events-none -translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none" />
       </div>
 
       <div className="container mx-auto px-4 lg:px-8 max-w-6xl relative z-10">
@@ -26,8 +27,8 @@ const ContactPage: React.FC = () => {
           className="text-center mb-16"
         >
           <span className="text-green-400 font-bold tracking-widest uppercase text-sm mb-3 block drop-shadow-sm">Χρειάζεστε Βοήθεια;</span>
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight mb-4">Επικοινωνία</h1>
-          <p className="text-gray-300 text-lg max-w-2xl mx-auto">Η ομάδα μας είναι πάντα διαθέσιμη να απαντήσει στις ερωτήσεις σας και να σας βοηθήσει να βρείτε ακριβώς τα υλικά που χρειάζεστε για τις κατασκευές σας.</p>
+          <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 tracking-tight mb-4">Επικοινωνία</h1>
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto">Η ομάδα μας είναι πάντα διαθέσιμη να απαντήσει στις ερωτήσεις σας και να σας βοηθήσει να βρείτε ακριβώς τα υλικά που χρειάζεστε για τις κατασκευές σας.</p>
         </motion.div>
 
         <div className="grid lg:grid-cols-5 gap-10">
@@ -74,7 +75,7 @@ const ContactPage: React.FC = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="bg-gray-900 rounded-3xl p-8 border border-gray-800 shadow-xl relative overflow-hidden group text-white"
+              className="bg-gray-900 rounded-3xl p-8 border border-gray-800 shadow-2xl shadow-green-900/10 relative overflow-hidden group text-white transform hover:-translate-y-1 transition-all duration-300"
             >
               <div className="absolute top-0 right-0 p-8 opacity-10 transform translate-x-4 -translate-y-4 group-hover:scale-110 group-hover:opacity-20 transition-all duration-500">
                 <Clock size={100} />
