@@ -37,11 +37,19 @@ const AddProductForm: React.FC = () => {
     setError(null);
     setSuccess(false);
 
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+      setError('You must be logged in to add a product. Return to Admin Portal.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
-      const response = await fetch('/api/products', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/products`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           ...formData,
