@@ -219,31 +219,39 @@ function Home() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          variants={fadeInUp}
-          className="mb-24 max-w-4xl mx-auto"
+          variants={staggerContainer}
+          className="mb-24 max-w-6xl mx-auto"
         >
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">Τι Λένε οι Πελάτες μας</h2>
             <div className="w-16 h-1 bg-green-500 mx-auto rounded-full" />
           </div>
 
-          <div className="bg-white p-10 md:p-14 rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 text-center relative">
-            <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-white rounded-full p-2 shadow-md">
-              <div className="bg-green-50 text-green-600 rounded-full p-3">
-                <Star className="w-6 h-6 fill-current" />
-              </div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { name: "Γιώργος Κ.", role: "Ιδιοκτήτης Επιπλοποιείου", text: "Η ΑΝΤΩΝΙΑΔΗΣ ΟΕ είναι ο απόλυτος συνεργάτης για τις ανάγκες της επιχείρησής μου. Η ποιότητα των προϊόντων και η εξυπηρέτηση είναι πάντα άψογες." },
+              { name: "Μαρία Σ.", role: "Αρχιτέκτονας Εσωτερικών Χώρων", text: "Βρίσκω πάντα μοναδικά και πρωτοποριακά υλικά για τα project μου. Η ποικιλία των προϊόντων τους με βοηθά να υλοποιώ κάθε σχεδιαστική μου ιδέα." },
+              { name: "Δημήτρης Π.", role: "Κατασκευαστής", text: "Η ταχύτητα παράδοσης και ο επαγγελματισμός της ομάδας τους, κάνουν την δουλειά μου πολύ πιο εύκολη. Τους εμπιστεύομαι τυφλά." }
+            ].map((testimonial, idx) => (
+              <motion.div key={idx} variants={fadeInUp} className="bg-white p-8 md:p-10 rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 text-center relative mt-6 hover:-translate-y-1 transition-transform duration-300">
+                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-white rounded-full p-2 shadow-md">
+                  <div className="bg-green-50 text-green-600 rounded-full p-3">
+                    <Star className="w-5 h-5 fill-current" />
+                  </div>
+                </div>
 
-            <div className="flex justify-center items-center mb-8 pt-4 gap-1">
-              {[...Array(5)].map((_, i) => <Star key={i} className="text-yellow-400 w-5 h-5 fill-current" />)}
-            </div>
-            <p className="text-2xl text-gray-700 mb-8 italic font-light leading-relaxed">
-              "Η ΑΝΤΩΝΙΑΔΗΣ ΟΕ είναι ο απόλυτος συνεργάτης για τις ανάγκες της επιχείρησής μου. Η ποιότητα των προϊόντων και η εξυπηρέτηση είναι πάντα άψογες."
-            </p>
-            <div>
-              <p className="font-bold text-gray-900 text-lg">Γιώργος Κ.</p>
-              <p className="text-gray-500 text-sm">Ιδιοκτήτης Επιπλοποιείου</p>
-            </div>
+                <div className="flex justify-center items-center mb-6 pt-4 gap-1">
+                  {[...Array(5)].map((_, i) => <Star key={i} className="text-yellow-400 w-4 h-4 fill-current" />)}
+                </div>
+                <p className="text-lg text-gray-700 mb-6 italic font-light leading-relaxed h-[120px]">
+                  "{testimonial.text}"
+                </p>
+                <div>
+                  <p className="font-bold text-gray-900 text-base">{testimonial.name}</p>
+                  <p className="text-gray-500 text-sm">{testimonial.role}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </motion.section>
       </div>
