@@ -1,12 +1,11 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
-import { Target, ShieldCheck, HeartHandshake, Award } from 'lucide-react';
+import { ShieldCheck, HeartHandshake, Award } from 'lucide-react';
 import heroBackground from '../assets/hero-background.jpg';
 import companyTeam from '../assets/company-team.jpg';
 import companyWarehouse from '../assets/company-warehouse.png';
 import companyOffice from '../assets/company-office.png';
 import companyShowroom from '../assets/company-showroom.jpg';
-import iconPartnerships from '../assets/icon-partnerships.jpg';
 
 const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 40 },
