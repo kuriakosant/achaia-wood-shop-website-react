@@ -124,16 +124,17 @@ function Home() {
             <motion.div
               key={idx}
               variants={fadeInUp}
-              className="bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300 group border border-gray-100"
+              whileHover={{ scale: 1.02, y: -5 }}
+              className="bg-white rounded-3xl p-6 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-500 group border border-gray-100 cursor-default"
             >
               <div className="relative overflow-hidden rounded-2xl mb-6 aspect-video">
-                <img src={feature.img} alt={feature.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-4 left-4 bg-white/20 backdrop-blur-md p-2 rounded-lg border border-white/30">
+                <img src={feature.img} alt={feature.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
+                <div className="absolute bottom-4 left-4 bg-white/20 backdrop-blur-md p-2 rounded-lg border border-white/30 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500">
                   <feature.icon className="text-white w-6 h-6" />
                 </div>
               </div>
-              <h3 className="text-lg font-bold mb-3 text-gray-900">{feature.title}</h3>
+              <h3 className="text-lg font-bold mb-3 text-gray-900 group-hover:text-green-600 transition-colors duration-300">{feature.title}</h3>
               <p className="text-gray-500 leading-relaxed text-sm">
                 {feature.desc}
               </p>
@@ -233,22 +234,30 @@ function Home() {
               { name: "Μαρία Σ.", role: "Αρχιτέκτονας Εσωτερικών Χώρων", text: "Βρίσκω πάντα μοναδικά και πρωτοποριακά υλικά για τα project μου. Η ποικιλία των προϊόντων τους με βοηθά να υλοποιώ κάθε σχεδιαστική μου ιδέα." },
               { name: "Δημήτρης Π.", role: "Κατασκευαστής", text: "Η ταχύτητα παράδοσης και ο επαγγελματισμός της ομάδας τους, κάνουν την δουλειά μου πολύ πιο εύκολη. Τους εμπιστεύομαι τυφλά." }
             ].map((testimonial, idx) => (
-              <motion.div key={idx} variants={fadeInUp} className="bg-white p-8 md:p-10 rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 text-center relative mt-6 hover:-translate-y-1 transition-transform duration-300">
-                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-white rounded-full p-2 shadow-md">
-                  <div className="bg-green-50 text-green-600 rounded-full p-3">
-                    <Star className="w-5 h-5 fill-current" />
+              <motion.div 
+                key={idx} 
+                variants={fadeInUp} 
+                whileHover={{ y: -10, scale: 1.02 }}
+                className="bg-white p-8 md:p-10 rounded-[2rem] shadow-xl shadow-gray-200/40 border border-gray-50 text-center relative mt-6 transition-all duration-500 hover:shadow-2xl hover:shadow-green-900/10"
+              >
+                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-white rounded-full shadow-lg border border-gray-100">
+                  <div className="flex gap-1">
+                    {[...Array(5)].map((_, i) => <Star key={i} className="text-yellow-400 w-4 h-4 fill-current" />)}
                   </div>
                 </div>
 
-                <div className="flex justify-center items-center mb-6 pt-4 gap-1">
-                  {[...Array(5)].map((_, i) => <Star key={i} className="text-yellow-400 w-4 h-4 fill-current" />)}
+                <div className="mb-6 pt-6 flex justify-center">
+                  <div className="bg-green-50 text-green-600 rounded-2xl p-4 transform -rotate-3 group-hover:rotate-0 transition-transform duration-500">
+                    <Star className="w-8 h-8 fill-current" />
+                  </div>
                 </div>
-                <p className="text-lg text-gray-700 mb-6 italic font-light leading-relaxed h-[120px]">
+
+                <p className="text-lg text-gray-700 mb-8 italic font-light leading-relaxed min-h-[140px] flex items-center justify-center">
                   "{testimonial.text}"
                 </p>
-                <div>
-                  <p className="font-bold text-gray-900 text-base">{testimonial.name}</p>
-                  <p className="text-gray-500 text-sm">{testimonial.role}</p>
+                <div className="pt-6 border-t border-gray-100">
+                  <p className="font-bold text-gray-900 text-base mb-1">{testimonial.name}</p>
+                  <p className="text-green-600 text-xs font-semibold tracking-widest uppercase">{testimonial.role}</p>
                 </div>
               </motion.div>
             ))}

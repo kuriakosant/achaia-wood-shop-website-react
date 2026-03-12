@@ -63,15 +63,19 @@ function Header() {
           {/* Desktop and Tablet Menu */}
           <div className="hidden md:flex items-center space-x-8">
             {menuItems.map((item) => (
-              <Link
+              <motion.div
                 key={item.href}
-                to={item.href}
-                className={clsx(
-                  "relative text-sm lg:text-base font-medium transition-colors outline-none",
-                  isDarkHeader ? "text-gray-200 hover:text-white" : "text-white/90 hover:text-white",
-                  location.pathname === item.href && "text-green-400 font-semibold"
-                )}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
+                <Link
+                  to={item.href}
+                  className={clsx(
+                    "relative text-sm lg:text-base font-medium transition-colors outline-none",
+                    isDarkHeader ? "text-gray-200 hover:text-green-400" : "text-white/90 hover:text-white",
+                    location.pathname === item.href && "text-green-400 font-semibold"
+                  )}
+                >
                 {item.title}
                 {location.pathname === item.href && (
                   <motion.div
@@ -79,7 +83,8 @@ function Header() {
                     className="absolute left-0 right-0 bottom-[-4px] h-[2px] bg-green-400 rounded-full"
                   />
                 )}
-              </Link>
+                </Link>
+              </motion.div>
             ))}
           </div>
 

@@ -1,8 +1,8 @@
-import React, { ButtonHTMLAttributes } from 'react';
+import { motion, HTMLMotionProps } from 'framer-motion';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends HTMLMotionProps<'button'> {
   variant?: 'default' | 'outline' | 'ghost';
 }
 
@@ -16,9 +16,14 @@ function Button({ children, variant = 'default', className, ...props }: ButtonPr
   };
 
   return (
-    <button className={twMerge(clsx(baseStyles, variants[variant], className))} {...props}>
+    <motion.button 
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className={twMerge(clsx(baseStyles, variants[variant], className))} 
+      {...props}
+    >
       {children}
-    </button>
+    </motion.button>
   );
 }
 
