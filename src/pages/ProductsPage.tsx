@@ -33,6 +33,8 @@ const ProductsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
+  const [sortBy, setSortBy] = useState('default');
+
   useEffect(() => {
     // Scroll to top on mount
     window.scrollTo(0, 0);
@@ -56,10 +58,18 @@ const ProductsPage: React.FC = () => {
     }, 400);
   }, []);
 
-  const filteredProducts = products.filter(product =>
-    (selectedCategory === 'Όλα' || product.category === selectedCategory) &&
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredAndSortedProducts = products
+    .filter(product =>
+      (selectedCategory === 'Όλα' || product.category === selectedCategory) &&
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortBy === 'price-asc') return a.price - b.price;
+      if (sortBy === 'price-desc') return b.price - a.price;
+      if (sortBy === 'name-asc') return a.name.localeCompare(b.name, 'el');
+      if (sortBy === 'name-desc') return b.name.localeCompare(a.name, 'el');
+      return 0; // 'default'
+    });
 
   return (
     <div className="bg-gray-50 min-h-screen pt-32 pb-20">
@@ -77,9 +87,23 @@ const ProductsPage: React.FC = () => {
             <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">Τα προϊόντα μας</h1>
             <p className="text-gray-500 mt-4 text-lg max-w-xl">Εξερευνήστε την πλήρη γκάμα των υλικών μας, σχεδιασμένη για τις υψηλότερες απαιτήσεις του επαγγελματία.</p>
           </div>
-          <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-            <div className="w-full sm:w-72">
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto mt-6 md:mt-0">
+            <div className="w-full sm:w-64">
               <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            </div>
+            <div className="w-full sm:w-auto flex items-center bg-white rounded-xl border border-gray-200 px-3 py-1 shadow-sm focus-within:ring-2 focus-within:ring-green-400 focus-within:border-green-400 transition-all">
+              <span className="text-gray-500 text-sm whitespace-nowrap mr-2">Ταξινόμηση:</span>
+              <select 
+                value={sortBy} 
+                onChange={(e) => setSortBy(e.target.value)}
+                className="bg-transparent text-gray-900 text-sm font-medium py-2 outline-none cursor-pointer w-full sm:w-auto"
+              >
+                <option value="default">Προεπιλογή</option>
+                <option value="price-asc">Τιμή (Αύξουσα)</option>
+                <option value="price-desc">Τιμή (Φθίνουσα)</option>
+                <option value="name-asc">Όνομα (Α-Ω)</option>
+                <option value="name-desc">Όνομα (Ω-Α)</option>
+              </select>
             </div>
           </div>
         </motion.div>
@@ -123,7 +147,7 @@ const ProductsPage: React.FC = () => {
               </div>
             ) : (
               <>
-                {filteredProducts.length > 0 ? (
+                {filteredAndSortedProducts.length > 0 ? (
                   <motion.div
                     variants={containerVariants}
                     initial="hidden"
@@ -131,7 +155,7 @@ const ProductsPage: React.FC = () => {
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8"
                   >
                     <AnimatePresence>
-                      {filteredProducts.map((product) => (
+                      {filteredAndSortedProducts.map((product) => (
                         <motion.div key={product.id} variants={itemVariants} layoutId={`product-${product.id}`}>
                           <ProductCard {...product} image={product.image} />
                         </motion.div>

@@ -5,10 +5,12 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import ProductsPage from './pages/ProductsPage';
 import ContactPage from './pages/ContactPage';
+import AboutPage from './pages/AboutPage';
 import ProductDetail from './components/ProductDetail';
 import AddProductPage from './pages/AddProductPage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
@@ -17,6 +19,7 @@ function App() {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/products/add" element={<AddProductPage />} />
           <Route path="/products/:id" element={<ProductDetail />} />
@@ -25,6 +28,7 @@ function App() {
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
         </Routes>
       </main>
+      <ScrollToTop />
       <Footer />
     </div>
   );

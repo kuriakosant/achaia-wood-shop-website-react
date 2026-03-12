@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface ProductCardProps {
   id: number;
@@ -8,8 +9,6 @@ interface ProductCardProps {
   image: string;
   price: number;
 }
-
-import { motion } from 'framer-motion';
 
 const ProductCard: React.FC<ProductCardProps> = ({ id, name, image, price }) => {
   return (

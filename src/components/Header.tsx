@@ -16,6 +16,7 @@ function Header() {
 
   const menuItems = [
     { title: 'Αρχική', href: '/' },
+    { title: 'Η Εταιρεία Μας', href: '/about' },
     { title: 'Προϊόντα', href: '/products' },
     { title: 'Επικοινωνία', href: '/contact' },
   ];
