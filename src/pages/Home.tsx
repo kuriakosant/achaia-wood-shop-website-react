@@ -73,7 +73,7 @@ function Home() {
             </span>
             <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-tight tracking-tight">
               Καλώς ήρθατε στην <br />
-              <span className="text-gradient">ΑΝΤΩΝΙΑΔΗΣ ΟΕ</span>
+              <span className="text-gradient">ΑΝΤΩΝΙΑΔΗΣ ΕΠΕ</span>
             </h1>
             <p className="text-lg md:text-2xl text-gray-300 font-light max-w-2xl">
               Ο πιο αξιόπιστος συνεργάτης σας στον κόσμο της επιπλοποιίας και των δομικών υλικών
@@ -190,7 +190,7 @@ function Home() {
               <span className="text-green-600 font-semibold tracking-widest uppercase text-sm mb-3 block">Σχετικα με εμας</span>
               <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-900 tracking-tight">Η ΕΤΑΙΡΕΙΑ ΜΑΣ</h2>
               <p className="text-gray-600 mb-6 leading-relaxed text-lg">
-                Η <strong>ΑΝΤΩΝΙΑΔΗΣ ΟΕ</strong> είναι μια δυναμική εταιρεία με μακρόχρονη παρουσία στο χώρο της επιπλοποιίας και των δομικών υλικών. Με πάνω από 30 χρόνια εμπειρίας, έχουμε καθιερωθεί ως ένας αξιόπιστος συνεργάτης για επαγγελματίες και ιδιώτες.
+                Η <strong>ΑΝΤΩΝΙΑΔΗΣ ΕΠΕ</strong> είναι μια δυναμική εταιρεία με μακρόχρονη παρουσία στο χώρο της επιπλοποιίας και των δομικών υλικών. Με πάνω από 30 χρόνια εμπειρίας, έχουμε καθιερωθεί ως ένας αξιόπιστος συνεργάτης για επαγγελματίες και ιδιώτες.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mt-8">
                 <Button variant="default" className="rounded-full px-8">
@@ -230,7 +230,7 @@ function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { name: "Γιώργος Κ.", role: "Ιδιοκτήτης Επιπλοποιείου", text: "Η ΑΝΤΩΝΙΑΔΗΣ ΟΕ είναι ο απόλυτος συνεργάτης για τις ανάγκες της επιχείρησής μου. Η ποιότητα των προϊόντων και η εξυπηρέτηση είναι πάντα άψογες." },
+              { name: "Γιώργος Κ.", role: "Ιδιοκτήτης Επιπλοποιείου", text: "Η ΑΝΤΩΝΙΑΔΗΣ ΕΠΕ είναι ο απόλυτος συνεργάτης για τις ανάγκες της επιχείρησής μου. Η ποιότητα των προϊόντων και η εξυπηρέτηση είναι πάντα άψογες." },
               { name: "Μαρία Σ.", role: "Αρχιτέκτονας Εσωτερικών Χώρων", text: "Βρίσκω πάντα μοναδικά και πρωτοποριακά υλικά για τα project μου. Η ποικιλία των προϊόντων τους με βοηθά να υλοποιώ κάθε σχεδιαστική μου ιδέα." },
               { name: "Δημήτρης Π.", role: "Κατασκευαστής", text: "Η ταχύτητα παράδοσης και ο επαγγελματισμός της ομάδας τους, κάνουν την δουλειά μου πολύ πιο εύκολη. Τους εμπιστεύομαι τυφλά." }
             ].map((testimonial, idx) => (

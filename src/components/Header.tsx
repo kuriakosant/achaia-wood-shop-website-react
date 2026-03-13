@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, Search, Phone, Mail, MapPin } from 'lucide-react';
+import { Menu, X, ChevronDown, Search, Phone, Mail, MapPin, Printer } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
 import antoniadisBlack from '../assets/ANTONIADIS-BLACK.png';
@@ -55,7 +55,7 @@ function Header() {
             >
               <img
                 src={antoniadisBlack}
-                alt="ΑΝΤΩΝΙΑΔΗΣ ΟΕ"
+                alt="ΑΝΤΩΝΙΑΔΗΣ ΕΠΕ"
                 className="h-10 md:h-16 w-auto object-contain transition-all duration-300"
               />
             </motion.div>
@@ -94,7 +94,7 @@ function Header() {
             <div className="flex items-center space-x-4">
               <a href="tel:2610434377" className="flex items-center bg-green-600/90 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-sm font-medium hover:bg-green-500 transition-colors shadow-lg shadow-green-900/20">
                 <Phone size={14} className="mr-2" />
-                <span>2610434377</span>
+                <span>2610 434377</span>
               </a>
               <div
                 className="relative"
@@ -126,11 +126,18 @@ function Header() {
                         </div>
                         <div className="flex items-center text-sm text-gray-300">
                           <Phone size={18} className="mr-3 text-green-400 shrink-0" />
-                          <span>2610434377</span>
+                          <div className="flex flex-col">
+                            <span>2610 434377</span>
+                            <span>2610 434478</span>
+                          </div>
                         </div>
-                        <a href="mailto:antoniades_oe@yahoo.gr" className="flex items-center text-sm text-gray-300 hover:text-green-400 transition-colors group">
+                        <div className="flex items-center text-sm text-gray-300">
+                          <Printer size={18} className="mr-3 text-green-400 shrink-0" />
+                          <span>2610 434379 (Fax)</span>
+                        </div>
+                        <a href="mailto:antoniadis_oe@yahoo.gr" className="flex items-center text-sm text-gray-300 hover:text-green-400 transition-colors group">
                           <Mail size={18} className="mr-3 text-green-400 group-hover:text-green-300 shrink-0" />
-                          <span>antoniades_oe@yahoo.gr</span>
+                          <span>antoniadis_oe@yahoo.gr</span>
                         </a>
                       </div>
                     </motion.div>
@@ -181,14 +188,19 @@ function Header() {
                 ))}
               </div>
               <div className="pt-6 border-t border-gray-700/50 space-y-4">
-                <a href="tel:2610434377" className="flex items-center text-sm text-gray-300">
-                  <Phone size={18} className="mr-3 text-green-400" /> 2610434377
-                </a>
+                <div className="flex flex-col space-y-3">
+                  <a href="tel:2610434377" className="flex items-center text-sm text-gray-300">
+                    <Phone size={18} className="mr-3 text-green-400" /> 2610 434377 / 434478
+                  </a>
+                  <div className="flex items-center text-sm text-gray-300">
+                    <Printer size={18} className="mr-3 text-green-400" /> 2610 434379 (Fax)
+                  </div>
+                </div>
                 <p className="flex items-start text-sm text-gray-300">
                   <MapPin size={18} className="mr-3 text-green-400 mt-0.5" /> Διοδώρου 128, Πάτρα, Τ.Κ 264 42
                 </p>
-                <a href="mailto:antoniades_oe@yahoo.gr" className="flex items-center text-sm text-gray-300">
-                  <Mail size={18} className="mr-3 text-green-400" /> antoniades_oe@yahoo.gr
+                <a href="mailto:antoniadis_oe@yahoo.gr" className="flex items-center text-sm text-gray-300">
+                  <Mail size={18} className="mr-3 text-green-400" /> antoniadis_oe@yahoo.gr
                 </a>
               </div>
             </div>

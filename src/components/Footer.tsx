@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Facebook, Instagram, Mail, Phone, MapPin, ChevronDown } from 'lucide-react'
+import { Facebook, Instagram, Mail, Phone, MapPin, ChevronDown, Printer } from 'lucide-react'
 import ESPAViewer from './ESPAViewer'
 
 // Import images directly
@@ -37,7 +37,7 @@ export function Footer() {
           <div className="flex-shrink-0 order-1 lg:order-1">
             <img
               src={AntoniadisBlue}
-              alt="ΑΝΤΩΝΙΑΔΗΣ ΟΕ"
+              alt="ΑΝΤΩΝΙΑΔΗΣ ΕΠΕ"
               className="h-auto w-48 sm:w-56 lg:w-64"
             />
           </div>
@@ -79,14 +79,20 @@ export function Footer() {
                     <MapPin size={16} className="mr-2 flex-shrink-0" />
                     <span>Διοδώρου 128, Πάτρα, Τ.Κ 264 42</span>
                   </li>
-                  <li className="flex items-center justify-center md:justify-start">
-                    <Phone size={16} className="mr-2 flex-shrink-0" />
-                    <span>2610434377</span>
+                  <li className="flex flex-col items-center md:items-start space-y-2">
+                    <div className="flex items-center">
+                      <Phone size={16} className="mr-2 flex-shrink-0" />
+                      <span>2610 434377 / 2610 434478</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Printer size={16} className="mr-2 flex-shrink-0" />
+                      <span>2610 434379 (Fax)</span>
+                    </div>
                   </li>
                   <li className="flex items-center justify-center md:justify-start">
                     <Mail size={16} className="mr-2 flex-shrink-0" />
-                    <a href="mailto:antoniades_oe@yahoo.gr" className="hover:text-green-400 transition-colors duration-200">
-                      antoniades_oe@yahoo.gr
+                    <a href="mailto:antoniadis_oe@yahoo.gr" className="hover:text-green-400 transition-colors duration-200">
+                      antoniadis_oe@yahoo.gr
                     </a>
                   </li>
                   <li>

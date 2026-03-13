@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Clock, Send } from 'lucide-react';
+import { MapPin, Phone, Clock, Send, Mail, Printer } from 'lucide-react';
 import ContactForm from '../components/ContactForm';
 
 const fadeIn = {
@@ -66,8 +66,33 @@ const ContactPage: React.FC = () => {
                 <Phone className="text-green-600 w-7 h-7" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Τηλεφωνικό Κέντρο</h3>
-              <a href="tel:2610434377" className="text-gray-600 hover:text-green-600 transition-colors block text-lg font-medium">2610 434 377</a>
-              <p className="text-gray-500 text-sm mt-1">Από Δευτέρα έως Σάββατο</p>
+              <div className="space-y-1">
+                <a href="tel:2610434377" className="text-gray-600 hover:text-green-600 transition-colors block text-lg font-medium">2610 434 377</a>
+                <a href="tel:2610434478" className="text-gray-600 hover:text-green-600 transition-colors block text-lg font-medium">2610 434 478</a>
+                <div className="text-gray-500 flex items-center mt-2">
+                  <Printer size={16} className="mr-2" />
+                  <span className="text-sm">Fax: 2610 434 379</span>
+                </div>
+              </div>
+              <p className="text-gray-500 text-sm mt-3">Από Δευτέρα έως Σάββατο</p>
+            </motion.div>
+
+            <motion.div
+              variants={fadeIn}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-green-900/5 transition-shadow duration-500 relative overflow-hidden group"
+            >
+              <div className="absolute top-0 right-0 p-8 opacity-5 transform translate-x-4 -translate-y-4 group-hover:scale-110 group-hover:opacity-10 transition-all duration-500">
+                <Mail size={100} />
+              </div>
+              <div className="bg-green-50 w-14 h-14 rounded-2xl flex items-center justify-center mb-6">
+                <Mail className="text-green-600 w-7 h-7" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Email</h3>
+              <a href="mailto:antoniadis_oe@yahoo.gr" className="text-gray-600 hover:text-green-600 transition-colors block text-lg font-medium">antoniadis_oe@yahoo.gr</a>
+              <p className="text-gray-500 text-sm mt-1">Στείλτε μας ό,τι σας απασχολεί</p>
             </motion.div>
 
             <motion.div
@@ -87,11 +112,11 @@ const ContactPage: React.FC = () => {
               <ul className="space-y-3 text-gray-300">
                 <li className="flex justify-between items-center border-b border-gray-800 pb-2">
                   <span className="font-medium text-gray-400">Δευ - Παρ</span>
-                  <span>9:00 - 15:00</span>
+                  <span>7:00 - 15:00</span>
                 </li>
                 <li className="flex justify-between items-center border-b border-gray-800 pb-2">
                   <span className="font-medium text-gray-400">Σάββατο</span>
-                  <span>9:00 - 14:00</span>
+                  <span>8:00 - 14:00</span>
                 </li>
                 <li className="flex justify-between items-center pb-1">
                   <span className="font-medium text-gray-400">Κυριακή</span>

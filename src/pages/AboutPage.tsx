@@ -72,7 +72,7 @@ const AboutPage: React.FC = () => {
             <motion.div variants={fadeInUp} className="relative pl-8 md:w-1/2 md:ml-auto md:pl-12">
               <div className="absolute w-6 h-6 bg-green-500 rounded-full border-4 border-white left-[-13px] md:left-[-13px] top-1 shadow-sm" />
               <h3 className="text-2xl font-bold text-gray-900 mb-2">1994 - Το Ξεκίνημα</h3>
-              <p className="text-gray-600 leading-relaxed text-lg">Η ΑΝΤΩΝΙΑΔΗΣ ΟΕ ιδρύεται με όραμα να προσφέρει ποιοτικά υλικά επιπλοποιίας σε επαγγελματίες της περιοχής. Τα πρώτα βήματα γίνονται με μια μικρή αποθήκη και πάθος για εξυπηρέτηση.</p>
+              <p className="text-gray-600 leading-relaxed text-lg">Η ΑΝΤΩΝΙΑΔΗΣ ΕΠΕ ιδρύεται με όραμα να προσφέρει ποιοτικά υλικά επιπλοποιίας σε επαγγελματίες της περιοχής. Τα πρώτα βήματα γίνονται με μια μικρή αποθήκη και πάθος για εξυπηρέτηση.</p>
             </motion.div>
 
             {/* 2005 */}
