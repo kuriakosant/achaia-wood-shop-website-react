@@ -87,7 +87,7 @@ const ContactPage: React.FC = () => {
               <ul className="space-y-3 text-gray-300">
                 <li className="flex justify-between items-center border-b border-gray-800 pb-2">
                   <span className="font-medium text-gray-400">Δευ - Παρ</span>
-                  <span>9:00 - 17:00</span>
+                  <span>9:00 - 15:00</span>
                 </li>
                 <li className="flex justify-between items-center border-b border-gray-800 pb-2">
                   <span className="font-medium text-gray-400">Σάββατο</span>
