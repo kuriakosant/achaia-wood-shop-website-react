@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Download } from 'lucide-react';
+import { X } from 'lucide-react';
 
 // Import the image directly
 import EspaImage from 'assets/ESPA-IMAGE.png';
