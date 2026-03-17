@@ -16,6 +16,7 @@ const AddProductPage: React.FC = () => {
 
     const [formData, setFormData] = useState({
         name: '',
+        category: '',
         price: '',
         description: '',
         features: '',
@@ -24,10 +25,6 @@ const AddProductPage: React.FC = () => {
         sku: ''
     });
 
-    useEffect(() => {
-        if (!token) {
-            navigate('/admin/login');
-            return;
     const fetchCategories = () => {
         axios.get(`${API_URL}/categories`)
             .then(res => setCategories(res.data))
