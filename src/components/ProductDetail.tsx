@@ -12,6 +12,7 @@ interface Product {
   price: number;
   description: string;
   features: string[];
+  sku?: string;
 }
 
 const ProductDetail: React.FC = () => {
@@ -116,7 +117,9 @@ const ProductDetail: React.FC = () => {
               className="p-8 lg:py-12 lg:pr-12 flex flex-col justify-center"
             >
               <div className="mb-2">
-                <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium tracking-wide">Κωδικός: {product.id}</span>
+                <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium tracking-wide">
+                  {product.sku ? `Κωδικός: ${product.sku}` : `Σύστημα ID: ${product.id}`}
+                </span>
               </div>
               <h1 className="text-4xl lg:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight leading-tight">{product.name}</h1>
               <p className="text-3xl font-extrabold text-green-600 mb-8">{product.price.toFixed(2)}€</p>
@@ -140,11 +143,8 @@ const ProductDetail: React.FC = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 mt-auto">
-                <Button className="w-full sm:w-auto px-8 py-4 rounded-full text-lg shadow-lg shadow-green-900/20">
-                  Εκδήλωση Ενδιαφέροντος
-                </Button>
                 <Link to="/contact">
-                  <Button variant="outline" className="w-full sm:w-auto px-8 py-4 rounded-full text-lg justify-center">
+                  <Button className="w-full sm:w-auto px-8 py-4 rounded-full text-lg justify-center shadow-lg shadow-green-900/20">
                     Επικοινωνήστε μαζί μας
                   </Button>
                 </Link>

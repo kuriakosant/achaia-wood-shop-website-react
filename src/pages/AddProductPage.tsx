@@ -16,25 +16,46 @@ const AddProductPage: React.FC = () => {
 
     const [formData, setFormData] = useState({
         name: '',
-        category: '',
         price: '',
         description: '',
         features: '',
         image: '', // Base64 thumbnail
-        gallery: [] as string[] // Base64 array
+        gallery: [] as string[], // Base64 array
+        sku: ''
     });
 
     useEffect(() => {
         if (!token) {
             navigate('/admin/login');
             return;
-        }
-
-        // Fetch dynamic categories
+    const fetchCategories = () => {
         axios.get(`${API_URL}/categories`)
             .then(res => setCategories(res.data))
             .catch(err => console.error('Failed to load categories', err));
+    };
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/admin/login');
+            return;
+        }
+        fetchCategories();
     }, [token, navigate]);
+
+    const handleInlineCategoryAdd = async () => {
+        const newCatName = window.prompt("Δώστε το όνομα της νέας κατηγορίας:");
+        if (newCatName && newCatName.trim()) {
+            try {
+                const { data } = await axios.post(`${API_URL}/categories`, { name: newCatName.trim() }, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setCategories([...categories, data]);
+                setFormData(prev => ({ ...prev, category: data.name }));
+            } catch (err) {
+                alert("Αποτυχία δημιουργίας κατηγορίας. Μπορεί να υπάρχει ήδη.");
+            }
+        }
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -126,9 +147,15 @@ const AddProductPage: React.FC = () => {
                         
                         {/* Basic Info */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Όνομα Προϊόντος *</label>
-                                <input required type="text" name="name" value={formData.name} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="π.χ. Πορτάκι Δρυς" />
+                            <div className="md:col-span-2 flex flex-col md:flex-row gap-6">
+                                <div className="flex-1">
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Όνομα Προϊόντος *</label>
+                                    <input required type="text" name="name" value={formData.name} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="π.χ. Πορτάκι Δρυς" />
+                                </div>
+                                <div className="w-full md:w-1/3 shrink-0">
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Κωδικός Προϊόντος (SKU)</label>
+                                    <input type="text" name="sku" value={formData.sku} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="π.χ. PORT-DR-001" />
+                                </div>
                             </div>
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">Τιμή (€) *</label>
@@ -136,12 +163,22 @@ const AddProductPage: React.FC = () => {
                             </div>
                             <div className="md:col-span-2">
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">Κατηγορία *</label>
-                                <select required name="category" value={formData.category} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all text-gray-700">
-                                    <option value="" disabled>Επιλέξτε Κατηγορία</option>
-                                    {categories.map(cat => (
-                                        <option key={cat.id} value={cat.name}>{cat.name}</option>
-                                    ))}
-                                </select>
+                                <div className="flex items-center gap-3">
+                                    <select required name="category" value={formData.category} onChange={handleChange} className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all text-gray-700">
+                                        <option value="" disabled>Επιλέξτε Κατηγορία</option>
+                                        {categories.map(cat => (
+                                            <option key={cat.id} value={cat.name}>{cat.name}</option>
+                                        ))}
+                                    </select>
+                                    <button 
+                                        type="button" 
+                                        onClick={handleInlineCategoryAdd}
+                                        className="bg-gray-100 hover:bg-green-50 text-gray-600 hover:text-green-600 transition-colors p-3 rounded-xl border border-gray-200 hover:border-green-200 group flex items-center justify-center"
+                                        title="Γρήγορη Προσθήκη Κατηγορίας"
+                                    >
+                                        <Plus className="w-6 h-6" />
+                                    </button>
+                                </div>
                             </div>
                         </div>
 

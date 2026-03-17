@@ -23,14 +23,7 @@ const ESPAViewer: React.FC<ESPAViewerProps> = ({ pdfUrl, onClose }) => {
           <img src={EspaImage} alt="ESPA" className="max-w-full max-h-full" />
         </div>
         <div className="flex justify-between items-center p-4 border-t">
-          <a
-            href={pdfUrl}
-            download
-            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md flex items-center space-x-2 transition duration-300"
-          >
-            <Download size={20} />
-            <span>Download PDF</span>
-          </a>
+          <div />
           <button
             onClick={onClose}
             className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md transition duration-300"
