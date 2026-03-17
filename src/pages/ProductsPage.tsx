@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutGrid, AlertCircle } from 'lucide-react';
 import SearchBar from '../components/ui/SearchBar';
 import ProductCard from '../components/ProductCard';
+import axios from 'axios';
 
 interface Product {
   id: number;
@@ -15,7 +16,10 @@ interface Product {
   features: string[];
 }
 
-const CATEGORIES = ['Όλα', 'Επικαλύψεις', 'Υλικά Επιπλοποιίας', 'Ξυλεία', 'Πορτάκια'];
+interface Category {
+  id: number;
+  name: string;
+}
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -29,6 +33,7 @@ const itemVariants = {
 
 const ProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('Όλα');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
@@ -39,23 +44,28 @@ const ProductsPage: React.FC = () => {
     // Scroll to top on mount
     window.scrollTo(0, 0);
 
+    // Fetch products & categories concurrently
+    const fetchData = async () => {
+      try {
+        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+        
+        const [prodRes, catRes] = await Promise.all([
+          axios.get(`${apiUrl}/products`),
+          axios.get(`${apiUrl}/categories`)
+        ]);
+
+        setProducts(prodRes.data);
+        setCategories(catRes.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching catalog data:', error);
+        setLoading(false);
+      }
+    };
+
     // Simulate slight loading for smooth entrance
-    setTimeout(() => {
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-      fetch(`${apiUrl}/products`)
-        .then(response => {
-          if (!response.ok) throw new Error('API fetch failed');
-          return response.json();
-        })
-        .then(data => {
-          setProducts(data);
-          setLoading(false);
-        })
-        .catch(error => {
-          console.error('Error fetching products:', error);
-          setLoading(false);
-        });
-    }, 400);
+    setTimeout(fetchData, 400);
+
   }, []);
 
   const filteredAndSortedProducts = products
@@ -70,6 +80,9 @@ const ProductsPage: React.FC = () => {
       if (sortBy === 'name-desc') return b.name.localeCompare(a.name, 'el');
       return 0; // 'default'
     });
+
+  // Construct Dynamic Categories List with 'Όλα' at the start
+  const displayCategories = ['Όλα', ...categories.map(c => c.name)];
 
   return (
     <div className="bg-gray-50 min-h-screen pt-32 pb-20">
@@ -121,17 +134,17 @@ const ProductsPage: React.FC = () => {
                 <LayoutGrid className="mr-2 w-5 h-5 text-green-500" /> Κατηγορίες
               </h2>
               <ul className="space-y-2">
-                {CATEGORIES.map((category) => (
+                {displayCategories.map((category) => (
                   <li key={category}>
                     <button
                       onClick={() => setSelectedCategory(category)}
-                      className={`w-full text-left py-3 px-5 rounded-xl transition duration-300 font-medium ${selectedCategory === category
+                      className={`w-full flex justify-between items-center py-3 px-5 rounded-xl transition duration-300 font-medium ${selectedCategory === category
                         ? 'bg-green-600 text-white shadow-md shadow-green-900/20'
                         : 'text-gray-600 hover:bg-gray-100'
                         }`}
                     >
-                      {category}
-                      {category === 'Όλα' && <span className="float-right bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded-full">{products.length}</span>}
+                      <span>{category}</span>
+                      {category === 'Όλα' && <span className={`text-xs px-2 py-1 rounded-full ${selectedCategory === 'Όλα' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'}`}>{products.length}</span>}
                     </button>
                   </li>
                 ))}
