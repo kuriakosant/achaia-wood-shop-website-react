@@ -26,22 +26,22 @@ const AdminLogin = () => {
             // Navigate to Dashboard
             navigate('/admin/dashboard');
         } catch (err: any) {
-            setError(err.response?.data?.message || 'Failed to login. Incorrect passphrase.');
+            setError(err.response?.data?.message || 'Αποτυχία σύνδεσης. Λανθασμένος κωδικός πρόσβασης.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-[80vh] flex items-center justify-center bg-gray-50 px-4">
+        <div className="min-h-[80vh] flex items-center justify-center bg-gray-50 px-4 pt-20">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="max-w-md w-full glass-panel rounded-2xl p-8"
+                className="max-w-md w-full glass-panel rounded-2xl p-8 shadow-xl border border-gray-100 bg-white"
             >
                 <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-2">Admin Portal</h2>
-                    <p className="text-gray-600">Enter your secure passphrase to manage products.</p>
+                    <h2 className="text-3xl font-bold text-gray-900 mb-2">Πύλη Διαχείρισης</h2>
+                    <p className="text-gray-600">Εισάγετε τον κωδικό πρόσβασης για να διαχειριστείτε τα προϊόντα.</p>
                 </div>
 
                 {error && (
@@ -53,14 +53,14 @@ const AdminLogin = () => {
                 <form onSubmit={handleLogin} className="space-y-6">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Passphrase Code
+                            Κωδικός Πρόσβασης
                         </label>
                         <input
                             type="password"
                             value={passphrase}
                             onChange={(e) => setPassphrase(e.target.value)}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all font-mono"
-                            placeholder="Enter secure phase..."
+                            placeholder="Εισάγετε τον κωδικό..."
                             required
                         />
                     </div>
@@ -70,7 +70,7 @@ const AdminLogin = () => {
                         disabled={loading}
                         className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center disabled:opacity-70"
                     >
-                        {loading ? 'Verifying...' : 'Access Dashboard'}
+                        {loading ? 'Επαλήθευση...' : 'Είσοδος'}
                     </button>
                 </form>
             </motion.div>

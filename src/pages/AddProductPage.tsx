@@ -1,217 +1,222 @@
-import React, { useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, UploadCloud, Image as ImageIcon, X, Loader2, Trash2, Plus } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Button from '../components/ui/Button';
 
-interface ProductFormData {
-  name: string;
-  category: string;
-  price: string;
-  description: string;
-  features: string;
-  image: string;
-}
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-const AddProductForm: React.FC = () => {
-  const [formData, setFormData] = useState<ProductFormData>({
-    name: '',
-    category: '',
-    price: '',
-    description: '',
-    features: '',
-    image: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
-    setSuccess(false);
-
+const AddProductPage: React.FC = () => {
+    const navigate = useNavigate();
     const token = localStorage.getItem('adminToken');
-    if (!token) {
-      setError('You must be logged in to add a product. Return to Admin Portal.');
-      setIsSubmitting(false);
-      return;
-    }
 
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/products`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          ...formData,
-          price: parseFloat(formData.price),
-          features: formData.features
-            .split(',')
-            .map((feature) => feature.trim()),
-        }),
-      });
+    const [categories, setCategories] = useState<any[]>([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-      if (!response.ok) {
-        throw new Error('Failed to add product');
-      }
-
-      setSuccess(true);
-      setFormData({
+    const [formData, setFormData] = useState({
         name: '',
         category: '',
         price: '',
         description: '',
         features: '',
-        image: '',
-      });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+        image: '', // Base64 thumbnail
+        gallery: [] as string[] // Base64 array
+    });
 
-  return (
-    <div className="container mx-auto px-4 py-8 pt-32">
-      <Link
-        to="/products"
-        className="inline-flex items-center text-green-600 hover:text-green-700 mb-6"
-      >
-        <ArrowLeft className="mr-2" size={20} />
-        Πίσω στα προϊόντα
-      </Link>
-      <h1 className="text-3xl font-bold mb-6">Προσθήκη Νέου Προϊόντος</h1>
-      <form onSubmit={handleSubmit} className="max-w-2xl">
-        <div className="mb-4">
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Όνομα Προϊόντος *
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
+    useEffect(() => {
+        if (!token) {
+            navigate('/admin/login');
+            return;
+        }
+
+        // Fetch dynamic categories
+        axios.get(`${API_URL}/categories`)
+            .then(res => setCategories(res.data))
+            .catch(err => console.error('Failed to load categories', err));
+    }, [token, navigate]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    // Convert file to Base64
+    const toBase64 = (file: File): Promise<string> => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = error => reject(error);
+    });
+
+    const handleThumbnailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            try {
+                const base64 = await toBase64(e.target.files[0]);
+                setFormData(prev => ({ ...prev, image: base64 }));
+            } catch (err) {
+                alert('Σφάλμα κατά την ανάγνωση της εικόνας.');
+            }
+        }
+    };
+
+    const handleGalleryChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            try {
+                const newImages = await Promise.all(Array.from(e.target.files).map(toBase64));
+                setFormData(prev => ({ ...prev, gallery: [...prev.gallery, ...newImages] }));
+            } catch (err) {
+                alert('Σφάλμα κατά την ανάγνωση των εικόνων.');
+            }
+        }
+    };
+
+    const removeGalleryImage = (indexToRemove: number) => {
+        setFormData(prev => ({
+            ...prev,
+            gallery: prev.gallery.filter((_, index) => index !== indexToRemove)
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setError(null);
+
+        try {
+            await axios.post(`${API_URL}/products`, {
+                ...formData,
+                price: parseFloat(formData.price),
+                features: formData.features.split(',').map(f => f.trim()).filter(f => f !== '')
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            // Redirect back to admin portal
+            navigate('/admin/dashboard');
+        } catch (err: any) {
+            setError(err.response?.data?.message || 'Παρουσιάστηκε σφάλμα κατά την αποθήκευση.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    return (
+        <div className="bg-gray-50 min-h-screen pt-32 pb-24">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <Link to="/admin/dashboard" className="inline-flex items-center text-gray-500 hover:text-green-600 font-medium mb-8 group transition-colors">
+                    <ArrowLeft className="mr-2 w-5 h-5 transform group-hover:-translate-x-1 transition-transform" />
+                    Πίσω στη Διαχείριση
+                </Link>
+
+                <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-sm border border-gray-100">
+                    <div className="mb-10">
+                        <h1 className="text-3xl font-extrabold text-gray-900 mb-2">Νέο Προϊόν</h1>
+                        <p className="text-gray-500">Συμπληρώστε τα στοιχεία και ανεβάστε φωτογραφίες του νέου προϊόντος.</p>
+                    </div>
+
+                    {error && (
+                        <div className="bg-red-50 text-red-600 p-4 rounded-2xl text-sm mb-8 border border-red-100 font-medium">
+                            {error}
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit} className="space-y-8">
+                        
+                        {/* Basic Info */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Όνομα Προϊόντος *</label>
+                                <input required type="text" name="name" value={formData.name} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="π.χ. Πορτάκι Δρυς" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Τιμή (€) *</label>
+                                <input required type="number" step="0.01" name="price" value={formData.price} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="0.00" />
+                            </div>
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Κατηγορία *</label>
+                                <select required name="category" value={formData.category} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all text-gray-700">
+                                    <option value="" disabled>Επιλέξτε Κατηγορία</option>
+                                    {categories.map(cat => (
+                                        <option key={cat.id} value={cat.name}>{cat.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Details */}
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">Περιγραφή *</label>
+                            <textarea required name="description" value={formData.description} onChange={handleChange} rows={4} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="Αναλυτική περιγραφή υπεροχής του υλικού..."></textarea>
+                        </div>
+                        
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">Χαρακτηριστικά (διαχωρίστε με κόμμα , )</label>
+                            <input type="text" name="features" value={formData.features} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="π.χ. Αντοχή στην υγρασία, Mat υφή, Μήκος 2.80m" />
+                        </div>
+
+                        {/* Media Uploads */}
+                        <div className="space-y-6 pt-6 border-t border-gray-100">
+                            <div>
+                                <label className="block text-sm font-bold text-gray-900 mb-2">Βασική Εικόνα (Thumbnail) *</label>
+                                <p className="text-sm text-gray-500 mb-4">Αυτή η εικόνα θα εμφανίζεται στην κεντρική λίστα (κατάλογος) και στην κορυφή του προϊόντος.</p>
+                                
+                                <div className="flex items-center gap-6">
+                                    {formData.image ? (
+                                        <div className="relative group rounded-2xl overflow-hidden w-40 h-40 border border-gray-200 shrink-0">
+                                            <img src={formData.image} alt="Thumbnail preview" className="w-full h-full object-cover" />
+                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                <button type="button" onClick={() => setFormData(prev => ({...prev, image: ''}))} className="p-2 bg-white text-red-600 rounded-full hover:bg-red-50">
+                                                    <Trash2 className="w-5 h-5" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <label className="flex flex-col items-center justify-center w-40 h-40 border-2 border-dashed border-gray-300 rounded-2xl bg-gray-50 hover:bg-green-50 hover:border-green-300 cursor-pointer transition-colors shrink-0">
+                                            <UploadCloud className="w-8 h-8 text-gray-400 mb-2" />
+                                            <span className="text-sm text-gray-500 font-medium">Ανέβασμα</span>
+                                            <input type="file" accept="image/*" onChange={handleThumbnailChange} className="hidden" required />
+                                        </label>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="pt-6">
+                                <label className="block text-sm font-bold text-gray-900 mb-2">Έξτρα Φωτογραφίες (Gallery)</label>
+                                <p className="text-sm text-gray-500 mb-4">Προσθέστε επιπλέον λεπτομέρειες ή οπτικές γωνίες. Μπορείτε να επιλέξετε πολλαπλά αρχεία.</p>
+                                
+                                <div className="flex flex-wrap items-center gap-4">
+                                    {formData.gallery.map((img, idx) => (
+                                        <div key={idx} className="relative group rounded-xl overflow-hidden w-28 h-28 border border-gray-200">
+                                            <img src={img} alt={`Gallery ${idx}`} className="w-full h-full object-cover" />
+                                            <button type="button" onClick={() => removeGalleryImage(idx)} className="absolute top-1 right-1 p-1 bg-white/90 text-red-600 rounded-full hover:bg-white shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <X className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <label className="flex flex-col items-center justify-center w-28 h-28 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-green-50 hover:border-green-300 cursor-pointer transition-colors">
+                                        <Plus className="w-6 h-6 text-gray-400 mb-1" />
+                                        <span className="text-xs text-gray-500 font-medium">Προσθήκη</span>
+                                        <input type="file" accept="image/*" multiple onChange={handleGalleryChange} className="hidden" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="pt-8 border-t border-gray-100 flex justify-end">
+                            <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto px-10 py-4 rounded-xl text-lg shadow-xl shadow-green-900/10">
+                                {isSubmitting ? (
+                                    <span className="flex items-center"><Loader2 className="w-5 h-5 mr-3 animate-spin" /> Αποθήκευση...</span>
+                                ) : 'Δημιουργία Προϊόντος'}
+                            </Button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
         </div>
-        <div className="mb-4">
-          <label
-            htmlFor="category"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Κατηγορία
-          </label>
-          <input
-            list="categories"
-            id="category"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            placeholder="Επιλέξτε ή πληκτρολογήστε νέα κατηγορία"
-          />
-          <datalist id="categories">
-            <option value="Επικαλύψεις" />
-            <option value="Υλικά Επιπλοποιίας" />
-            <option value="Ξυλεία" />
-            <option value="Πορτάκια" />
-          </datalist>
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="price"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Τιμή
-          </label>
-          <input
-            type="number"
-            id="price"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            step="0.01"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Περιγραφή
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          ></textarea>
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="features"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Χαρακτηριστικά (διαχωρισμένα με κόμμα)
-          </label>
-          <input
-            type="text"
-            id="features"
-            name="features"
-            value={formData.features}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-        <div className="mb-6">
-          <label
-            htmlFor="image"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            URL Εικόνας
-          </label>
-          <input
-            type="url"
-            id="image"
-            name="image"
-            value={formData.image}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-        {success && (
-          <p className="text-green-500 mb-4">
-            Το προϊόν προστέθηκε με επιτυχία!
-          </p>
-        )}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="bg-green-500 text-white py-2 px-6 rounded-full hover:bg-green-600 transition duration-300 flex items-center justify-center disabled:opacity-50"
-        >
-          {isSubmitting ? 'Προσθήκη...' : 'Προσθήκη Προϊόντος'}
-        </button>
-      </form>
-    </div>
-  );
+    );
 };
 
-export default AddProductForm;
+export default AddProductPage;

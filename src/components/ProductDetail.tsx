@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Button from './ui/Button';
 
 interface Product {
   id: number;
   name: string;
   image: string;
+  gallery?: string[];
   price: number;
   description: string;
   features: string[];
@@ -17,6 +18,7 @@ const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activeImage, setActiveImage] = useState<string>('');
 
   useEffect(() => {
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -29,6 +31,7 @@ const ProductDetail: React.FC = () => {
       })
       .then(data => {
         setProduct(data);
+        setActiveImage(data.image); // set initial image
         setLoading(false);
       })
       .catch(error => {
@@ -51,6 +54,8 @@ const ProductDetail: React.FC = () => {
     );
   }
 
+  const allImages = [product.image, ...(product.gallery || [])].filter(Boolean);
+
   return (
     <div className="bg-gray-50 min-h-screen pb-24 pt-32">
       <div className="container mx-auto px-4 lg:px-8 max-w-6xl">
@@ -60,20 +65,55 @@ const ProductDetail: React.FC = () => {
         </Link>
         <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden">
           <div className="grid lg:grid-cols-2 gap-0 lg:gap-8">
+            
+            {/* Image Gallery Section */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="relative aspect-square lg:aspect-auto h-full"
+              className="p-4 lg:py-12 lg:pl-12 flex flex-col gap-4 relative"
             >
-              <div className="absolute inset-0 bg-gray-100/50 mix-blend-multiply rounded-t-[2.5rem] lg:rounded-tr-none lg:rounded-l-[2.5rem]" />
-              <img src={product.image} alt={product.name} className="object-cover w-full h-full lg:min-h-[600px]" />
+              {/* Main Image */}
+              <div className="relative aspect-square w-full rounded-[2rem] overflow-hidden bg-gray-100">
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={activeImage}
+                    initial={{ opacity: 0, scale: 1.05 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    src={activeImage}
+                    alt={product.name}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                </AnimatePresence>
+                <div className="absolute inset-0 bg-gray-900/5 mix-blend-multiply pointer-events-none" />
+              </div>
+
+              {/* Thumbnails */}
+              {allImages.length > 1 && (
+                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                  {allImages.map((img, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setActiveImage(img)}
+                      className={`relative w-20 h-20 shrink-0 rounded-xl overflow-hidden border-2 transition-all ${
+                        activeImage === img ? 'border-green-500 scale-95 opacity-100' : 'border-transparent opacity-60 hover:opacity-100'
+                      }`}
+                    >
+                      <img src={img} alt={`${product.name} view ${idx + 1}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </motion.div>
+
+            {/* Product Details Section */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="p-8 lg:p-12 flex flex-col justify-center"
+              className="p-8 lg:py-12 lg:pr-12 flex flex-col justify-center"
             >
               <div className="mb-2">
                 <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium tracking-wide">Κωδικός: {product.id}</span>
