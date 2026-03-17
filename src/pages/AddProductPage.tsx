@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, UploadCloud, Image as ImageIcon, X, Loader2, Trash2, Plus } from 'lucide-react';
+import { ArrowLeft, UploadCloud, X, Loader2, Trash2, Plus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Button from '../components/ui/Button';
