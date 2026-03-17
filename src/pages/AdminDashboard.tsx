@@ -154,9 +154,9 @@ const AdminDashboard = () => {
                         {activeTab === 'products' && (
                             <div>
                                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-                                    <h2 className="text-2xl font-bold text-gray-900">Προϊόντα</h2>
-                                    <Button onClick={() => navigate('/products/add')} className="rounded-full">
-                                        <Plus className="w-5 h-5 mr-2" /> Νέο Προϊόν
+                                    <h2 className="text-2xl font-bold text-gray-900 leading-none mt-1">Προϊόντα</h2>
+                                    <Button onClick={() => navigate('/products/add')} className="rounded-full shrink-0 px-5">
+                                        <Plus className="w-5 h-5 mr-1 sm:mr-2" /> Νέο Προϊόν
                                     </Button>
                                 </div>
                                 <div className="overflow-x-auto">
@@ -201,10 +201,10 @@ const AdminDashboard = () => {
                         {/* Categories */}
                         {activeTab === 'categories' && (
                             <div>
-                                <div className="flex justify-between items-center mb-8">
-                                    <h2 className="text-2xl font-bold text-gray-900">Κατηγορίες</h2>
-                                    <Button onClick={() => setEditingCategory({ name: '' })} className="rounded-full">
-                                        <Plus className="w-5 h-5 mr-2" /> Νέα Κατηγορία
+                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+                                    <h2 className="text-2xl font-bold text-gray-900 leading-none mt-1">Κατηγορίες</h2>
+                                    <Button onClick={() => setEditingCategory({ name: '' })} className="rounded-full shrink-0 px-5">
+                                        <Plus className="w-5 h-5 mr-1 sm:mr-2" /> Νέα Κατηγορία
                                     </Button>
                                 </div>
                                 <div className="overflow-x-auto">

@@ -62,7 +62,7 @@ function Header() {
           </Link>
 
           {/* Desktop and Tablet Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-6 xl:space-x-8">
             {menuItems.map((item) => (
               <motion.div
                 key={item.href}
@@ -72,7 +72,7 @@ function Header() {
                 <Link
                   to={item.href}
                   className={clsx(
-                    "relative text-sm lg:text-base font-medium transition-colors outline-none",
+                    "relative text-sm xl:text-base font-medium transition-colors outline-none",
                     isDarkHeader ? "text-gray-200 hover:text-green-400" : "text-white/90 hover:text-white",
                     location.pathname === item.href && "text-green-400 font-semibold"
                   )}
@@ -90,10 +90,10 @@ function Header() {
           </div>
 
           {/* Contact Info and Icons */}
-          <div className="hidden md:flex items-center space-x-6">
-            <div className="flex items-center space-x-4">
-              <a href="tel:2610434377" className="flex items-center bg-green-600/90 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-sm font-medium hover:bg-green-500 transition-colors shadow-lg shadow-green-900/20">
-                <Phone size={14} className="mr-2" />
+          <div className="hidden lg:flex items-center space-x-4 xl:space-x-6">
+            <div className="flex items-center space-x-3 xl:space-x-4">
+              <a href="tel:2610434377" className="flex items-center bg-green-600/90 backdrop-blur-sm text-white px-3 py-1.5 xl:px-4 rounded-full text-xs xl:text-sm font-medium hover:bg-green-500 transition-colors shadow-lg shadow-green-900/20 whitespace-nowrap">
+                <Phone size={14} className="mr-1.5 xl:mr-2" />
                 <span>2610 434377</span>
               </a>
               <div
@@ -103,7 +103,7 @@ function Header() {
               >
                 <button
                   className={clsx(
-                    "flex items-center text-sm font-medium transition-colors outline-none",
+                    "flex items-center text-xs xl:text-sm font-medium transition-colors outline-none whitespace-nowrap",
                     isDarkHeader ? "text-gray-200 hover:text-white" : "text-white/90 hover:text-white"
                   )}
                 >
