@@ -19,14 +19,21 @@ const ProductDetail: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/products/${id}`)
-      .then(response => response.json())
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+    fetch(`${apiUrl}/products/${id}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Product not found');
+        }
+        return response.json();
+      })
       .then(data => {
         setProduct(data);
         setLoading(false);
       })
       .catch(error => {
         console.error('Error fetching product:', error);
+        setProduct(null);
         setLoading(false);
       });
   }, [id]);
