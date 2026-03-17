@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { LogOut, Plus, Edit, Trash2, X, Package, Tags } from 'lucide-react';
+import { LogOut, Plus, Edit, Trash2, X, Package, Tags, Star } from 'lucide-react';
 import Button from '../components/ui/Button';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -70,6 +70,18 @@ const AdminDashboard = () => {
             setEditingProduct(null);
         } catch (err) {
             alert('Αποτυχία ενημέρωσης προϊόντος.');
+        }
+    };
+
+    const handleToggleFeatured = async (product: any) => {
+        try {
+            const updatedProduct = { ...product, isFeatured: !product.isFeatured };
+            const { data } = await axios.put(`${API_URL}/products/${product.id}`, updatedProduct, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setProducts(products.map(p => (p.id === data.id ? data : p)));
+        } catch (err) {
+            alert('Αποτυχία ενημέρωσης κατάστασης (Featured).');
         }
     };
 
@@ -175,11 +187,18 @@ const AdminDashboard = () => {
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">#{product.id}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{product.name}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.price.toFixed(2)}€</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
-                                                        <button onClick={() => setEditingProduct(product)} className="text-blue-600 hover:text-blue-900 p-2 hover:bg-blue-50 rounded-lg transition-colors inline-block">
+                                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                                        <button 
+                                                            onClick={() => handleToggleFeatured(product)} 
+                                                            className={`p-2 rounded-lg transition-colors inline-block ${product.isFeatured ? 'text-yellow-500 hover:bg-yellow-50' : 'text-gray-400 hover:text-yellow-500 hover:bg-gray-50'}`}
+                                                            title={product.isFeatured ? "Αφαίρεση από Προτεινόμενα" : "Προσθήκη στα Προτεινόμενα"}
+                                                        >
+                                                            <Star size={18} className={product.isFeatured ? "fill-current" : ""} />
+                                                        </button>
+                                                        <button onClick={() => setEditingProduct(product)} className="text-blue-600 hover:text-blue-900 p-2 hover:bg-blue-50 rounded-lg transition-colors inline-block" title="Επεξεργασία">
                                                             <Edit size={18} />
                                                         </button>
-                                                        <button onClick={() => handleDeleteProduct(product.id)} className="text-red-600 hover:text-red-900 p-2 hover:bg-red-50 rounded-lg transition-colors inline-block">
+                                                        <button onClick={() => handleDeleteProduct(product.id)} className="text-red-600 hover:text-red-900 p-2 hover:bg-red-50 rounded-lg transition-colors inline-block" title="Διαγραφή">
                                                             <Trash2 size={18} />
                                                         </button>
                                                     </td>

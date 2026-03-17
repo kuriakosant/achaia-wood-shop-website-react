@@ -18,6 +18,7 @@ interface Product {
   name: string;
   image: string;
   price: number;
+  isFeatured?: boolean;
 }
 
 const fadeInUp: Variants = {
@@ -43,8 +44,10 @@ function Home() {
         if (!response.ok) throw new Error('Failed to fetch from live API');
         return response.json();
       })
-      .then((data) => {
-        setFeaturedProducts(data.slice(0, 3));
+      .then((data: Product[]) => {
+        const featured = data.filter(p => p.isFeatured);
+        // Fallback to latest 3 if none are manually featured yet
+        setFeaturedProducts(featured.length > 0 ? featured.slice(0, 3) : data.slice(0, 3));
       })
       .catch((error) => console.error('Error fetching live products:', error));
   }, []);
