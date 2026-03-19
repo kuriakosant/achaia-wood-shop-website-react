@@ -60,13 +60,7 @@ const AddProductPage: React.FC = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    // Legacy base64 encoding without compression (unused now)
-    const toBase64 = (file: File): Promise<string> => new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = error => reject(error);
-    });
+
 
     const handleThumbnailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
