@@ -3,6 +3,7 @@ import { ArrowLeft, UploadCloud, X, Loader2, Trash2, Plus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Button from '../components/ui/Button';
+import { compressImageToBase64 } from '../utils/imageCompression';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
@@ -59,7 +60,7 @@ const AddProductPage: React.FC = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    // Convert file to Base64
+    // Legacy base64 encoding without compression (unused now)
     const toBase64 = (file: File): Promise<string> => new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -70,21 +71,36 @@ const AddProductPage: React.FC = () => {
     const handleThumbnailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             try {
-                const base64 = await toBase64(e.target.files[0]);
+                // Compress image down to max 1200px width/height and 500KB size limit
+                const base64 = await compressImageToBase64(e.target.files[0], { maxWidthOrHeight: 1200, maxSizeMB: 0.5 });
                 setFormData(prev => ({ ...prev, image: base64 }));
-            } catch (err) {
-                alert('Σφάλμα κατά την ανάγνωση της εικόνας.');
+            } catch (err: any) {
+                alert(err.message || 'Σφάλμα κατά την συμπίεση ή ανάγνωση της εικόνας.');
             }
         }
     };
 
     const handleGalleryChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            try {
-                const newImages = await Promise.all(Array.from(e.target.files).map(toBase64));
-                setFormData(prev => ({ ...prev, gallery: [...prev.gallery, ...newImages] }));
-            } catch (err) {
-                alert('Σφάλμα κατά την ανάγνωση των εικόνων.');
+            const currentCount = formData.gallery.length;
+            const filesArray = Array.from(e.target.files);
+            
+            // Limit total gallery images to 4
+            const allowedFiles = filesArray.slice(0, 4 - currentCount);
+            
+            if (filesArray.length > allowedFiles.length) {
+                alert('Επιτρέπονται το πολύ 4 επιπλέον φωτογραφίες συνολικά.');
+            }
+            
+            if (allowedFiles.length > 0) {
+                try {
+                    const newImages = await Promise.all(
+                        allowedFiles.map(file => compressImageToBase64(file, { maxWidthOrHeight: 1200, maxSizeMB: 0.5 }))
+                    );
+                    setFormData(prev => ({ ...prev, gallery: [...prev.gallery, ...newImages] }));
+                } catch (err: any) {
+                    alert(err.message || 'Σφάλμα κατά την συμπίεση των εικόνων.');
+                }
             }
         }
     };
@@ -194,7 +210,7 @@ const AddProductPage: React.FC = () => {
                         <div className="space-y-6 pt-6 border-t border-gray-100">
                             <div>
                                 <label className="block text-sm font-bold text-gray-900 mb-2">Βασική Εικόνα (Thumbnail) *</label>
-                                <p className="text-sm text-gray-500 mb-4">Αυτή η εικόνα θα εμφανίζεται στην κεντρική λίστα (κατάλογος) και στην κορυφή του προϊόντος.</p>
+                                <p className="text-sm text-gray-500 mb-4">Αυτή η εικόνα θα εμφανίζεται στην κεντρική λίστα (κατάλογος) και στην κορυφή του προϊόντος.<br/><span className="text-green-600 font-medium text-xs mt-1 block">Αυτόματη συμπίεση &lt; 500KB</span></p>
                                 
                                 <div className="flex items-center gap-6">
                                     {formData.image ? (
@@ -218,7 +234,7 @@ const AddProductPage: React.FC = () => {
 
                             <div className="pt-6">
                                 <label className="block text-sm font-bold text-gray-900 mb-2">Έξτρα Φωτογραφίες (Gallery)</label>
-                                <p className="text-sm text-gray-500 mb-4">Προσθέστε επιπλέον λεπτομέρειες ή οπτικές γωνίες. Μπορείτε να επιλέξετε πολλαπλά αρχεία.</p>
+                                <p className="text-sm text-gray-500 mb-4">Προσθέστε επιπλέον λεπτομέρειες ή οπτικές γωνίες. Μπορείτε να επιλέξετε μέχρι <strong>4</strong> αρχεία.<br/><span className="text-green-600 font-medium text-xs mt-1 block">Αυτόματη συμπίεση &lt; 500KB</span></p>
                                 
                                 <div className="flex flex-wrap items-center gap-4">
                                     {formData.gallery.map((img, idx) => (
@@ -229,11 +245,13 @@ const AddProductPage: React.FC = () => {
                                             </button>
                                         </div>
                                     ))}
-                                    <label className="flex flex-col items-center justify-center w-28 h-28 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-green-50 hover:border-green-300 cursor-pointer transition-colors">
-                                        <Plus className="w-6 h-6 text-gray-400 mb-1" />
-                                        <span className="text-xs text-gray-500 font-medium">Προσθήκη</span>
-                                        <input type="file" accept="image/*" multiple onChange={handleGalleryChange} className="hidden" />
-                                    </label>
+                                    {formData.gallery.length < 4 && (
+                                        <label className="flex flex-col items-center justify-center w-28 h-28 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-green-50 hover:border-green-300 cursor-pointer transition-colors">
+                                            <Plus className="w-6 h-6 text-gray-400 mb-1" />
+                                            <span className="text-xs text-gray-500 font-medium">Προσθήκη</span>
+                                            <input type="file" accept="image/*" multiple onChange={handleGalleryChange} className="hidden" />
+                                        </label>
+                                    )}
                                 </div>
                             </div>
                         </div>
