@@ -94,6 +94,11 @@ export function Footer() {
                     </a>
                   </li>
                   <li>
+                    <Link to="/order" className="hover:text-green-400 transition-colors duration-200">
+                      Υποβολή Παραγγελίας
+                    </Link>
+                  </li>
+                  <li>
                     <Link to="/about" className="hover:text-green-400 transition-colors duration-200">
                       Η Εταιρεία Μας
                     </Link>

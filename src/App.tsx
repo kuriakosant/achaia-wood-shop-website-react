@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import ProductsWoodPage from './pages/ProductsWoodPage';
 import ProductsGalleryPage from './pages/ProductsGalleryPage';
 import ContactPage from './pages/ContactPage';
+import OrderPage from './pages/OrderPage';
 import AboutPage from './pages/AboutPage';
 import ProductDetail from './components/ProductDetail';
 import AddProductPage from './pages/AddProductPage';
@@ -26,6 +27,7 @@ function App() {
           <Route path="/products/add" element={<AddProductPage />} />
           <Route path="/wood/:id" element={<ProductDetail />} />
           <Route path="/gallery/:id" element={<ProductDetail />} />
+          <Route path="/order" element={<OrderPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />

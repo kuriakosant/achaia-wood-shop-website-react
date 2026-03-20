@@ -86,10 +86,14 @@ function Home() {
             </p>
             <motion.div
               variants={fadeInUp}
-              className="pt-8"
+              className="pt-8 flex flex-col sm:flex-row gap-4 justify-center"
             >
-              <Link to="/products" className="group inline-flex items-center justify-center bg-green-600 text-white font-semibold py-4 px-8 rounded-full hover:bg-green-500 transition-all duration-300 shadow-xl shadow-green-900/40 hover:shadow-green-900/60 hover:-translate-y-1">
+              <Link to="/wood" className="group inline-flex items-center justify-center bg-green-600 text-white font-semibold py-4 px-8 rounded-full hover:bg-green-500 transition-all duration-300 shadow-xl shadow-green-900/40 hover:shadow-green-900/60 hover:-translate-y-1">
                 Δείτε τα προϊόντα μας
+                <ArrowRight className="ml-2 transform group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link to="/order" className="group inline-flex items-center justify-center bg-transparent border-2 border-green-500 text-white font-semibold py-4 px-8 rounded-full hover:bg-green-600 transition-all duration-300 shadow-xl shadow-green-900/20 hover:shadow-green-900/40 hover:-translate-y-1">
+                Στείλτε Παραγγελία
                 <ArrowRight className="ml-2 transform group-hover:translate-x-1 transition-transform" />
               </Link>
             </motion.div>
