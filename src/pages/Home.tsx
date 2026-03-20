@@ -19,6 +19,7 @@ interface Product {
   image: string;
   price: number;
   isFeatured?: boolean;
+  shopType: string;
 }
 
 const fadeInUp: Variants = {
@@ -39,17 +40,19 @@ function Home() {
 
   useEffect(() => {
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-    fetch(`${apiUrl}/products`)
-      .then((response) => {
-        if (!response.ok) throw new Error('Failed to fetch from live API');
-        return response.json();
-      })
-      .then((data: Product[]) => {
-        const featured = data.filter(p => p.isFeatured);
-        // Fallback to latest 3 if none are manually featured yet
-        setFeaturedProducts(featured.length > 0 ? featured.slice(0, 3) : data.slice(0, 3));
-      })
-      .catch((error) => console.error('Error fetching live products:', error));
+    Promise.all([
+      fetch(`${apiUrl}/wood-products`).then(res => res.json()),
+      fetch(`${apiUrl}/gallery-products`).then(res => res.json())
+    ])
+    .then(([woodData, galleryData]) => {
+      const woodProducts = Array.isArray(woodData) ? woodData.map((p: any) => ({ ...p, shopType: 'wood' })) : [];
+      const galleryProducts = Array.isArray(galleryData) ? galleryData.map((p: any) => ({ ...p, shopType: 'gallery' })) : [];
+      const allProducts = [...woodProducts, ...galleryProducts];
+      
+      const featured = allProducts.filter(p => p.isFeatured);
+      setFeaturedProducts(featured.length > 0 ? featured.slice(0, 3) : allProducts.slice(0, 3));
+    })
+    .catch((error) => console.error('Error fetching live products:', error));
   }, []);
 
   return (
@@ -166,7 +169,7 @@ function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredProducts.map((product) => (
               <motion.div key={product.id} variants={fadeInUp}>
-                <ProductCard {...product} image={product.image} />
+                <ProductCard id={product.id} name={product.name} price={product.price} image={product.image} shopType={product.shopType} />
               </motion.div>
             ))}
           </div>

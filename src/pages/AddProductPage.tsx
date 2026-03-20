@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, UploadCloud, X, Loader2, Trash2, Plus } from 'lucide-react';
+import { ArrowLeft, UploadCloud, X, Loader2, Trash2, LayoutGrid, Layers, Plus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Button from '../components/ui/Button';
@@ -11,61 +11,60 @@ const AddProductPage: React.FC = () => {
     const navigate = useNavigate();
     const token = localStorage.getItem('adminToken');
 
+    const [shopType, setShopType] = useState<'wood' | 'gallery'>('wood');
     const [categories, setCategories] = useState<any[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const [formData, setFormData] = useState({
         name: '',
-        category: '',
         price: '',
+        company: '',
         description: '',
         features: '',
+        mainCategoryId: '' as string | number,
+        subCategoryId1: '' as string | number,
+        subCategoryId2: '' as string | number,
         image: '', // Base64 thumbnail
         gallery: [] as string[], // Base64 array
         sku: ''
     });
 
-    const fetchCategories = () => {
-        axios.get(`${API_URL}/categories`)
-            .then(res => setCategories(res.data))
-            .catch(err => console.error('Failed to load categories', err));
-    };
-
+    // Reset categories when shop changes
     useEffect(() => {
         if (!token) {
             navigate('/admin/login');
             return;
         }
-        fetchCategories();
-    }, [token, navigate]);
+        
+        // Reset category selection
+        setFormData(prev => ({ ...prev, mainCategoryId: '', subCategoryId1: '', subCategoryId2: '' }));
+        
+        // Fetch new category list
+        axios.get(`${API_URL}/${shopType}-categories`)
+            .then(res => setCategories(res.data))
+            .catch(err => console.error('Failed to load categories', err));
+    }, [shopType, token, navigate]);
 
-    const handleInlineCategoryAdd = async () => {
-        const newCatName = window.prompt("Δώστε το όνομα της νέας κατηγορίας:");
-        if (newCatName && newCatName.trim()) {
-            try {
-                const { data } = await axios.post(`${API_URL}/categories`, { name: newCatName.trim() }, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                setCategories([...categories, data]);
-                setFormData(prev => ({ ...prev, category: data.name }));
-            } catch (err) {
-                alert("Αποτυχία δημιουργίας κατηγορίας. Μπορεί να υπάρχει ήδη.");
-            }
-        }
-    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        
+        if (name === 'mainCategoryId') {
+             setFormData(prev => ({ ...prev, mainCategoryId: value ? parseInt(value) : '', subCategoryId1: '', subCategoryId2: '' }));
+        } else if (name === 'subCategoryId1') {
+             setFormData(prev => ({ ...prev, subCategoryId1: value ? parseInt(value) : '', subCategoryId2: '' }));
+        } else if (name === 'subCategoryId2') {
+             setFormData(prev => ({ ...prev, subCategoryId2: value ? parseInt(value) : '' }));
+        } else {
+             setFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
-
 
 
     const handleThumbnailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             try {
-                // Compress image down to max 1200px width/height and 500KB size limit
                 const base64 = await compressImageToBase64(e.target.files[0], { maxWidthOrHeight: 1200, maxSizeMB: 0.5 });
                 setFormData(prev => ({ ...prev, image: base64 }));
             } catch (err: any) {
@@ -79,7 +78,6 @@ const AddProductPage: React.FC = () => {
             const currentCount = formData.gallery.length;
             const filesArray = Array.from(e.target.files);
             
-            // Limit total gallery images to 4
             const allowedFiles = filesArray.slice(0, 4 - currentCount);
             
             if (filesArray.length > allowedFiles.length) {
@@ -108,14 +106,21 @@ const AddProductPage: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        if (!formData.mainCategoryId || !formData.subCategoryId1) {
+             setError('Η επιλογή Κύριας Κατηγορίας (Level 1) και Yποκατηγορίας 1 (Level 2) είναι υποχρεωτική.');
+             return;
+        }
+
         setIsSubmitting(true);
         setError(null);
 
         try {
-            await axios.post(`${API_URL}/products`, {
+            await axios.post(`${API_URL}/${shopType}-products`, {
                 ...formData,
                 price: parseFloat(formData.price),
-                features: formData.features.split(',').map(f => f.trim()).filter(f => f !== '')
+                features: formData.features.split(',').map(f => f.trim()).filter(f => f !== ''),
+                subCategoryId2: formData.subCategoryId2 || null
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -152,41 +157,82 @@ const AddProductPage: React.FC = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-8">
                         
+                        {/* 1. Shop Selection */}
+                        <div className="bg-gray-50 p-6 rounded-3xl border border-gray-200">
+                             <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center"><Layers className="w-5 h-5 mr-2 text-green-600"/>Επιλογή Καταστήματος</h2>
+                             <div className="flex flex-col sm:flex-row gap-4">
+                                 <label className={`flex-1 flex px-4 border text-center justify-center py-4 rounded-xl cursor-pointer transition-all ${shopType === 'wood' ? 'bg-green-50 border-green-500 text-green-700 font-bold shadow-sm' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}>
+                                     <input type="radio" name="shopType" value="wood" checked={shopType === 'wood'} onChange={() => setShopType('wood')} className="hidden" />
+                                     Βιομηχανική Ξυλεία
+                                 </label>
+                                 <label className={`flex-1 flex px-4 border text-center justify-center py-4 rounded-xl cursor-pointer transition-all ${shopType === 'gallery' ? 'bg-green-50 border-green-500 text-green-700 font-bold shadow-sm' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}>
+                                     <input type="radio" name="shopType" value="gallery" checked={shopType === 'gallery'} onChange={() => setShopType('gallery')} className="hidden" />
+                                     Προϊόντα Γαλλερίας
+                                 </label>
+                             </div>
+                        </div>
+
                         {/* Basic Info */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                             <div className="md:col-span-2 flex flex-col md:flex-row gap-6">
                                 <div className="flex-1">
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">Όνομα Προϊόντος *</label>
                                     <input required type="text" name="name" value={formData.name} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="π.χ. Πορτάκι Δρυς" />
                                 </div>
                                 <div className="w-full md:w-1/3 shrink-0">
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Κωδικός Προϊόντος (SKU)</label>
-                                    <input type="text" name="sku" value={formData.sku} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="π.χ. PORT-DR-001" />
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Εταιρεία / Κατασκευαστής</label>
+                                    <input type="text" name="company" value={formData.company} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="π.χ. Kastamonu" />
                                 </div>
                             </div>
+                            
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">Τιμή (€) *</label>
                                 <input required type="number" step="0.01" name="price" value={formData.price} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="0.00" />
                             </div>
-                            <div className="md:col-span-2">
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Κατηγορία *</label>
-                                <div className="flex items-center gap-3">
-                                    <select required name="category" value={formData.category} onChange={handleChange} className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all text-gray-700">
-                                        <option value="" disabled>Επιλέξτε Κατηγορία</option>
-                                        {categories.map(cat => (
-                                            <option key={cat.id} value={cat.name}>{cat.name}</option>
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Κωδικός Προϊόντος (SKU)</label>
+                                <input type="text" name="sku" value={formData.sku} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="π.χ. PORT-DR-001" />
+                            </div>
+                        </div>
+
+                        {/* Hierarchical Categories */}
+                        <div className="bg-gray-50 p-6 rounded-3xl border border-gray-100 space-y-4">
+                            <h2 className="text-lg font-bold text-gray-900 mb-2 flex items-center"><LayoutGrid className="w-5 h-5 mr-2 text-green-600"/>Κατηγοριοποίηση</h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                {/* Level 1 */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Κύρια Κατηγορία *</label>
+                                    <select required name="mainCategoryId" value={formData.mainCategoryId} onChange={handleChange} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700">
+                                        <option value="" disabled>Επιλογή Level 1</option>
+                                        {categories.filter(c => c.level === 1).map(cat => (
+                                            <option key={cat.id} value={cat.id}>{cat.name}</option>
                                         ))}
                                     </select>
-                                    <button 
-                                        type="button" 
-                                        onClick={handleInlineCategoryAdd}
-                                        className="bg-gray-100 hover:bg-green-50 text-gray-600 hover:text-green-600 transition-colors p-3 rounded-xl border border-gray-200 hover:border-green-200 group flex items-center justify-center"
-                                        title="Γρήγορη Προσθήκη Κατηγορίας"
-                                    >
-                                        <Plus className="w-6 h-6" />
-                                    </button>
+                                </div>
+
+                                {/* Level 2 */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Subcategory 1 *</label>
+                                    <select required disabled={!formData.mainCategoryId} name="subCategoryId1" value={formData.subCategoryId1} onChange={handleChange} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700 disabled:bg-gray-100 disabled:text-gray-400">
+                                        <option value="" disabled>Επιλογή Level 2</option>
+                                        {categories.filter(c => c.parentId === formData.mainCategoryId && c.level === 2).map(cat => (
+                                            <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                {/* Level 3 */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Subcategory 2 (Προαιρετικό)</label>
+                                    <select disabled={!formData.subCategoryId1} name="subCategoryId2" value={formData.subCategoryId2} onChange={handleChange} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700 disabled:bg-gray-100 disabled:text-gray-400">
+                                        <option value="">Καμία</option>
+                                        {categories.filter(c => c.parentId === formData.subCategoryId1 && c.level === 3).map(cat => (
+                                            <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                        ))}
+                                    </select>
                                 </div>
                             </div>
+                            <p className="text-xs text-gray-500 mt-2">Η Κύρια Κατηγορία και η 1η Υποκατηγορία είναι <strong>υποχρεωτικές</strong> για την σωστή εμφάνιση του προϊόντος.</p>
                         </div>
 
                         {/* Details */}

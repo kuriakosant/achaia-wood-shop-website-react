@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from './ui/Button';
@@ -17,13 +17,20 @@ interface Product {
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState<string>('');
 
+  const isWood = location.pathname.startsWith('/wood');
+  const shopType = isWood ? 'wood' : 'gallery';
+  const apiEndpoint = `/${shopType}-products/${id}`;
+  const backLink = `/${shopType}`;
+  const backText = isWood ? "Επιστροφή στη Βιομηχανική Ξυλεία" : "Επιστροφή στα Προϊόντα Γαλλερίας";
+
   useEffect(() => {
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-    fetch(`${apiUrl}/products/${id}`)
+    fetch(`${apiUrl}${apiEndpoint}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Product not found');
@@ -40,7 +47,7 @@ const ProductDetail: React.FC = () => {
         setProduct(null);
         setLoading(false);
       });
-  }, [id]);
+  }, [apiEndpoint]);
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center pt-24"><div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>;
@@ -50,7 +57,7 @@ const ProductDetail: React.FC = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center pt-24 text-center">
         <h2 className="text-3xl font-bold text-gray-800 mb-4">Το προϊόν δεν βρέθηκε</h2>
-        <Link to="/products" className="text-green-600 hover:text-green-700 underline underline-offset-4">Επιστροφή στα προϊόντα</Link>
+        <Link to={backLink} className="text-green-600 hover:text-green-700 underline underline-offset-4">{backText}</Link>
       </div>
     );
   }
@@ -60,9 +67,9 @@ const ProductDetail: React.FC = () => {
   return (
     <div className="bg-gray-50 min-h-screen pb-24 pt-32">
       <div className="container mx-auto px-4 lg:px-8 max-w-6xl">
-        <Link to="/products" className="inline-flex items-center text-gray-500 hover:text-green-600 font-medium mb-8 group transition-colors">
+        <Link to={backLink} className="inline-flex items-center text-gray-500 hover:text-green-600 font-medium mb-8 group transition-colors">
           <ArrowLeft className="mr-2 w-5 h-5 transform group-hover:-translate-x-1 transition-transform" />
-          Επιστροφή στον κατάλογο
+          {backText}
         </Link>
         <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden">
           <div className="grid lg:grid-cols-2 gap-0 lg:gap-8">

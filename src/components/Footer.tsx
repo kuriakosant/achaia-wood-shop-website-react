@@ -14,10 +14,8 @@ export function Footer() {
   const navigate = useNavigate()
 
   const productLinks = [
-    { name: 'ΕΠΙΚΑΛΥΨΕΙΣ', href: '/products/epikalypseis' },
-    { name: 'ΥΛΙΚΑ ΕΠΙΠΛΟΠΟΙΙΑΣ', href: '/products/ylika-epiplopias' },
-    { name: 'ΞΥΛΕΙΑ-ΠΡΟΪΟΝΤΑ ΞΥΛΟΥ', href: '/products/xyleia' },
-    { name: 'ΠΟΡΤΑΚΙΑ', href: '/products/portakia' },
+    { name: 'ΒΙΟΜΗΧΑΝΙΚΗ ΞΥΛΕΙΑ', href: '/wood' },
+    { name: 'ΕΚΘΕΣΗ - GALLERY', href: '/gallery' },
   ]
 
   const handleButtonClick = (route: string, setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {

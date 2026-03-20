@@ -17,7 +17,8 @@ function Header() {
   const menuItems = [
     { title: 'Αρχική', href: '/' },
     { title: 'Η Εταιρεία Μας', href: '/about' },
-    { title: 'Προϊόντα', href: '/products' },
+    { title: 'Βιομηχανική Ξυλεία', href: '/wood' },
+    { title: 'Εκθεση - Gallery', href: '/gallery' },
     { title: 'Επικοινωνία', href: '/contact' },
   ];
 

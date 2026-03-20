@@ -8,9 +8,10 @@ interface ProductCardProps {
   name: string;
   image: string;
   price: number;
+  shopType: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ id, name, image, price }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ id, name, image, price, shopType }) => {
   return (
     <motion.div 
       whileHover={{ y: -12 }}
@@ -18,7 +19,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ id, name, image, price }) => 
       className="h-full"
     >
       <div className="group bg-white rounded-[2rem] border border-gray-100 overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-green-900/10 transition-all duration-500 flex flex-col h-full">
-        <Link to={`/products/${id}`} className="flex flex-col h-full outline-none">
+        <Link to={`/${shopType}/${id}`} className="flex flex-col h-full outline-none">
           <div className="relative overflow-hidden aspect-[4/3] bg-gray-50 flex items-center justify-center">
             {image ? (
               <img

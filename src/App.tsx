@@ -3,7 +3,8 @@ import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
-import ProductsPage from './pages/ProductsPage';
+import ProductsWoodPage from './pages/ProductsWoodPage';
+import ProductsGalleryPage from './pages/ProductsGalleryPage';
 import ContactPage from './pages/ContactPage';
 import AboutPage from './pages/AboutPage';
 import ProductDetail from './components/ProductDetail';
@@ -20,9 +21,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/wood" element={<ProductsWoodPage />} />
+          <Route path="/gallery" element={<ProductsGalleryPage />} />
           <Route path="/products/add" element={<AddProductPage />} />
-          <Route path="/products/:id" element={<ProductDetail />} />
+          <Route path="/wood/:id" element={<ProductDetail />} />
+          <Route path="/gallery/:id" element={<ProductDetail />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
