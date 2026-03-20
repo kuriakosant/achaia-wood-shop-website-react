@@ -179,10 +179,13 @@ const AddProductPage: React.FC = () => {
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">Όνομα Προϊόντος *</label>
                                     <input required type="text" name="name" value={formData.name} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="π.χ. Πορτάκι Δρυς" />
                                 </div>
-                                <div className="w-full md:w-1/3 shrink-0">
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Εταιρεία / Κατασκευαστής</label>
-                                    <input type="text" name="company" value={formData.company} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="π.χ. Kastamonu" />
-                                </div>
+                                {/* Company text field only for Wood — Gallery uses cat level 3 */}
+                                {shopType === 'wood' && (
+                                    <div className="w-full md:w-1/3 shrink-0">
+                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Εταιρεία / Κατασκευαστής</label>
+                                        <input type="text" name="company" value={formData.company} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="π.χ. Kastamonu" />
+                                    </div>
+                                )}
                             </div>
                             
                             <div>
@@ -195,44 +198,45 @@ const AddProductPage: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Hierarchical Categories */}
                         <div className="bg-gray-50 p-6 rounded-3xl border border-gray-100 space-y-4">
                             <h2 className="text-lg font-bold text-gray-900 mb-2 flex items-center"><LayoutGrid className="w-5 h-5 mr-2 text-green-600"/>Κατηγοριοποίηση</h2>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                {/* Level 1 */}
+                            <div className={`grid gap-4 ${shopType === 'gallery' ? 'grid-cols-1 sm:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2'}`}>
+                                {/* Level 1 — Main Category */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Κύρια Κατηγορία *</label>
                                     <select required name="mainCategoryId" value={formData.mainCategoryId} onChange={handleChange} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700">
-                                        <option value="" disabled>Επιλογή Level 1</option>
+                                        <option value="" disabled>Επιλογή κατηγορίας</option>
                                         {categories.filter(c => c.level === 1).map(cat => (
                                             <option key={cat.id} value={cat.id}>{cat.name}</option>
                                         ))}
                                     </select>
                                 </div>
 
-                                {/* Level 2 */}
+                                {/* Level 2 — Subcategory 1 (mandatory) */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Subcategory 1 *</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Υποκατηγορία *</label>
                                     <select required disabled={!formData.mainCategoryId} name="subCategoryId1" value={formData.subCategoryId1} onChange={handleChange} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700 disabled:bg-gray-100 disabled:text-gray-400">
-                                        <option value="" disabled>Επιλογή Level 2</option>
-                                        {categories.filter(c => c.parentId === formData.mainCategoryId && c.level === 2).map(cat => (
+                                        <option value="" disabled>Επιλογή υποκατηγορίας</option>
+                                        {categories.filter(c => c.parentId === Number(formData.mainCategoryId) && c.level === 2).map(cat => (
                                             <option key={cat.id} value={cat.id}>{cat.name}</option>
                                         ))}
                                     </select>
                                 </div>
 
-                                {/* Level 3 */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Subcategory 2 (Προαιρετικό)</label>
-                                    <select disabled={!formData.subCategoryId1} name="subCategoryId2" value={formData.subCategoryId2} onChange={handleChange} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700 disabled:bg-gray-100 disabled:text-gray-400">
-                                        <option value="">Καμία</option>
-                                        {categories.filter(c => c.parentId === formData.subCategoryId1 && c.level === 3).map(cat => (
-                                            <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                        ))}
-                                    </select>
-                                </div>
+                                {/* Level 3 — Company (Gallery only, optional) */}
+                                {shopType === 'gallery' && (
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Εταιρεία / Κατασκευαστής <span className="text-gray-400 font-normal">(Προαιρετικό)</span></label>
+                                        <select disabled={!formData.subCategoryId1} name="subCategoryId2" value={formData.subCategoryId2} onChange={handleChange} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700 disabled:bg-gray-100 disabled:text-gray-400">
+                                            <option value="">Καμία</option>
+                                            {categories.filter(c => c.parentId === Number(formData.subCategoryId1) && c.level === 3).map(cat => (
+                                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
                             </div>
-                            <p className="text-xs text-gray-500 mt-2">Η Κύρια Κατηγορία και η 1η Υποκατηγορία είναι <strong>υποχρεωτικές</strong> για την σωστή εμφάνιση του προϊόντος.</p>
+                            <p className="text-xs text-gray-500 mt-2">Η Κύρια Κατηγορία και η Υποκατηγορία είναι <strong>υποχρεωτικές</strong>{shopType === 'gallery' ? '. Η Εταιρεία είναι προαιρετική.' : '.'}</p>
                         </div>
 
                         {/* Details */}

@@ -72,15 +72,14 @@ const ProductsWoodPage: React.FC = () => {
 
   const filteredAndSortedProducts = products
     .filter(product => {
-      // 1. Category Filter
+      // 1. Category Filter — use Number() to safely compare ids from API
       let catMatch = true;
       if (selectedCatId !== null && selectedCatLevel !== null) {
-        if (selectedCatLevel === 1) catMatch = product.mainCategoryId === selectedCatId;
-        else if (selectedCatLevel === 2) catMatch = product.subCategoryId1 === selectedCatId;
-        else if (selectedCatLevel === 3) catMatch = product.subCategoryId2 === selectedCatId;
+        if (selectedCatLevel === 1) catMatch = Number(product.mainCategoryId) === selectedCatId;
+        else if (selectedCatLevel === 2) catMatch = Number(product.subCategoryId1) === selectedCatId;
       }
       
-      // 2. Company Filter
+      // 2. Company Filter (text field on Wood products)
       let compMatch = true;
       if (selectedCompany !== 'Όλες') {
         compMatch = product.company === selectedCompany;

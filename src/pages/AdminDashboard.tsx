@@ -486,32 +486,35 @@ const AdminDashboard = () => {
                             <div className="p-4 bg-gray-50 rounded-2xl border border-gray-200 space-y-4">
                                 <h3 className="font-bold text-gray-900">Κατηγοριοποίηση</h3>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Κύρια Κατηγορία (Level 1)*</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Κύρια Κατηγορία *</label>
                                     <select required value={editingProduct.mainCategoryId || ''} onChange={e => setEditingProduct({ ...editingProduct, mainCategoryId: parseInt(e.target.value), subCategoryId1: null, subCategoryId2: null })} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl outline-none">
-                                        <option value="" disabled>Επιλέξτε Κύρια Κατηγορία</option>
+                                        <option value="" disabled>Επιλογή Κύριας Κατηγορίας</option>
                                         {categories.filter(c => c.level === 1).map(cat => (
                                             <option key={cat.id} value={cat.id}>{cat.name}</option>
                                         ))}
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Subcategory 1 (Level 2)*</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Υποκατηγορία *</label>
                                     <select required disabled={!editingProduct.mainCategoryId} value={editingProduct.subCategoryId1 || ''} onChange={e => setEditingProduct({ ...editingProduct, subCategoryId1: parseInt(e.target.value), subCategoryId2: null })} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl outline-none disabled:bg-gray-100">
-                                        <option value="" disabled>Επιλέξτε Subcategory 1</option>
-                                        {categories.filter(c => c.parentId === editingProduct.mainCategoryId).map(cat => (
+                                        <option value="" disabled>Επιλογή υποκατηγορίας</option>
+                                        {categories.filter(c => Number(c.parentId) === Number(editingProduct.mainCategoryId) && c.level === 2).map(cat => (
                                             <option key={cat.id} value={cat.id}>{cat.name}</option>
                                         ))}
                                     </select>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Subcategory 2 (Level 3) [Προαιρετικό]</label>
-                                    <select disabled={!editingProduct.subCategoryId1} value={editingProduct.subCategoryId2 || ''} onChange={e => setEditingProduct({ ...editingProduct, subCategoryId2: e.target.value ? parseInt(e.target.value) : null })} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl outline-none disabled:bg-gray-100">
-                                        <option value="">Καμία</option>
-                                        {categories.filter(c => c.parentId === editingProduct.subCategoryId1).map(cat => (
-                                            <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                        ))}
-                                    </select>
-                                </div>
+                                {/* Level 3 company — Gallery only */}
+                                {activeShop === 'gallery' && (
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Εταιρεία / Κατασκευαστής (Προαιρετικό)</label>
+                                        <select disabled={!editingProduct.subCategoryId1} value={editingProduct.subCategoryId2 || ''} onChange={e => setEditingProduct({ ...editingProduct, subCategoryId2: e.target.value ? parseInt(e.target.value) : null })} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl outline-none disabled:bg-gray-100">
+                                            <option value="">Καμία</option>
+                                            {categories.filter(c => Number(c.parentId) === Number(editingProduct.subCategoryId1) && c.level === 3).map(cat => (
+                                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
                             </div>
 
                             <div>
