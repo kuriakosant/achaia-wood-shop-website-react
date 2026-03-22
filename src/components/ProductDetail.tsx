@@ -26,7 +26,7 @@ const ProductDetail: React.FC = () => {
   const shopType = isWood ? 'wood' : 'gallery';
   const apiEndpoint = `/${shopType}-products/${id}`;
   const backLink = `/${shopType}`;
-  const backText = isWood ? "Επιστροφή στη Βιομηχανική Ξυλεία" : "Επιστροφή στα Προϊόντα Γαλλερίας";
+  const backText = isWood ? "Επιστροφή στη Βιομηχανική Ξυλεία" : "Επιστροφή στα Προϊόντα Κιγκαλερίας";
 
   useEffect(() => {
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
