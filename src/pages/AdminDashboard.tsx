@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { LogOut, Plus, Edit, Trash2, X, Package, Tags, Star, ChevronRight, Layers, ClipboardList, Download } from 'lucide-react';
+import { LogOut, Plus, Edit, Trash2, X, Package, Tags, Star, ChevronRight, Layers, ClipboardList, Download, LayoutTemplate, Search } from 'lucide-react';
 import Button from '../components/ui/Button';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -21,7 +21,13 @@ const AdminDashboard = () => {
 
     // UI State
     const [activeShop, setActiveShop] = useState<'wood' | 'gallery'>('wood');
-    const [activeTab, setActiveTab] = useState<'products' | 'categories' | 'orders'>('products');
+    const [activeTab, setActiveTab] = useState<'products' | 'categories' | 'orders' | 'featured'>('products');
+
+    // Featured tab filter state
+    const [featuredShop, setFeaturedShop] = useState<'wood' | 'gallery'>('wood');
+    const [featuredFilterCat, setFeaturedFilterCat] = useState<string>('');
+    const [featuredFilterSub, setFeaturedFilterSub] = useState<string>('');
+    const [featuredSearch, setFeaturedSearch] = useState<string>('');
 
     const [editingProduct, setEditingProduct] = useState<any | null>(null);
     const [editingCategory, setEditingCategory] = useState<any | null>(null);
@@ -108,6 +114,23 @@ const AdminDashboard = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setProducts(products.map(p => (p.id === data.id ? data : p)));
+        } catch (err) {
+            alert('Αποτυχία ενημέρωσης κατάστασης (Featured).');
+        }
+    };
+
+    // Toggle featured on ANY shop's product regardless of activeShop
+    const handleToggleFeaturedAny = async (shopType: 'wood' | 'gallery', product: any) => {
+        const updatedProduct = { ...product, isFeatured: !product.isFeatured };
+        try {
+            const { data } = await axios.put(`${API_URL}/${shopType}-products/${product.id}`, updatedProduct, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (shopType === 'wood') {
+                setWoodProducts(woodProducts.map(p => p.id === data.id ? data : p));
+            } else {
+                setGalleryProducts(galleryProducts.map(p => p.id === data.id ? data : p));
+            }
         } catch (err) {
             alert('Αποτυχία ενημέρωσης κατάστασης (Featured).');
         }
@@ -246,6 +269,14 @@ const AdminDashboard = () => {
                                 }`}
                             >
                                 <ClipboardList className="w-5 h-5 mr-3" /> Παραγγελίες
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('featured')}
+                                className={`w-full flex items-center px-4 py-3 rounded-xl transition-colors font-medium ${
+                                    activeTab === 'featured' ? 'bg-amber-50 text-amber-700' : 'text-gray-600 hover:bg-gray-50'
+                                }`}
+                            >
+                                <LayoutTemplate className="w-5 h-5 mr-3" /> Αρχική Σελίδα
                             </button>
                         </nav>
                         <div className="mt-8 pt-4 border-t border-gray-100">
@@ -455,6 +486,179 @@ const AdminDashboard = () => {
                                 </div>
                             </div>
                         )}
+
+                        {/* ── Featured / Homepage Tab ── */}
+                        {activeTab === 'featured' && (() => {
+                            // All products from both shops tagged with shopType
+                            const allWood    = woodProducts.map((p: any)    => ({ ...p, shopType: 'wood'    as const }));
+                            const allGallery = galleryProducts.map((p: any) => ({ ...p, shopType: 'gallery' as const }));
+
+                            // Currently featured across BOTH shops
+                            const featured = [...allWood, ...allGallery].filter(p => p.isFeatured);
+
+                            // Browse pool — right panel
+                            const browseCats  = featuredShop === 'wood' ? woodCategories    : galleryCategories;
+                            const mainCatsF   = browseCats.filter((c: any) => c.level === 1);
+                            const subCatsF    = featuredFilterCat
+                                ? browseCats.filter((c: any) => Number(c.parentId) === Number(featuredFilterCat) && c.level === 2)
+                                : [];
+                            const browsePool  = (featuredShop === 'wood' ? allWood : allGallery)
+                                .filter((p: any) => {
+                                    if (featuredFilterCat && Number(p.mainCategoryId) !== Number(featuredFilterCat)) return false;
+                                    if (featuredFilterSub && Number(p.subCategoryId1) !== Number(featuredFilterSub)) return false;
+                                    if (featuredSearch && !p.name.toLowerCase().includes(featuredSearch.toLowerCase())) return false;
+                                    return true;
+                                });
+
+                            return (
+                                <div>
+                                    <div className="mb-8">
+                                        <h2 className="text-2xl font-bold text-gray-900 leading-none mt-1">Αρχική Σελίδα — Προτεινόμενα Προϊόντα</h2>
+                                        <p className="text-sm text-gray-500 mt-2">Επιλέξτε ποια προϊόντα εμφανίζονται στο τμήμα "Τα Προϊόντα μας" της αρχικής σελίδας. Εμφανίζονται τα πρώτα 3 με ⭐.</p>
+                                    </div>
+
+                                    <div className="flex flex-col xl:flex-row gap-8">
+
+                                        {/* ── Left: Currently Featured ── */}
+                                        <div className="w-full xl:w-80 shrink-0">
+                                            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <h3 className="font-bold text-amber-900 flex items-center gap-2">
+                                                        <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
+                                                        Τρέχοντα Προτεινόμενα
+                                                    </h3>
+                                                    <span className={`text-xs font-bold px-2 py-1 rounded-full ${featured.length > 3 ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}>
+                                                        {featured.length} / ∞
+                                                    </span>
+                                                </div>
+
+                                                {featured.length > 3 && (
+                                                    <p className="text-xs text-amber-700 bg-amber-100 rounded-lg px-3 py-2 mb-3">
+                                                        ⚠️ Εμφανίζονται μόνο τα πρώτα 3. Αφαιρέστε κάποια για καλύτερη εμφάνιση.
+                                                    </p>
+                                                )}
+
+                                                {featured.length === 0 ? (
+                                                    <p className="text-sm text-amber-700 text-center py-6 opacity-70">Δεν υπάρχουν προτεινόμενα προϊόντα.<br/>Επιλέξτε από τη λίστα δεξιά.</p>
+                                                ) : (
+                                                    <ul className="space-y-3">
+                                                        {featured.map((p: any) => (
+                                                            <li key={`${p.shopType}-${p.id}`} className="flex items-center gap-3 bg-white rounded-xl p-3 border border-amber-100 shadow-sm">
+                                                                {p.image && (
+                                                                    <img src={p.image} alt={p.name} className="w-12 h-12 rounded-lg object-cover shrink-0 border border-gray-100" />
+                                                                )}
+                                                                <div className="flex-1 min-w-0">
+                                                                    <p className="text-sm font-semibold text-gray-900 truncate">{p.name}</p>
+                                                                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded mt-0.5 inline-block ${p.shopType === 'wood' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}`}>
+                                                                        {p.shopType === 'wood' ? 'Ξυλεία' : 'Gallery'}
+                                                                    </span>
+                                                                </div>
+                                                                <button
+                                                                    onClick={() => handleToggleFeaturedAny(p.shopType, p)}
+                                                                    title="Αφαίρεση από Προτεινόμενα"
+                                                                    className="p-1.5 text-amber-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors shrink-0"
+                                                                >
+                                                                    <X className="w-4 h-4" />
+                                                                </button>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* ── Right: Product Browser ── */}
+                                        <div className="flex-1 min-w-0">
+                                            {/* Shop toggle */}
+                                            <div className="flex gap-3 mb-5">
+                                                <button
+                                                    onClick={() => { setFeaturedShop('wood'); setFeaturedFilterCat(''); setFeaturedFilterSub(''); }}
+                                                    className={`flex-1 py-2.5 rounded-xl font-semibold text-sm border transition-all ${featuredShop === 'wood' ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'}`}
+                                                >
+                                                    🌲 Βιομηχανική Ξυλεία
+                                                </button>
+                                                <button
+                                                    onClick={() => { setFeaturedShop('gallery'); setFeaturedFilterCat(''); setFeaturedFilterSub(''); }}
+                                                    className={`flex-1 py-2.5 rounded-xl font-semibold text-sm border transition-all ${featuredShop === 'gallery' ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'}`}
+                                                >
+                                                    🪑 Εκθεση - Gallery
+                                                </button>
+                                            </div>
+
+                                            {/* Filters */}
+                                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                                                <div className="relative">
+                                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Αναζήτηση ονόματος..."
+                                                        value={featuredSearch}
+                                                        onChange={e => setFeaturedSearch(e.target.value)}
+                                                        className="w-full pl-9 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-400/50 focus:border-amber-300"
+                                                    />
+                                                </div>
+                                                <select
+                                                    value={featuredFilterCat}
+                                                    onChange={e => { setFeaturedFilterCat(e.target.value); setFeaturedFilterSub(''); }}
+                                                    className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-400/50 text-gray-700"
+                                                >
+                                                    <option value="">Όλες οι κατηγορίες</option>
+                                                    {mainCatsF.map((c: any) => (
+                                                        <option key={c.id} value={c.id}>{c.name}</option>
+                                                    ))}
+                                                </select>
+                                                <select
+                                                    value={featuredFilterSub}
+                                                    onChange={e => setFeaturedFilterSub(e.target.value)}
+                                                    disabled={!featuredFilterCat || subCatsF.length === 0}
+                                                    className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-400/50 text-gray-700 disabled:bg-gray-50 disabled:text-gray-400"
+                                                >
+                                                    <option value="">Όλες οι υποκατηγορίες</option>
+                                                    {subCatsF.map((c: any) => (
+                                                        <option key={c.id} value={c.id}>{c.name}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+
+                                            {/* Product grid */}
+                                            {browsePool.length === 0 ? (
+                                                <div className="bg-gray-50 rounded-2xl text-center py-16 text-gray-400 border border-dashed border-gray-200">
+                                                    Δεν βρέθηκαν προϊόντα για τα επιλεγμένα φίλτρα.
+                                                </div>
+                                            ) : (
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[600px] overflow-y-auto pr-1">
+                                                    {browsePool.map((p: any) => (
+                                                        <div key={p.id} className={`bg-white rounded-2xl border shadow-sm overflow-hidden flex flex-col transition-all ${p.isFeatured ? 'border-amber-300 ring-2 ring-amber-200' : 'border-gray-100 hover:shadow-md'}`}>
+                                                            {p.image ? (
+                                                                <img src={p.image} alt={p.name} className="w-full h-36 object-cover" />
+                                                            ) : (
+                                                                <div className="w-full h-36 bg-gray-100 flex items-center justify-center text-gray-300 text-3xl">📦</div>
+                                                            )}
+                                                            <div className="p-3 flex flex-col gap-2 flex-1">
+                                                                <p className="text-sm font-semibold text-gray-900 leading-tight">{p.name}</p>
+                                                                <p className="text-xs text-gray-500">{p.price.toFixed(2)}€</p>
+                                                                <button
+                                                                    onClick={() => handleToggleFeaturedAny(p.shopType, p)}
+                                                                    className={`mt-auto w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${
+                                                                        p.isFeatured
+                                                                            ? 'bg-amber-400 text-white hover:bg-amber-500'
+                                                                            : 'bg-gray-100 text-gray-600 hover:bg-amber-50 hover:text-amber-700'
+                                                                    }`}
+                                                                >
+                                                                    <Star className={`w-3.5 h-3.5 ${p.isFeatured ? 'fill-white' : ''}`} />
+                                                                    {p.isFeatured ? 'Αφαίρεση από Αρχική' : 'Προσθήκη στην Αρχική'}
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                    </div>
+                                </div>
+                            );
+                        })()}
                     </div>
                 </div>
             </div>
