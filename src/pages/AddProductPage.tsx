@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, UploadCloud, X, Loader2, Trash2, LayoutGrid, Layers, Plus } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { ArrowLeft, UploadCloud, X, Loader2, Trash2, LayoutGrid, Layers, Plus, Edit2 } from 'lucide-react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Button from '../components/ui/Button';
 import { compressImageToBase64 } from '../utils/imageCompression';
@@ -10,8 +10,10 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 const AddProductPage: React.FC = () => {
     const navigate = useNavigate();
     const token = localStorage.getItem('adminToken');
+    const { shopType: routeShopType, id } = useParams();
+    const isEditMode = !!id;
 
-    const [shopType, setShopType] = useState<'wood' | 'gallery'>('wood');
+    const [shopType, setShopType] = useState<'wood' | 'gallery'>((routeShopType as 'wood' | 'gallery') || 'wood');
     const [categories, setCategories] = useState<any[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -30,21 +32,45 @@ const AddProductPage: React.FC = () => {
         sku: ''
     });
 
-    // Reset categories when shop changes
+    // Fetch categories and product details (if editing)
     useEffect(() => {
         if (!token) {
             navigate('/admin/login');
             return;
         }
         
-        // Reset category selection
-        setFormData(prev => ({ ...prev, mainCategoryId: '', subCategoryId1: '', subCategoryId2: '' }));
-        
-        // Fetch new category list
         axios.get(`${API_URL}/${shopType}-categories`)
             .then(res => setCategories(res.data))
             .catch(err => console.error('Failed to load categories', err));
-    }, [shopType, token, navigate]);
+
+        if (isEditMode) {
+            axios.get(`${API_URL}/${shopType}-products/${id}`)
+                 .then(res => {
+                      const p = res.data;
+                      setFormData({
+                          name: p.name || '',
+                          price: p.price ? p.price.toString() : '',
+                          company: p.company || '',
+                          description: p.description || '',
+                          features: p.features ? p.features.join(', ') : '',
+                          mainCategoryId: p.mainCategoryId || '',
+                          subCategoryId1: p.subCategoryId1 || '',
+                          subCategoryId2: p.subCategoryId2 || '',
+                          image: p.image || '',
+                          gallery: p.gallery || [],
+                          sku: p.sku || ''
+                      });
+                 })
+                 .catch(() => setError('Αποτυχία φόρτωσης προϊόντος προς επεξεργασία.'));
+        } else {
+             // Reset form when not in edit mode
+             setFormData({
+                 name: '', price: '', company: '', description: '', features: '',
+                 mainCategoryId: '', subCategoryId1: '', subCategoryId2: '',
+                 image: '', gallery: [], sku: ''
+             });
+        }
+    }, [shopType, id, isEditMode, token, navigate]);
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -61,6 +87,61 @@ const AddProductPage: React.FC = () => {
         }
     };
 
+    const handleCreateCategory = async (level: number, parentId: number | null) => {
+        const name = window.prompt(`Νέα Κατηγορία (Level ${level}):`);
+        if (!name) return;
+        try {
+            const { data } = await axios.post(`${API_URL}/${shopType}-categories`, 
+                { name, level, parentId }, 
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            setCategories([...categories, data]);
+            if (level === 1) setFormData(prev => ({ ...prev, mainCategoryId: data.id }));
+            if (level === 2) setFormData(prev => ({ ...prev, subCategoryId1: data.id }));
+            if (level === 3) setFormData(prev => ({ ...prev, subCategoryId2: data.id }));
+        } catch (err) {
+            alert('Αποτυχία δημιουργίας κατηγορίας.');
+        }
+    };
+
+    const handleEditCategory = async (id: number | string) => {
+        if (!id) return;
+        const cat = categories.find(c => c.id === Number(id));
+        if (!cat) return;
+        const newName = window.prompt('Επεξεργασία ονόματος:', cat.name);
+        if (!newName || newName === cat.name) return;
+        try {
+            const { data } = await axios.put(`${API_URL}/${shopType}-categories/${id}`, 
+                { name: newName }, 
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            setCategories(categories.map(c => c.id === data.id ? data : c));
+        } catch (err) {
+            alert('Αποτυχία επεξεργασίας.');
+        }
+    };
+
+    const handleDeleteCategory = async (id: number | string) => {
+        if (!id) return;
+        const hasChildren = categories.some(c => c.parentId === Number(id));
+        if (hasChildren) {
+            alert('Δεν μπορείτε να διαγράψετε αυτή την κατηγορία γιατί περιέχει υποκατηγορίες.');
+            return;
+        }
+        if (window.confirm('Είστε σίγουροι ότι θέλετε να την διαγράψετε;')) {
+            try {
+                await axios.delete(`${API_URL}/${shopType}-categories/${id}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setCategories(categories.filter(c => c.id !== Number(id)));
+                if (formData.mainCategoryId === id) setFormData(prev => ({ ...prev, mainCategoryId: '', subCategoryId1: '', subCategoryId2: '' }));
+                if (formData.subCategoryId1 === id) setFormData(prev => ({ ...prev, subCategoryId1: '', subCategoryId2: '' }));
+                if (formData.subCategoryId2 === id) setFormData(prev => ({ ...prev, subCategoryId2: '' }));
+            } catch (err) {
+                alert('Αποτυχία διαγραφής.');
+            }
+        }
+    };
 
     const handleThumbnailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -116,14 +197,22 @@ const AddProductPage: React.FC = () => {
         setError(null);
 
         try {
-            await axios.post(`${API_URL}/${shopType}-products`, {
+            const payload = {
                 ...formData,
                 price: parseFloat(formData.price),
                 features: formData.features.split(',').map(f => f.trim()).filter(f => f !== ''),
                 subCategoryId2: formData.subCategoryId2 || null
-            }, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            };
+
+            if (isEditMode) {
+                await axios.put(`${API_URL}/${shopType}-products/${id}`, payload, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+            } else {
+                await axios.post(`${API_URL}/${shopType}-products`, payload, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+            }
 
             // Redirect back to admin portal
             navigate('/admin/dashboard');
@@ -145,8 +234,8 @@ const AddProductPage: React.FC = () => {
 
                 <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-sm border border-gray-100">
                     <div className="mb-10">
-                        <h1 className="text-3xl font-extrabold text-gray-900 mb-2">Νέο Προϊόν</h1>
-                        <p className="text-gray-500">Συμπληρώστε τα στοιχεία και ανεβάστε φωτογραφίες του νέου προϊόντος.</p>
+                        <h1 className="text-3xl font-extrabold text-gray-900 mb-2">{isEditMode ? 'Επεξεργασία Προϊόντος' : 'Νέο Προϊόν'}</h1>
+                        <p className="text-gray-500">Συμπληρώστε τα στοιχεία και ανεβάστε φωτογραφίες του προϊόντος.</p>
                     </div>
 
                     {error && (
@@ -204,35 +293,50 @@ const AddProductPage: React.FC = () => {
                                 {/* Level 1 — Main Category */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Κύρια Κατηγορία *</label>
-                                    <select required name="mainCategoryId" value={formData.mainCategoryId} onChange={handleChange} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700">
-                                        <option value="" disabled>Επιλογή κατηγορίας</option>
-                                        {categories.filter(c => c.level === 1).map(cat => (
-                                            <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                        ))}
-                                    </select>
+                                    <div className="flex items-center gap-2">
+                                        <select required name="mainCategoryId" value={formData.mainCategoryId} onChange={handleChange} className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700">
+                                            <option value="" disabled>Επιλογή κατηγορίας</option>
+                                            {categories.filter(c => c.level === 1).map(cat => (
+                                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                            ))}
+                                        </select>
+                                        <button type="button" onClick={() => handleCreateCategory(1, null)} className="p-3 bg-green-50 text-green-600 rounded-xl hover:bg-green-100" title="Νέα Κατηγορία"><Plus size={18} /></button>
+                                        <button type="button" onClick={() => handleEditCategory(formData.mainCategoryId)} disabled={!formData.mainCategoryId} className="p-3 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 disabled:opacity-50" title="Επεξεργασία"><Edit2 size={18} /></button>
+                                        <button type="button" onClick={() => handleDeleteCategory(formData.mainCategoryId)} disabled={!formData.mainCategoryId} className="p-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 disabled:opacity-50" title="Διαγραφή"><Trash2 size={18} /></button>
+                                    </div>
                                 </div>
 
                                 {/* Level 2 — Subcategory 1 (mandatory) */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Υποκατηγορία *</label>
-                                    <select required disabled={!formData.mainCategoryId} name="subCategoryId1" value={formData.subCategoryId1} onChange={handleChange} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700 disabled:bg-gray-100 disabled:text-gray-400">
-                                        <option value="" disabled>Επιλογή υποκατηγορίας</option>
-                                        {categories.filter(c => c.parentId === Number(formData.mainCategoryId) && c.level === 2).map(cat => (
-                                            <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                        ))}
-                                    </select>
+                                    <div className="flex items-center gap-2">
+                                        <select required disabled={!formData.mainCategoryId} name="subCategoryId1" value={formData.subCategoryId1} onChange={handleChange} className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700 disabled:bg-gray-100 disabled:text-gray-400">
+                                            <option value="" disabled>Επιλογή υποκατηγορίας</option>
+                                            {categories.filter(c => c.parentId === Number(formData.mainCategoryId) && c.level === 2).map(cat => (
+                                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                            ))}
+                                        </select>
+                                        <button type="button" onClick={() => handleCreateCategory(2, Number(formData.mainCategoryId))} disabled={!formData.mainCategoryId} className="p-3 bg-green-50 text-green-600 rounded-xl hover:bg-green-100 disabled:opacity-50" title="Νέα Υποκατηγορία"><Plus size={18} /></button>
+                                        <button type="button" onClick={() => handleEditCategory(formData.subCategoryId1)} disabled={!formData.subCategoryId1} className="p-3 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 disabled:opacity-50" title="Επεξεργασία"><Edit2 size={18} /></button>
+                                        <button type="button" onClick={() => handleDeleteCategory(formData.subCategoryId1)} disabled={!formData.subCategoryId1} className="p-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 disabled:opacity-50" title="Διαγραφή"><Trash2 size={18} /></button>
+                                    </div>
                                 </div>
 
                                 {/* Level 3 — Company (Gallery only, optional) */}
                                 {shopType === 'gallery' && (
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">Εταιρεία / Κατασκευαστής <span className="text-gray-400 font-normal">(Προαιρετικό)</span></label>
-                                        <select disabled={!formData.subCategoryId1} name="subCategoryId2" value={formData.subCategoryId2} onChange={handleChange} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700 disabled:bg-gray-100 disabled:text-gray-400">
-                                            <option value="">Καμία</option>
-                                            {categories.filter(c => c.parentId === Number(formData.subCategoryId1) && c.level === 3).map(cat => (
-                                                <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                            ))}
-                                        </select>
+                                        <div className="flex items-center gap-2">
+                                            <select disabled={!formData.subCategoryId1} name="subCategoryId2" value={formData.subCategoryId2} onChange={handleChange} className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700 disabled:bg-gray-100 disabled:text-gray-400">
+                                                <option value="">Καμία</option>
+                                                {categories.filter(c => c.parentId === Number(formData.subCategoryId1) && c.level === 3).map(cat => (
+                                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                                ))}
+                                            </select>
+                                            <button type="button" onClick={() => handleCreateCategory(3, Number(formData.subCategoryId1))} disabled={!formData.subCategoryId1} className="p-3 bg-green-50 text-green-600 rounded-xl hover:bg-green-100 disabled:opacity-50" title="Νέα Εταιρεία"><Plus size={18} /></button>
+                                            <button type="button" onClick={() => handleEditCategory(formData.subCategoryId2)} disabled={!formData.subCategoryId2} className="p-3 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 disabled:opacity-50" title="Επεξεργασία"><Edit2 size={18} /></button>
+                                            <button type="button" onClick={() => handleDeleteCategory(formData.subCategoryId2)} disabled={!formData.subCategoryId2} className="p-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 disabled:opacity-50" title="Διαγραφή"><Trash2 size={18} /></button>
+                                        </div>
                                     </div>
                                 )}
                             </div>
@@ -304,7 +408,7 @@ const AddProductPage: React.FC = () => {
                             <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto px-10 py-4 rounded-xl text-lg shadow-xl shadow-green-900/10">
                                 {isSubmitting ? (
                                     <span className="flex items-center"><Loader2 className="w-5 h-5 mr-3 animate-spin" /> Αποθήκευση...</span>
-                                ) : 'Δημιουργία Προϊόντος'}
+                                ) : isEditMode ? 'Αποθήκευση Αλλαγών' : 'Δημιουργία Προϊόντος'}
                             </Button>
                         </div>
 

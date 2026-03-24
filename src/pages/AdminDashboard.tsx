@@ -29,7 +29,6 @@ const AdminDashboard = () => {
     const [featuredFilterSub, setFeaturedFilterSub] = useState<string>('');
     const [featuredSearch, setFeaturedSearch] = useState<string>('');
 
-    const [editingProduct, setEditingProduct] = useState<any | null>(null);
     const [editingCategory, setEditingCategory] = useState<any | null>(null);
 
     // Check auth
@@ -91,19 +90,6 @@ const AdminDashboard = () => {
             } catch (err) {
                 alert('Αποτυχία διαγραφής προϊόντος.');
             }
-        }
-    };
-
-    const handleEditProductSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            const { data } = await axios.put(`${API_URL}/${endpointPrefix}-products/${editingProduct.id}`, editingProduct, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            setProducts(products.map(p => (p.id === data.id ? data : p)));
-            setEditingProduct(null);
-        } catch (err) {
-            alert('Αποτυχία ενημέρωσης προϊόντος. Βεβαιωθείτε ότι έχετε επιλέξει τις υποχρεωτικές κατηγορίες.');
         }
     };
 
@@ -400,7 +386,7 @@ const AdminDashboard = () => {
                                                         >
                                                             <Star size={18} className={product.isFeatured ? "fill-current" : ""} />
                                                         </button>
-                                                        <button onClick={() => setEditingProduct(product)} className="text-blue-600 hover:text-blue-900 p-2 hover:bg-blue-50 rounded-lg transition-colors inline-block" title="Επεξεργασία">
+                                                        <button onClick={() => navigate(`/products/edit/${activeShop}/${product.id}`)} className="text-blue-600 hover:text-blue-900 p-2 hover:bg-blue-50 rounded-lg transition-colors inline-block" title="Επεξεργασία">
                                                             <Edit size={18} />
                                                         </button>
                                                         <button onClick={() => handleDeleteProduct(product.id)} className="text-red-600 hover:text-red-900 p-2 hover:bg-red-50 rounded-lg transition-colors inline-block" title="Διαγραφή">
@@ -662,74 +648,6 @@ const AdminDashboard = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Product Edit Modal */}
-            {editingProduct && (
-                <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-                    <div className="bg-white rounded-[2rem] max-w-xl w-full p-8 shadow-2xl animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-bold text-gray-900">Επεξεργασία Προϊόντος</h2>
-                            <button onClick={() => setEditingProduct(null)} className="p-2 hover:bg-gray-100 rounded-full transition-colors"><X className="text-gray-500" /></button>
-                        </div>
-                        <form onSubmit={handleEditProductSubmit} className="space-y-5">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Όνομα</label>
-                                <input required type="text" value={editingProduct.name} onChange={e => setEditingProduct({ ...editingProduct, name: e.target.value })} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none" />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-1">Τιμή (€)</label>
-                                    <input required type="number" step="0.01" value={editingProduct.price} onChange={e => setEditingProduct({ ...editingProduct, price: parseFloat(e.target.value) })} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-1">Κατασκευαστής</label>
-                                    <input type="text" value={editingProduct.company || ''} onChange={e => setEditingProduct({ ...editingProduct, company: e.target.value })} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none" />
-                                </div>
-                            </div>
-
-                            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-200 space-y-4">
-                                <h3 className="font-bold text-gray-900">Κατηγοριοποίηση</h3>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Κύρια Κατηγορία *</label>
-                                    <select required value={editingProduct.mainCategoryId || ''} onChange={e => setEditingProduct({ ...editingProduct, mainCategoryId: parseInt(e.target.value), subCategoryId1: null, subCategoryId2: null })} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl outline-none">
-                                        <option value="" disabled>Επιλογή Κύριας Κατηγορίας</option>
-                                        {categories.filter(c => c.level === 1).map(cat => (
-                                            <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Υποκατηγορία *</label>
-                                    <select required disabled={!editingProduct.mainCategoryId} value={editingProduct.subCategoryId1 || ''} onChange={e => setEditingProduct({ ...editingProduct, subCategoryId1: parseInt(e.target.value), subCategoryId2: null })} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl outline-none disabled:bg-gray-100">
-                                        <option value="" disabled>Επιλογή υποκατηγορίας</option>
-                                        {categories.filter(c => Number(c.parentId) === Number(editingProduct.mainCategoryId) && c.level === 2).map(cat => (
-                                            <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                {/* Level 3 company — Gallery only */}
-                                {activeShop === 'gallery' && (
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Εταιρεία / Κατασκευαστής (Προαιρετικό)</label>
-                                        <select disabled={!editingProduct.subCategoryId1} value={editingProduct.subCategoryId2 || ''} onChange={e => setEditingProduct({ ...editingProduct, subCategoryId2: e.target.value ? parseInt(e.target.value) : null })} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl outline-none disabled:bg-gray-100">
-                                            <option value="">Καμία</option>
-                                            {categories.filter(c => Number(c.parentId) === Number(editingProduct.subCategoryId1) && c.level === 3).map(cat => (
-                                                <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Περιγραφή</label>
-                                <textarea required value={editingProduct.description} onChange={e => setEditingProduct({ ...editingProduct, description: e.target.value })} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none" rows={4}></textarea>
-                            </div>
-                            <Button type="submit" className="w-full py-4 rounded-xl text-lg mt-4">Αποθήκευση Αλλαγών</Button>
-                        </form>
-                    </div>
-                </div>
-            )}
 
             {/* Category Edit Modal */}
             {editingCategory && (
