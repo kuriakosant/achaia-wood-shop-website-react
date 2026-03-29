@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { LogOut, Plus, Edit, Trash2, X, Package, Tags, Star, ChevronRight, Layers, ClipboardList, Download, LayoutTemplate, Search } from 'lucide-react';
+import { LogOut, Plus, Edit, Trash2, X, Package, Tags, Star, ChevronRight, Layers, ClipboardList, Download, LayoutTemplate, Search, MessageSquare, Check, Mail } from 'lucide-react';
 import Button from '../components/ui/Button';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -18,10 +18,11 @@ const AdminDashboard = () => {
     const [loading, setLoading] = useState(true);
 
     const [orders, setOrders] = useState<any[]>([]);
+    const [contactMessages, setContactMessages] = useState<any[]>([]);
 
     // UI State
     const [activeShop, setActiveShop] = useState<'wood' | 'gallery'>('wood');
-    const [activeTab, setActiveTab] = useState<'products' | 'categories' | 'orders' | 'featured'>('products');
+    const [activeTab, setActiveTab] = useState<'products' | 'categories' | 'orders' | 'featured' | 'messages'>('products');
 
     // Featured tab filter state
     const [featuredShop, setFeaturedShop] = useState<'wood' | 'gallery'>('wood');
@@ -47,18 +48,20 @@ const AdminDashboard = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [wProd, wCat, gProd, gCat, ordRes] = await Promise.all([
+            const [wProd, wCat, gProd, gCat, ordRes, msgRes] = await Promise.all([
                 axios.get(`${API_URL}/wood-products`),
                 axios.get(`${API_URL}/wood-categories`),
                 axios.get(`${API_URL}/gallery-products`),
                 axios.get(`${API_URL}/gallery-categories`),
                 axios.get(`${API_URL}/orders`, { headers: { Authorization: `Bearer ${token}` } }),
+                axios.get(`${API_URL}/contact-messages`, { headers: { Authorization: `Bearer ${token}` } }),
             ]);
             setWoodProducts(wProd.data);
             setWoodCategories(wCat.data);
             setGalleryProducts(gProd.data);
             setGalleryCategories(gCat.data);
             setOrders(ordRes.data);
+            setContactMessages(msgRes.data);
         } catch (err) {
             console.error('Failed to fetch data');
         } finally {
@@ -198,6 +201,30 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleToggleReadMessage = async (id: number) => {
+        try {
+            const { data } = await axios.put(`${API_URL}/contact-messages/${id}/read`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setContactMessages(contactMessages.map(m => (m.id === id ? data : m)));
+        } catch (err) {
+            alert('Αποτυχία ενημέρωσης κατάστασης μηνύματος.');
+        }
+    };
+
+    const handleDeleteMessage = async (id: number) => {
+        if (window.confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτό το μήνυμα;')) {
+            try {
+                await axios.delete(`${API_URL}/contact-messages/${id}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setContactMessages(contactMessages.filter(m => m.id !== id));
+            } catch (err) {
+                alert('Αποτυχία διαγραφής μηνύματος.');
+            }
+        }
+    };
+
     if (loading) return <div className="text-center py-20 flex justify-center"><div className="w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>;
 
     const mainCats = categories.filter(c => c.level === 1);
@@ -250,11 +277,25 @@ const AdminDashboard = () => {
                             </button>
                             <button
                                 onClick={() => setActiveTab('orders')}
-                                className={`w-full flex items-center px-4 py-3 rounded-xl transition-colors font-medium ${
+                                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-colors font-medium ${
                                     activeTab === 'orders' ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:bg-gray-50'
                                 }`}
                             >
-                                <ClipboardList className="w-5 h-5 mr-3" /> Παραγγελίες
+                                <div className="flex items-center"><ClipboardList className="w-5 h-5 mr-3" /> Παραγγελίες</div>
+                                {orders.filter(o => o.status === 'Pending').length > 0 && (
+                                    <span className="bg-red-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded-full">{orders.filter(o => o.status === 'Pending').length}</span>
+                                )}
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('messages')}
+                                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-colors font-medium ${
+                                    activeTab === 'messages' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'
+                                }`}
+                            >
+                                <div className="flex items-center"><MessageSquare className="w-5 h-5 mr-3" /> Μηνύματα</div>
+                                {contactMessages.filter(m => !m.isRead).length > 0 && (
+                                    <span className="bg-blue-100 text-blue-600 text-xs font-bold px-2 py-0.5 rounded-full">{contactMessages.filter(m => !m.isRead).length}</span>
+                                )}
                             </button>
                             <button
                                 onClick={() => setActiveTab('featured')}
@@ -340,6 +381,7 @@ const AdminDashboard = () => {
                                                     </td>
                                                 </tr>
                                             ))}
+                                {/* No orders empty state handling */}
                                             {orders.length === 0 && (
                                                 <tr>
                                                     <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
@@ -349,6 +391,61 @@ const AdminDashboard = () => {
                                             )}
                                         </tbody>
                                     </table>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Contact Messages */}
+                        {activeTab === 'messages' && (
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-900 leading-none mt-1 mb-8">Μηνύματα Επικοινωνίας</h2>
+                                <div className="grid grid-cols-1 gap-4">
+                                    {contactMessages.map((msg) => (
+                                        <div key={msg.id} className={`bg-white rounded-2xl border ${msg.isRead ? 'border-gray-100 opacity-75' : 'border-blue-100 ring-2 ring-blue-50'} p-6 shadow-sm flex flex-col md:flex-row gap-6 transition-all`}>
+                                            <div className="flex-1">
+                                                <div className="flex justify-between items-start mb-4">
+                                                    <div>
+                                                        <h3 className="font-bold text-gray-900 text-lg flex items-center gap-2">
+                                                            {msg.name}
+                                                            {!msg.isRead && <span className="text-[10px] uppercase font-bold tracking-wider bg-blue-500 text-white px-2 py-0.5 rounded-md">Νεο</span>}
+                                                        </h3>
+                                                        <div className="flex flex-wrap gap-4 text-sm text-gray-500 mt-2">
+                                                            <a href={`mailto:${msg.email}`} className="flex items-center hover:text-blue-600"><Mail className="w-4 h-4 mr-1" /> {msg.email}</a>
+                                                            <span className="flex items-center"><Phone className="w-4 h-4 mr-1" /> {msg.phone}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-sm font-medium text-gray-400 bg-gray-50 px-3 py-1 rounded-lg border border-gray-100">
+                                                        {new Date(msg.createdAt).toLocaleString('el-GR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                                    </div>
+                                                </div>
+                                                <div className="bg-gray-50 rounded-xl p-4 text-gray-700 text-base leading-relaxed whitespace-pre-wrap border border-gray-100">
+                                                    {msg.message}
+                                                </div>
+                                            </div>
+                                            <div className="flex md:flex-col gap-2 shrink-0 md:w-40 justify-end md:justify-start border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6">
+                                                <button
+                                                    onClick={() => handleToggleReadMessage(msg.id)}
+                                                    className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-bold transition-colors w-full ${
+                                                        msg.isRead ? 'bg-gray-100 text-gray-500 hover:bg-gray-200' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                                                    }`}
+                                                >
+                                                    <Check className="w-4 h-4" /> {msg.isRead ? 'Διαβάστηκε' : 'Σήμανση'}
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeleteMessage(msg.id)}
+                                                    className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-bold bg-white border border-red-100 text-red-600 hover:bg-red-50 transition-colors w-full"
+                                                >
+                                                    <Trash2 className="w-4 h-4" /> Διαγραφή
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {contactMessages.length === 0 && (
+                                        <div className="text-center py-16 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                                            <MessageSquare className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                            <p className="text-gray-500">Δεν υπάρχουν μηνύματα.</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         )}
@@ -631,7 +728,7 @@ const AdminDashboard = () => {
                                                                             : 'bg-gray-100 text-gray-600 hover:bg-amber-50 hover:text-amber-700'
                                                                     }`}
                                                                 >
-                                                                    <Star className={`w-3.5 h-3.5 ${p.isFeatured ? 'fill-white' : ''}`} />
+                                                            <Star className={`w-3.5 h-3.5 ${p.isFeatured ? 'fill-white' : ''}`} />
                                                                     {p.isFeatured ? 'Αφαίρεση από Αρχική' : 'Προσθήκη στην Αρχική'}
                                                                 </button>
                                                             </div>

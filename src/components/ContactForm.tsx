@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, AlertCircle } from 'lucide-react';
 import Button from './ui/Button';
+import axios from 'axios';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 interface FormData {
   name: string;
@@ -18,6 +21,7 @@ const ContactForm: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -27,13 +31,13 @@ const ContactForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError(null);
     
-    // Simulate API call since no endpoint is fully connected yet
-    setTimeout(() => {
-      console.log('Form submitted:', formData);
+    try {
+      await axios.post(`${API_URL}/contact-messages`, formData);
       setIsSubmitting(false);
       setIsSuccess(true);
       setFormData({ name: '', phone: '', email: '', message: '' });
@@ -42,7 +46,11 @@ const ContactForm: React.FC = () => {
       setTimeout(() => {
         setIsSuccess(false);
       }, 8000);
-    }, 1500);
+    } catch (err) {
+      console.error('Failed to send message:', err);
+      setError('Παρουσιάστηκε σφάλμα κατά την αποστολή του μηνύματος. Παρακαλώ δοκιμάστε ξανά ή επικοινωνήστε μαζί μας τηλεφωνικά.');
+      setIsSubmitting(false);
+    }
   };
 
   const inputClasses = "w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all duration-300 outline-none placeholder-gray-400";
@@ -68,6 +76,12 @@ const ContactForm: React.FC = () => {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6 animate-in fade-in duration-500">
+          {error && (
+            <div className="bg-red-50 text-red-700 p-4 rounded-xl border border-red-100 flex items-start">
+              <AlertCircle className="w-5 h-5 mr-3 shrink-0 mt-0.5" />
+              <p className="text-sm font-medium">{error}</p>
+            </div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label htmlFor="name" className="block text-sm font-semibold text-gray-700 ml-1">
