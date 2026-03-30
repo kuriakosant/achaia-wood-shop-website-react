@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { LogOut, Plus, Edit, Trash2, X, Package, Tags, Star, ChevronRight, Layers, ClipboardList, Download, LayoutTemplate, Search, MessageSquare, Check, Mail } from 'lucide-react';
+import { LogOut, Plus, Edit, Trash2, X, Package, Tags, Star, ChevronRight, Layers, ClipboardList, Download, LayoutTemplate, Search, MessageSquare, Check, Mail, Phone } from 'lucide-react';
 import Button from '../components/ui/Button';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
