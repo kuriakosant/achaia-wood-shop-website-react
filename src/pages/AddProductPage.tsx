@@ -300,9 +300,6 @@ const AddProductPage: React.FC = () => {
                                                 <option key={cat.id} value={cat.id}>{cat.name}</option>
                                             ))}
                                         </select>
-                                        <button type="button" onClick={() => handleCreateCategory(1, null)} className="p-3 bg-green-50 text-green-600 rounded-xl hover:bg-green-100" title="Νέα Κατηγορία"><Plus size={18} /></button>
-                                        <button type="button" onClick={() => handleEditCategory(formData.mainCategoryId)} disabled={!formData.mainCategoryId} className="p-3 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 disabled:opacity-50" title="Επεξεργασία"><Edit2 size={18} /></button>
-                                        <button type="button" onClick={() => handleDeleteCategory(formData.mainCategoryId)} disabled={!formData.mainCategoryId} className="p-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 disabled:opacity-50" title="Διαγραφή"><Trash2 size={18} /></button>
                                     </div>
                                 </div>
 

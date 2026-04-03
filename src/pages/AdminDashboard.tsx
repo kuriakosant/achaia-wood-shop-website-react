@@ -760,21 +760,6 @@ const AdminDashboard = () => {
                                 <input required type="text" value={editingCategory.name} onChange={e => setEditingCategory({ ...editingCategory, name: e.target.value })} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none" placeholder="π.χ. Πόρτες" />
                             </div>
 
-                            {!editingCategory.id && ( // Only allow setting parent on creation for simplicity, or we can allow moving tree
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-1">Υπάγεται σε (Γονέα)</label>
-                                    <select value={editingCategory.parentId || ''} onChange={e => setEditingCategory({ ...editingCategory, parentId: e.target.value })} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none">
-                                        <option value="">ΚΑΜΙΑ (Κύρια Κατηγορία Level 1)</option>
-                                        {/* Show only Level 1 and Level 2 as possible parents (max depth 3) */}
-                                        {categories.filter(c => c.level < 3).map(cat => (
-                                            <option key={cat.id} value={cat.id}>
-                                                {cat.level === 1 ? `[Level 1] ${cat.name}` : `   [Level 2] ${cat.name}`}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            )}
-
                             <Button type="submit" className="w-full py-4 rounded-xl text-lg mt-4">Αποθήκευση</Button>
                         </form>
                     </div>
