@@ -348,9 +348,9 @@ const AdminDashboard = () => {
                                                     <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
                                                         {order.specialInstructions || '-'}
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm flex items-center">
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm align-middle">
                                                         {order.fileUrl ? (
-                                                            <a href={order.fileUrl} download={`Order_${order.id}`} className="text-green-600 hover:text-green-800 flex items-center font-medium bg-green-50 px-3 py-1.5 rounded-lg border border-green-100">
+                                                            <a href={order.fileUrl} download={`${order.customerName}_Παραγγελία.xlsx`} className="text-green-600 hover:text-green-800 inline-flex items-center font-medium bg-green-50 px-3 py-1.5 rounded-lg border border-green-100">
                                                                 <Download className="w-4 h-4 mr-2" /> Λήψη
                                                             </a>
                                                         ) : <span className="text-gray-400">-</span>}

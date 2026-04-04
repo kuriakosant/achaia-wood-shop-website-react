@@ -250,7 +250,7 @@ const OrderPage: React.FC = () => {
                   <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto mb-4" />
                   <h3 className="text-xl font-bold mb-2">Η παραγγελία εστάλη επιτυχώς!</h3>
                   <p className="text-green-700">Θα την επεξεργαστούμε άμεσα και θα επικοινωνήσουμε μαζί σας αν χρειαστεί.</p>
-                  <Button onClick={() => setSuccess(false)} className="mt-6 mx-auto">Νέα Παραγγελία</Button>
+                  <Button onClick={() => setSuccess(false)} className="mt-8 mx-auto w-fit px-8 py-3 rounded-full text-base font-bold shadow-sm">Νέα Παραγγελία</Button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-8">
