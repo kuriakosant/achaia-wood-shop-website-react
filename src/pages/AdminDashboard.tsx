@@ -362,6 +362,12 @@ const AdminDashboard = () => {
                                                         <div className="text-sm font-bold text-gray-900">{order.customerName}</div>
                                                         <div className="text-xs text-gray-500">{order.phone}</div>
                                                         <div className="text-xs text-gray-400 mt-1">{order.documentType} | {order.paymentMethod}</div>
+                                                        {order.documentType === 'Τιμολόγιο' && (
+                                                            <div className="mt-2 p-2 bg-gray-50 rounded border border-gray-100 text-xs text-gray-600">
+                                                                <span className="font-bold">ΑΦΜ:</span> {order.afm}
+                                                                {order.companyName && <span><br/><span className="font-bold">Εταιρεία:</span> {order.companyName}</span>}
+                                                            </div>
+                                                        )}
                                                     </td>
                                                     <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
                                                         {order.specialInstructions || '-'}

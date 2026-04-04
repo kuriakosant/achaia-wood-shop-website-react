@@ -59,6 +59,8 @@ const OrderPage: React.FC = () => {
     paymentMethod: 'Μετρητά',
     documentType: 'Απόδειξη',
     specialInstructions: '',
+    afm: '',
+    companyName: '',
   });
 
   // ── File upload ──
@@ -140,7 +142,7 @@ const OrderPage: React.FC = () => {
         fileUrl: finalFileUrl,
       });
       setSuccess(true);
-      setFormData({ customerName: '', phone: '', paymentMethod: 'Μετρητά', documentType: 'Απόδειξη', specialInstructions: '' });
+      setFormData({ customerName: '', phone: '', paymentMethod: 'Μετρητά', documentType: 'Απόδειξη', specialInstructions: '', afm: '', companyName: '' });
       setFileBase64('');
       setFileName('');
       setRows([emptyRow(1), emptyRow(2), emptyRow(3)]);
@@ -291,6 +293,24 @@ const OrderPage: React.FC = () => {
                       </select>
                     </div>
                   </div>
+
+                  {/* ── Additional Invoice Info ── */}
+                  {formData.documentType === 'Τιμολόγιο' && (
+                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50/50 p-6 rounded-2xl border border-gray-200">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">ΑΦΜ *</label>
+                        <input required type="text" name="afm" value={formData.afm} onChange={handleChange}
+                          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:bg-gray-50 focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400"
+                          placeholder="Εισάγετε ΑΦΜ" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Επωνυμία Εταιρείας <span className="font-normal text-gray-400">(Προαιρετικό)</span></label>
+                        <input type="text" name="companyName" value={formData.companyName} onChange={handleChange}
+                          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:bg-gray-50 focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400"
+                          placeholder="π.χ. Ιωάννης Α.Ε." />
+                      </div>
+                    </motion.div>
+                  )}
 
                   {/* ── Mini Excel Editor ── */}
                   <div>
