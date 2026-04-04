@@ -6,6 +6,24 @@ import Button from '../components/ui/Button';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
+const getFileTypeAndExtension = (fileUrl: string) => {
+    if (!fileUrl.startsWith('data:')) return { type: 'Άγνωστο', ext: 'bin' };
+    const mimeMatch = fileUrl.match(/^data:([^;]+);/);
+    if (!mimeMatch) return { type: 'Άγνωστο', ext: 'bin' };
+    const mime = mimeMatch[1].toLowerCase();
+    
+    if (mime.includes('image')) {
+        const ext = mime.split('/')[1] || 'jpg';
+        return { type: `Εικόνα (${ext.toUpperCase()})`, ext: ext };
+    }
+    if (mime.includes('pdf')) return { type: 'PDF', ext: 'pdf' };
+    if (mime.includes('spreadsheet') || mime.includes('excel')) return { type: 'Excel', ext: 'xlsx' };
+    if (mime.includes('csv')) return { type: 'CSV', ext: 'csv' };
+    if (mime.includes('text')) return { type: 'Κείμενο', ext: 'txt' };
+    
+    return { type: 'Αρχείο', ext: 'bin' };
+};
+
 const AdminDashboard = () => {
     // State for Wood
     const [woodProducts, setWoodProducts] = useState<any[]>([]);
@@ -349,11 +367,17 @@ const AdminDashboard = () => {
                                                         {order.specialInstructions || '-'}
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm align-middle">
-                                                        {order.fileUrl ? (
-                                                            <a href={order.fileUrl} download={`${order.customerName}_Παραγγελία.xlsx`} className="text-green-600 hover:text-green-800 inline-flex items-center font-medium bg-green-50 px-3 py-1.5 rounded-lg border border-green-100">
-                                                                <Download className="w-4 h-4 mr-2" /> Λήψη
-                                                            </a>
-                                                        ) : <span className="text-gray-400">-</span>}
+                                                        {order.fileUrl ? (() => {
+                                                            const { type, ext } = getFileTypeAndExtension(order.fileUrl);
+                                                            return (
+                                                                <div className="flex flex-col gap-1 items-start">
+                                                                    <span className="text-[10px] uppercase font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md border border-gray-200">1 Αρχείο ({type})</span>
+                                                                    <a href={order.fileUrl} download={`${order.customerName.replace(/\s+/g, '_')}_Παραγγελία.${ext}`} className="text-green-600 hover:text-green-800 inline-flex items-center font-medium bg-green-50 px-3 py-1.5 rounded-lg border border-green-100 transition-colors">
+                                                                        <Download className="w-4 h-4 mr-2" /> Λήψη
+                                                                    </a>
+                                                                </div>
+                                                            );
+                                                        })() : <span className="text-gray-400">-</span>}
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                                                         <select

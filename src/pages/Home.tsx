@@ -44,15 +44,15 @@ function Home() {
       fetch(`${apiUrl}/wood-products`).then(res => res.json()),
       fetch(`${apiUrl}/gallery-products`).then(res => res.json())
     ])
-    .then(([woodData, galleryData]) => {
-      const woodProducts = Array.isArray(woodData) ? woodData.map((p: any) => ({ ...p, shopType: 'wood' })) : [];
-      const galleryProducts = Array.isArray(galleryData) ? galleryData.map((p: any) => ({ ...p, shopType: 'gallery' })) : [];
-      const allProducts = [...woodProducts, ...galleryProducts];
-      
-      const featured = allProducts.filter(p => p.isFeatured);
-      setFeaturedProducts(featured.length > 0 ? featured.slice(0, 3) : allProducts.slice(0, 3));
-    })
-    .catch((error) => console.error('Error fetching live products:', error));
+      .then(([woodData, galleryData]) => {
+        const woodProducts = Array.isArray(woodData) ? woodData.map((p: any) => ({ ...p, shopType: 'wood' })) : [];
+        const galleryProducts = Array.isArray(galleryData) ? galleryData.map((p: any) => ({ ...p, shopType: 'gallery' })) : [];
+        const allProducts = [...woodProducts, ...galleryProducts];
+
+        const featured = allProducts.filter(p => p.isFeatured);
+        setFeaturedProducts(featured.length > 0 ? featured.slice(0, 3) : allProducts.slice(0, 3));
+      })
+      .catch((error) => console.error('Error fetching live products:', error));
   }, []);
 
   return (
@@ -162,7 +162,7 @@ function Home() {
         >
           <div className="flex flex-col md:flex-row justify-between items-end mb-10 pb-4 border-b border-gray-200">
             <div>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">Featured Products</h2>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">Τα προϊόντα μας</h2>
               <p className="text-gray-500 mt-2">Επιλεγμένα κομμάτια για τους πιο απαιτητικούς επαγγελματίες</p>
             </div>
             <Link to="/products" className="hidden md:inline-flex items-center text-green-600 font-semibold hover:text-green-700 transition-colors">
@@ -244,9 +244,9 @@ function Home() {
               { name: "Μαρία Σ.", role: "Αρχιτέκτονας Εσωτερικών Χώρων", text: "Βρίσκω πάντα μοναδικά και πρωτοποριακά υλικά για τα project μου. Η ποικιλία των προϊόντων τους με βοηθά να υλοποιώ κάθε σχεδιαστική μου ιδέα." },
               { name: "Δημήτρης Π.", role: "Κατασκευαστής", text: "Η ταχύτητα παράδοσης και ο επαγγελματισμός της ομάδας τους, κάνουν την δουλειά μου πολύ πιο εύκολη. Τους εμπιστεύομαι τυφλά." }
             ].map((testimonial, idx) => (
-              <motion.div 
-                key={idx} 
-                variants={fadeInUp} 
+              <motion.div
+                key={idx}
+                variants={fadeInUp}
                 whileHover={{ y: -10, scale: 1.02 }}
                 className="bg-white p-8 md:p-10 rounded-[2rem] shadow-xl shadow-gray-200/40 border border-gray-50 text-center relative mt-6 transition-all duration-500 hover:shadow-2xl hover:shadow-green-900/10"
               >

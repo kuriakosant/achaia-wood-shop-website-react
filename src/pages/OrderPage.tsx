@@ -405,11 +405,11 @@ const OrderPage: React.FC = () => {
                             <p className="mt-2 text-sm text-gray-500">
                               <span className="font-medium text-green-600">Αναζήτηση αρχείου</span> ή σύρτε εδώ
                             </p>
-                            <p className="text-xs text-gray-400 mt-1">.xlsx · .pdf · .png · .jpg (Μέγ. 5MB)</p>
+                            <p className="text-xs text-gray-400 mt-1">.xlsx · .pdf · .png · .jpg · .txt · .csv (Μέγ. 5MB)</p>
                           </>
                         )}
                       </div>
-                      <input id="file-upload" type="file" accept=".xlsx,.pdf,.png,.jpg,.jpeg"
+                      <input id="file-upload" type="file" accept=".xlsx,.xls,.pdf,.png,.jpg,.jpeg,.txt,.csv"
                         onChange={handleFileChange}
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                     </div>
