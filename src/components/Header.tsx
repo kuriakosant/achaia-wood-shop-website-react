@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, Search, Phone, Mail, MapPin, Printer } from 'lucide-react';
+import { Menu, X, ChevronDown, Search, Phone, Mail, MapPin, Printer, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
 import antoniadisBlack from '../assets/ANTONIADIS-BLACK.png';
@@ -97,6 +97,10 @@ function Header() {
                 <Phone size={14} className="mr-1.5 xl:mr-2" />
                 <span>2610 434377</span>
               </a>
+              <Link to="/order" className="flex items-center bg-amber-500/90 backdrop-blur-sm text-white px-3 py-1.5 xl:px-4 rounded-full text-xs xl:text-sm font-bold hover:bg-amber-400 transition-colors shadow-lg shadow-amber-900/20 whitespace-nowrap">
+                <Send size={14} className="mr-1.5 xl:mr-2" />
+                Στείλτε Παραγγελία
+              </Link>
               <div
                 className="relative"
                 onMouseEnter={() => setIsContactOpen(true)}
