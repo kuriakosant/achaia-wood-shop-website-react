@@ -79,7 +79,7 @@ const ProductsGalleryPage: React.FC = () => {
         else if (selectedCatLevel === 2) catMatch = Number(product.subCategoryId1) === selectedCatId;
         else if (selectedCatLevel === 3) catMatch = Number(product.subCategoryId2) === selectedCatId;
       }
-      
+
       // 2. Company text filter (fallback if company string is set)
       let compMatch = true;
       if (selectedCompany !== 'Όλες') {
@@ -134,14 +134,13 @@ const ProductsGalleryPage: React.FC = () => {
                 ) : (
                   <span className="w-6 line-block"></span> // Spacer for alignment
                 )}
-                
+
                 <button
                   onClick={() => selectCategory(cat.id, cat.level)}
-                  className={`flex-1 text-left py-2 px-3 rounded-lg transition-colors font-medium border-l-2 ${
-                    isSelected 
-                      ? 'bg-green-50 text-green-700 border-green-500' 
-                      : 'border-transparent text-gray-700 hover:bg-gray-50 hover:text-green-600'
-                  }`}
+                  className={`flex-1 text-left py-2 px-3 rounded-lg transition-colors font-medium border-l-2 ${isSelected
+                    ? 'bg-green-50 text-green-700 border-green-500'
+                    : 'border-transparent text-gray-700 hover:bg-gray-50 hover:text-green-600'
+                    }`}
                 >
                   {cat.name}
                 </button>
@@ -168,8 +167,8 @@ const ProductsGalleryPage: React.FC = () => {
         >
           <div>
             <span className="text-green-600 font-semibold tracking-widest uppercase text-sm mb-2 block">Καταλογος</span>
-            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">Προϊόντα Γαλλερίας</h1>
-            <p className="text-gray-500 mt-4 text-lg max-w-xl">Εξερευνήστε τα εκλεκτά προϊόντα γαλλερίας, σχεδιασμένα για κορυφαία αισθητική και λειτουργικότητα.</p>
+            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">Προϊόντα Κιγκαλερίας</h1>
+            <p className="text-gray-500 mt-4 text-lg max-w-xl">Εξερευνήστε τα εκλεκτά προϊόντα κιγκαλερίας, σχεδιασμένα για κορυφαία αισθητική και λειτουργικότητα.</p>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto mt-6 md:mt-0">
             <div className="w-full sm:w-64">
@@ -177,8 +176,8 @@ const ProductsGalleryPage: React.FC = () => {
             </div>
             <div className="w-full sm:w-auto flex items-center bg-white rounded-xl border border-gray-200 px-3 py-1 shadow-sm focus-within:ring-2 focus-within:ring-green-400 focus-within:border-green-400 transition-all">
               <span className="text-gray-500 text-sm whitespace-nowrap mr-2">Ταξινόμηση:</span>
-              <select 
-                value={sortBy} 
+              <select
+                value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 className="bg-transparent text-gray-900 text-sm font-medium py-2 outline-none cursor-pointer w-full sm:w-auto"
               >
@@ -201,15 +200,15 @@ const ProductsGalleryPage: React.FC = () => {
             className="w-full lg:w-1/4 shrink-0"
           >
             <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col gap-8">
-              
+
               {/* Companies Filter */}
               {companies.length > 1 && (
                 <div>
                   <h2 className="text-lg font-bold mb-4 text-gray-900 flex items-center">
                     <Briefcase className="mr-2 w-5 h-5 text-green-500" /> Κατασκευαστής / Εταιρεία
                   </h2>
-                  <select 
-                    value={selectedCompany} 
+                  <select
+                    value={selectedCompany}
                     onChange={e => setSelectedCompany(e.target.value)}
                     className="w-full bg-gray-50 border border-gray-200 text-gray-800 text-sm rounded-xl py-3 px-4 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
                   >
@@ -223,8 +222,8 @@ const ProductsGalleryPage: React.FC = () => {
                 <h2 className="text-lg font-bold mb-4 text-gray-900 flex items-center">
                   <LayoutGrid className="mr-2 w-5 h-5 text-green-500" /> Κατηγορίες
                 </h2>
-                
-                <button 
+
+                <button
                   onClick={() => { setSelectedCatId(null); setSelectedCatLevel(null); }}
                   className={`w-full text-left py-3 px-4 rounded-xl font-medium mb-4 transition-colors border-2 ${selectedCatId === null ? 'bg-gray-900 text-white border-gray-900' : 'bg-gray-50 text-gray-700 border-gray-100 hover:bg-gray-100 hover:border-gray-200'}`}
                 >

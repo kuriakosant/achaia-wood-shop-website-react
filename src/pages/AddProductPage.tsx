@@ -38,52 +38,52 @@ const AddProductPage: React.FC = () => {
             navigate('/admin/login');
             return;
         }
-        
+
         axios.get(`${API_URL}/${shopType}-categories`)
             .then(res => setCategories(res.data))
             .catch(err => console.error('Failed to load categories', err));
 
         if (isEditMode) {
             axios.get(`${API_URL}/${shopType}-products/${id}`)
-                 .then(res => {
-                      const p = res.data;
-                      setFormData({
-                          name: p.name || '',
-                          price: p.price ? p.price.toString() : '',
-                          company: p.company || '',
-                          description: p.description || '',
-                          features: p.features ? p.features.join(', ') : '',
-                          mainCategoryId: p.mainCategoryId || '',
-                          subCategoryId1: p.subCategoryId1 || '',
-                          subCategoryId2: p.subCategoryId2 || '',
-                          image: p.image || '',
-                          gallery: p.gallery || [],
-                          sku: p.sku || ''
-                      });
-                 })
-                 .catch(() => setError('Αποτυχία φόρτωσης προϊόντος προς επεξεργασία.'));
+                .then(res => {
+                    const p = res.data;
+                    setFormData({
+                        name: p.name || '',
+                        price: p.price ? p.price.toString() : '',
+                        company: p.company || '',
+                        description: p.description || '',
+                        features: p.features ? p.features.join(', ') : '',
+                        mainCategoryId: p.mainCategoryId || '',
+                        subCategoryId1: p.subCategoryId1 || '',
+                        subCategoryId2: p.subCategoryId2 || '',
+                        image: p.image || '',
+                        gallery: p.gallery || [],
+                        sku: p.sku || ''
+                    });
+                })
+                .catch(() => setError('Αποτυχία φόρτωσης προϊόντος προς επεξεργασία.'));
         } else {
-             // Reset form when not in edit mode
-             setFormData({
-                 name: '', price: '', company: '', description: '', features: '',
-                 mainCategoryId: '', subCategoryId1: '', subCategoryId2: '',
-                 image: '', gallery: [], sku: ''
-             });
+            // Reset form when not in edit mode
+            setFormData({
+                name: '', price: '', company: '', description: '', features: '',
+                mainCategoryId: '', subCategoryId1: '', subCategoryId2: '',
+                image: '', gallery: [], sku: ''
+            });
         }
     }, [shopType, id, isEditMode, token, navigate]);
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        
+
         if (name === 'mainCategoryId') {
-             setFormData(prev => ({ ...prev, mainCategoryId: value ? parseInt(value) : '', subCategoryId1: '', subCategoryId2: '' }));
+            setFormData(prev => ({ ...prev, mainCategoryId: value ? parseInt(value) : '', subCategoryId1: '', subCategoryId2: '' }));
         } else if (name === 'subCategoryId1') {
-             setFormData(prev => ({ ...prev, subCategoryId1: value ? parseInt(value) : '', subCategoryId2: '' }));
+            setFormData(prev => ({ ...prev, subCategoryId1: value ? parseInt(value) : '', subCategoryId2: '' }));
         } else if (name === 'subCategoryId2') {
-             setFormData(prev => ({ ...prev, subCategoryId2: value ? parseInt(value) : '' }));
+            setFormData(prev => ({ ...prev, subCategoryId2: value ? parseInt(value) : '' }));
         } else {
-             setFormData(prev => ({ ...prev, [name]: value }));
+            setFormData(prev => ({ ...prev, [name]: value }));
         }
     };
 
@@ -91,8 +91,8 @@ const AddProductPage: React.FC = () => {
         const name = window.prompt(`Νέα Κατηγορία (Level ${level}):`);
         if (!name) return;
         try {
-            const { data } = await axios.post(`${API_URL}/${shopType}-categories`, 
-                { name, level, parentId }, 
+            const { data } = await axios.post(`${API_URL}/${shopType}-categories`,
+                { name, level, parentId },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setCategories([...categories, data]);
@@ -111,8 +111,8 @@ const AddProductPage: React.FC = () => {
         const newName = window.prompt('Επεξεργασία ονόματος:', cat.name);
         if (!newName || newName === cat.name) return;
         try {
-            const { data } = await axios.put(`${API_URL}/${shopType}-categories/${id}`, 
-                { name: newName }, 
+            const { data } = await axios.put(`${API_URL}/${shopType}-categories/${id}`,
+                { name: newName },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setCategories(categories.map(c => c.id === data.id ? data : c));
@@ -158,13 +158,13 @@ const AddProductPage: React.FC = () => {
         if (e.target.files) {
             const currentCount = formData.gallery.length;
             const filesArray = Array.from(e.target.files);
-            
+
             const allowedFiles = filesArray.slice(0, 4 - currentCount);
-            
+
             if (filesArray.length > allowedFiles.length) {
                 alert('Επιτρέπονται το πολύ 4 επιπλέον φωτογραφίες συνολικά.');
             }
-            
+
             if (allowedFiles.length > 0) {
                 try {
                     const newImages = await Promise.all(
@@ -187,10 +187,10 @@ const AddProductPage: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!formData.mainCategoryId || !formData.subCategoryId1) {
-             setError('Η επιλογή Κύριας Κατηγορίας (Level 1) και Yποκατηγορίας 1 (Level 2) είναι υποχρεωτική.');
-             return;
+            setError('Η επιλογή Κύριας Κατηγορίας (Level 1) και Yποκατηγορίας 1 (Level 2) είναι υποχρεωτική.');
+            return;
         }
 
         setIsSubmitting(true);
@@ -226,7 +226,7 @@ const AddProductPage: React.FC = () => {
     return (
         <div className="bg-gray-50 min-h-screen pt-32 pb-24">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                
+
                 <Link to="/admin/dashboard" className="inline-flex items-center text-gray-500 hover:text-green-600 font-medium mb-8 group transition-colors">
                     <ArrowLeft className="mr-2 w-5 h-5 transform group-hover:-translate-x-1 transition-transform" />
                     Πίσω στη Διαχείριση
@@ -245,20 +245,20 @@ const AddProductPage: React.FC = () => {
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-8">
-                        
+
                         {/* 1. Shop Selection */}
                         <div className="bg-gray-50 p-6 rounded-3xl border border-gray-200">
-                             <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center"><Layers className="w-5 h-5 mr-2 text-green-600"/>Επιλογή Καταστήματος</h2>
-                             <div className="flex flex-col sm:flex-row gap-4">
-                                 <label className={`flex-1 flex px-4 border text-center justify-center py-4 rounded-xl cursor-pointer transition-all ${shopType === 'wood' ? 'bg-green-50 border-green-500 text-green-700 font-bold shadow-sm' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}>
-                                     <input type="radio" name="shopType" value="wood" checked={shopType === 'wood'} onChange={() => setShopType('wood')} className="hidden" />
-                                     Βιομηχανική Ξυλεία
-                                 </label>
-                                 <label className={`flex-1 flex px-4 border text-center justify-center py-4 rounded-xl cursor-pointer transition-all ${shopType === 'gallery' ? 'bg-green-50 border-green-500 text-green-700 font-bold shadow-sm' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}>
-                                     <input type="radio" name="shopType" value="gallery" checked={shopType === 'gallery'} onChange={() => setShopType('gallery')} className="hidden" />
-                                     Προϊόντα Γαλλερίας
-                                 </label>
-                             </div>
+                            <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center"><Layers className="w-5 h-5 mr-2 text-green-600" />Επιλογή Καταστήματος</h2>
+                            <div className="flex flex-col sm:flex-row gap-4">
+                                <label className={`flex-1 flex px-4 border text-center justify-center py-4 rounded-xl cursor-pointer transition-all ${shopType === 'wood' ? 'bg-green-50 border-green-500 text-green-700 font-bold shadow-sm' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}>
+                                    <input type="radio" name="shopType" value="wood" checked={shopType === 'wood'} onChange={() => setShopType('wood')} className="hidden" />
+                                    Βιομηχανική Ξυλεία
+                                </label>
+                                <label className={`flex-1 flex px-4 border text-center justify-center py-4 rounded-xl cursor-pointer transition-all ${shopType === 'gallery' ? 'bg-green-50 border-green-500 text-green-700 font-bold shadow-sm' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}>
+                                    <input type="radio" name="shopType" value="gallery" checked={shopType === 'gallery'} onChange={() => setShopType('gallery')} className="hidden" />
+                                    Προϊόντα Κιγκαλερίας
+                                </label>
+                            </div>
                         </div>
 
                         {/* Basic Info */}
@@ -276,7 +276,7 @@ const AddProductPage: React.FC = () => {
                                     </div>
                                 )}
                             </div>
-                            
+
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">Τιμή (€) *</label>
                                 <input required type="number" step="0.01" name="price" value={formData.price} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="0.00" />
@@ -288,7 +288,7 @@ const AddProductPage: React.FC = () => {
                         </div>
 
                         <div className="bg-gray-50 p-6 rounded-3xl border border-gray-100 space-y-4">
-                            <h2 className="text-lg font-bold text-gray-900 mb-2 flex items-center"><LayoutGrid className="w-5 h-5 mr-2 text-green-600"/>Κατηγοριοποίηση</h2>
+                            <h2 className="text-lg font-bold text-gray-900 mb-2 flex items-center"><LayoutGrid className="w-5 h-5 mr-2 text-green-600" />Κατηγοριοποίηση</h2>
                             <div className={`grid gap-4 ${shopType === 'gallery' ? 'grid-cols-1 sm:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2'}`}>
                                 {/* Level 1 — Main Category */}
                                 <div>
@@ -345,7 +345,7 @@ const AddProductPage: React.FC = () => {
                             <label className="block text-sm font-semibold text-gray-700 mb-2">Περιγραφή *</label>
                             <textarea required name="description" value={formData.description} onChange={handleChange} rows={4} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="Αναλυτική περιγραφή υπεροχής του υλικού..."></textarea>
                         </div>
-                        
+
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 mb-2">Χαρακτηριστικά (διαχωρίστε με κόμμα , )</label>
                             <input type="text" name="features" value={formData.features} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-green-500/50 outline-none transition-all placeholder-gray-400" placeholder="π.χ. Αντοχή στην υγρασία, Mat υφή, Μήκος 2.80m" />
@@ -355,14 +355,14 @@ const AddProductPage: React.FC = () => {
                         <div className="space-y-6 pt-6 border-t border-gray-100">
                             <div>
                                 <label className="block text-sm font-bold text-gray-900 mb-2">Βασική Εικόνα (Thumbnail) *</label>
-                                <p className="text-sm text-gray-500 mb-4">Αυτή η εικόνα θα εμφανίζεται στην κεντρική λίστα (κατάλογος) και στην κορυφή του προϊόντος.<br/><span className="text-green-600 font-medium text-xs mt-1 block">Αυτόματη συμπίεση &lt; 500KB</span></p>
-                                
+                                <p className="text-sm text-gray-500 mb-4">Αυτή η εικόνα θα εμφανίζεται στην κεντρική λίστα (κατάλογος) και στην κορυφή του προϊόντος.<br /><span className="text-green-600 font-medium text-xs mt-1 block">Αυτόματη συμπίεση &lt; 500KB</span></p>
+
                                 <div className="flex items-center gap-6">
                                     {formData.image ? (
                                         <div className="relative group rounded-2xl overflow-hidden w-40 h-40 border border-gray-200 shrink-0">
                                             <img src={formData.image} alt="Thumbnail preview" className="w-full h-full object-cover" />
                                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                                <button type="button" onClick={() => setFormData(prev => ({...prev, image: ''}))} className="p-2 bg-white text-red-600 rounded-full hover:bg-red-50">
+                                                <button type="button" onClick={() => setFormData(prev => ({ ...prev, image: '' }))} className="p-2 bg-white text-red-600 rounded-full hover:bg-red-50">
                                                     <Trash2 className="w-5 h-5" />
                                                 </button>
                                             </div>
@@ -379,8 +379,8 @@ const AddProductPage: React.FC = () => {
 
                             <div className="pt-6">
                                 <label className="block text-sm font-bold text-gray-900 mb-2">Έξτρα Φωτογραφίες (Gallery)</label>
-                                <p className="text-sm text-gray-500 mb-4">Προσθέστε επιπλέον λεπτομέρειες ή οπτικές γωνίες. Μπορείτε να επιλέξετε μέχρι <strong>4</strong> αρχεία.<br/><span className="text-green-600 font-medium text-xs mt-1 block">Αυτόματη συμπίεση &lt; 500KB</span></p>
-                                
+                                <p className="text-sm text-gray-500 mb-4">Προσθέστε επιπλέον λεπτομέρειες ή οπτικές γωνίες. Μπορείτε να επιλέξετε μέχρι <strong>4</strong> αρχεία.<br /><span className="text-green-600 font-medium text-xs mt-1 block">Αυτόματη συμπίεση &lt; 500KB</span></p>
+
                                 <div className="flex flex-wrap items-center gap-4">
                                     {formData.gallery.map((img, idx) => (
                                         <div key={idx} className="relative group rounded-xl overflow-hidden w-28 h-28 border border-gray-200">
