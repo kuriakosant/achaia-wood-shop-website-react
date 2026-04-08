@@ -40,6 +40,7 @@ const ContactForm: React.FC = () => {
       await axios.post(`${API_URL}/contact-messages`, formData);
       setIsSubmitting(false);
       setIsSuccess(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       setFormData({ name: '', phone: '', email: '', message: '' });
       
       // Auto-hide success message after 8 seconds

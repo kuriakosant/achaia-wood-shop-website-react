@@ -142,6 +142,7 @@ const OrderPage: React.FC = () => {
         fileUrl: finalFileUrl,
       });
       setSuccess(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       setFormData({ customerName: '', phone: '', paymentMethod: 'Μετρητά', documentType: 'Απόδειξη', specialInstructions: '', afm: '', companyName: '' });
       setFileBase64('');
       setFileName('');
