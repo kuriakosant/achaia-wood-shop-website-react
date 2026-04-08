@@ -83,6 +83,11 @@ const OrderPage: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      if (file.size > 2 * 1024 * 1024) {
+        alert('Το αρχείο που επιλέξατε είναι πολύ μεγάλο. Το μέγιστο επιτρεπτό όριο είναι 2MB. Παρακαλώ επιλέξτε μικρότερο αρχείο.');
+        e.target.value = '';
+        return;
+      }
       setFileName(file.name);
       const reader = new FileReader();
       reader.onload = () => setFileBase64(reader.result as string);
@@ -150,7 +155,7 @@ const OrderPage: React.FC = () => {
       setNextId(4);
       setShowEditor(true);
     } catch {
-      setError('Παρουσιάστηκε σφάλμα κατά την αποστολή της παραγγελίας. Παρακαλώ δοκιμάστε ξανά.');
+      setError('Παρουσιάστηκε σφάλμα κατά την αποστολή της παραγγελίας, πιθανώς επειδή τα αρχεία είναι πολύ μεγάλα (Όριο 2MB). Παρακαλώ δοκιμάστε ξανά.');
     } finally {
       setIsSubmitting(false);
     }
@@ -426,7 +431,7 @@ const OrderPage: React.FC = () => {
                             <p className="mt-2 text-sm text-gray-500">
                               <span className="font-medium text-green-600">Αναζήτηση αρχείου</span> ή σύρτε εδώ
                             </p>
-                            <p className="text-xs text-gray-400 mt-1">.xlsx · .pdf · .png · .jpg · .txt · .csv (Μέγ. 5MB)</p>
+                            <p className="text-xs text-gray-400 mt-1">.xlsx · .pdf · .png · .jpg · .txt · .csv (Μέγ. 2MB)</p>
                           </>
                         )}
                       </div>
