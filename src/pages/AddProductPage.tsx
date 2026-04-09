@@ -289,50 +289,53 @@ const AddProductPage: React.FC = () => {
 
                         <div className="bg-gray-50 p-6 rounded-3xl border border-gray-100 space-y-4">
                             <h2 className="text-lg font-bold text-gray-900 mb-2 flex items-center"><LayoutGrid className="w-5 h-5 mr-2 text-green-600" />Κατηγοριοποίηση</h2>
-                            <div className={`grid gap-4 ${shopType === 'gallery' ? 'grid-cols-1 sm:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2'}`}>
+                            <div className={`grid gap-6 ${shopType === 'gallery' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2'}`}>
                                 {/* Level 1 — Main Category */}
-                                <div>
+                                <div className="flex flex-col">
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Κύρια Κατηγορία *</label>
+                                    <select required name="mainCategoryId" value={formData.mainCategoryId} onChange={handleChange} className="w-full px-4 py-3 mb-2 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700">
+                                        <option value="" disabled>Επιλογή κατηγορίας</option>
+                                        {categories.filter(c => c.level === 1).map(cat => (
+                                            <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                        ))}
+                                    </select>
                                     <div className="flex items-center gap-2">
-                                        <select required name="mainCategoryId" value={formData.mainCategoryId} onChange={handleChange} className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700">
-                                            <option value="" disabled>Επιλογή κατηγορίας</option>
-                                            {categories.filter(c => c.level === 1).map(cat => (
-                                                <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                            ))}
-                                        </select>
+                                        <button type="button" onClick={() => handleCreateCategory(1, null)} className="flex-1 p-2 bg-green-50 text-green-600 rounded-xl hover:bg-green-100 flex items-center justify-center transition-colors" title="Νέα Κύρια Κατηγορία"><Plus size={18} /></button>
+                                        <button type="button" onClick={() => handleEditCategory(formData.mainCategoryId)} disabled={!formData.mainCategoryId} className="flex-1 p-2 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 disabled:opacity-50 flex items-center justify-center transition-colors" title="Επεξεργασία"><Edit2 size={18} /></button>
+                                        <button type="button" onClick={() => handleDeleteCategory(formData.mainCategoryId)} disabled={!formData.mainCategoryId} className="flex-1 p-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 disabled:opacity-50 flex items-center justify-center transition-colors" title="Διαγραφή"><Trash2 size={18} /></button>
                                     </div>
                                 </div>
 
                                 {/* Level 2 — Subcategory 1 (mandatory) */}
-                                <div>
+                                <div className="flex flex-col">
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Υποκατηγορία *</label>
+                                    <select required disabled={!formData.mainCategoryId} name="subCategoryId1" value={formData.subCategoryId1} onChange={handleChange} className="w-full px-4 py-3 mb-2 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700 disabled:bg-gray-100 disabled:text-gray-400">
+                                        <option value="" disabled>Επιλογή υποκατηγορίας</option>
+                                        {categories.filter(c => c.parentId === Number(formData.mainCategoryId) && c.level === 2).map(cat => (
+                                            <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                        ))}
+                                    </select>
                                     <div className="flex items-center gap-2">
-                                        <select required disabled={!formData.mainCategoryId} name="subCategoryId1" value={formData.subCategoryId1} onChange={handleChange} className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700 disabled:bg-gray-100 disabled:text-gray-400">
-                                            <option value="" disabled>Επιλογή υποκατηγορίας</option>
-                                            {categories.filter(c => c.parentId === Number(formData.mainCategoryId) && c.level === 2).map(cat => (
-                                                <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                            ))}
-                                        </select>
-                                        <button type="button" onClick={() => handleCreateCategory(2, Number(formData.mainCategoryId))} disabled={!formData.mainCategoryId} className="p-3 bg-green-50 text-green-600 rounded-xl hover:bg-green-100 disabled:opacity-50" title="Νέα Υποκατηγορία"><Plus size={18} /></button>
-                                        <button type="button" onClick={() => handleEditCategory(formData.subCategoryId1)} disabled={!formData.subCategoryId1} className="p-3 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 disabled:opacity-50" title="Επεξεργασία"><Edit2 size={18} /></button>
-                                        <button type="button" onClick={() => handleDeleteCategory(formData.subCategoryId1)} disabled={!formData.subCategoryId1} className="p-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 disabled:opacity-50" title="Διαγραφή"><Trash2 size={18} /></button>
+                                        <button type="button" onClick={() => handleCreateCategory(2, Number(formData.mainCategoryId))} disabled={!formData.mainCategoryId} className="flex-1 p-2 bg-green-50 text-green-600 rounded-xl hover:bg-green-100 disabled:opacity-50 flex items-center justify-center transition-colors" title="Νέα Υποκατηγορία"><Plus size={18} /></button>
+                                        <button type="button" onClick={() => handleEditCategory(formData.subCategoryId1)} disabled={!formData.subCategoryId1} className="flex-1 p-2 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 disabled:opacity-50 flex items-center justify-center transition-colors" title="Επεξεργασία"><Edit2 size={18} /></button>
+                                        <button type="button" onClick={() => handleDeleteCategory(formData.subCategoryId1)} disabled={!formData.subCategoryId1} className="flex-1 p-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 disabled:opacity-50 flex items-center justify-center transition-colors" title="Διαγραφή"><Trash2 size={18} /></button>
                                     </div>
                                 </div>
 
                                 {/* Level 3 — Company (Gallery only, optional) */}
                                 {shopType === 'gallery' && (
-                                    <div>
+                                    <div className="flex flex-col">
                                         <label className="block text-sm font-medium text-gray-700 mb-1">Εταιρεία / Κατασκευαστής <span className="text-gray-400 font-normal">(Προαιρετικό)</span></label>
+                                        <select disabled={!formData.subCategoryId1} name="subCategoryId2" value={formData.subCategoryId2} onChange={handleChange} className="w-full px-4 py-3 mb-2 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700 disabled:bg-gray-100 disabled:text-gray-400">
+                                            <option value="">Καμία</option>
+                                            {categories.filter(c => c.parentId === Number(formData.subCategoryId1) && c.level === 3).map(cat => (
+                                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                            ))}
+                                        </select>
                                         <div className="flex items-center gap-2">
-                                            <select disabled={!formData.subCategoryId1} name="subCategoryId2" value={formData.subCategoryId2} onChange={handleChange} className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/50 text-gray-700 disabled:bg-gray-100 disabled:text-gray-400">
-                                                <option value="">Καμία</option>
-                                                {categories.filter(c => c.parentId === Number(formData.subCategoryId1) && c.level === 3).map(cat => (
-                                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                                ))}
-                                            </select>
-                                            <button type="button" onClick={() => handleCreateCategory(3, Number(formData.subCategoryId1))} disabled={!formData.subCategoryId1} className="p-3 bg-green-50 text-green-600 rounded-xl hover:bg-green-100 disabled:opacity-50" title="Νέα Εταιρεία"><Plus size={18} /></button>
-                                            <button type="button" onClick={() => handleEditCategory(formData.subCategoryId2)} disabled={!formData.subCategoryId2} className="p-3 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 disabled:opacity-50" title="Επεξεργασία"><Edit2 size={18} /></button>
-                                            <button type="button" onClick={() => handleDeleteCategory(formData.subCategoryId2)} disabled={!formData.subCategoryId2} className="p-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 disabled:opacity-50" title="Διαγραφή"><Trash2 size={18} /></button>
+                                            <button type="button" onClick={() => handleCreateCategory(3, Number(formData.subCategoryId1))} disabled={!formData.subCategoryId1} className="flex-1 p-2 bg-green-50 text-green-600 rounded-xl hover:bg-green-100 disabled:opacity-50 flex items-center justify-center transition-colors" title="Νέα Εταιρεία"><Plus size={18} /></button>
+                                            <button type="button" onClick={() => handleEditCategory(formData.subCategoryId2)} disabled={!formData.subCategoryId2} className="flex-1 p-2 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 disabled:opacity-50 flex items-center justify-center transition-colors" title="Επεξεργασία"><Edit2 size={18} /></button>
+                                            <button type="button" onClick={() => handleDeleteCategory(formData.subCategoryId2)} disabled={!formData.subCategoryId2} className="flex-1 p-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 disabled:opacity-50 flex items-center justify-center transition-colors" title="Διαγραφή"><Trash2 size={18} /></button>
                                         </div>
                                     </div>
                                 )}
