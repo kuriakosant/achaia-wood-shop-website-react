@@ -11,7 +11,7 @@ const getFileTypeAndExtension = (fileUrl: string) => {
     const mimeMatch = fileUrl.match(/^data:([^;]+);/);
     if (!mimeMatch) return { type: 'Άγνωστο', ext: 'bin' };
     const mime = mimeMatch[1].toLowerCase();
-    
+
     if (mime.includes('image')) {
         const ext = mime.split('/')[1] || 'jpg';
         return { type: `Εικόνα (${ext.toUpperCase()})`, ext: ext };
@@ -20,7 +20,7 @@ const getFileTypeAndExtension = (fileUrl: string) => {
     if (mime.includes('spreadsheet') || mime.includes('excel')) return { type: 'Excel', ext: 'xlsx' };
     if (mime.includes('csv')) return { type: 'CSV', ext: 'csv' };
     if (mime.includes('text')) return { type: 'Κείμενο', ext: 'txt' };
-    
+
     return { type: 'Αρχείο', ext: 'bin' };
 };
 
@@ -295,9 +295,8 @@ const AdminDashboard = () => {
                             </button>
                             <button
                                 onClick={() => setActiveTab('orders')}
-                                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-colors font-medium ${
-                                    activeTab === 'orders' ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:bg-gray-50'
-                                }`}
+                                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-colors font-medium ${activeTab === 'orders' ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:bg-gray-50'
+                                    }`}
                             >
                                 <div className="flex items-center"><ClipboardList className="w-5 h-5 mr-3" /> Παραγγελίες</div>
                                 {orders.filter(o => o.status === 'Pending').length > 0 && (
@@ -306,9 +305,8 @@ const AdminDashboard = () => {
                             </button>
                             <button
                                 onClick={() => setActiveTab('messages')}
-                                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-colors font-medium ${
-                                    activeTab === 'messages' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'
-                                }`}
+                                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-colors font-medium ${activeTab === 'messages' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'
+                                    }`}
                             >
                                 <div className="flex items-center"><MessageSquare className="w-5 h-5 mr-3" /> Μηνύματα</div>
                                 {contactMessages.filter(m => !m.isRead).length > 0 && (
@@ -317,9 +315,8 @@ const AdminDashboard = () => {
                             </button>
                             <button
                                 onClick={() => setActiveTab('featured')}
-                                className={`w-full flex items-center px-4 py-3 rounded-xl transition-colors font-medium ${
-                                    activeTab === 'featured' ? 'bg-amber-50 text-amber-700' : 'text-gray-600 hover:bg-gray-50'
-                                }`}
+                                className={`w-full flex items-center px-4 py-3 rounded-xl transition-colors font-medium ${activeTab === 'featured' ? 'bg-amber-50 text-amber-700' : 'text-gray-600 hover:bg-gray-50'
+                                    }`}
                             >
                                 <LayoutTemplate className="w-5 h-5 mr-3" /> Αρχική Σελίδα
                             </button>
@@ -365,7 +362,7 @@ const AdminDashboard = () => {
                                                         {order.documentType === 'Τιμολόγιο' && (
                                                             <div className="mt-2 p-2 bg-gray-50 rounded border border-gray-100 text-xs text-gray-600">
                                                                 <span className="font-bold">ΑΦΜ:</span> {order.afm}
-                                                                {order.companyName && <span><br/><span className="font-bold">Εταιρεία:</span> {order.companyName}</span>}
+                                                                {order.companyName && <span><br /><span className="font-bold">Εταιρεία:</span> {order.companyName}</span>}
                                                             </div>
                                                         )}
                                                     </td>
@@ -389,11 +386,10 @@ const AdminDashboard = () => {
                                                         <select
                                                             value={order.status}
                                                             onChange={(e) => handleUpdateOrderStatus(order.id, e.target.value)}
-                                                            className={`text-sm rounded-lg py-1.5 px-3 border outline-none font-medium cursor-pointer ${
-                                                                order.status === 'Completed' ? 'bg-green-50 text-green-700 border-green-200' :
-                                                                order.status === 'Reviewed' ? 'bg-blue-50 text-blue-700 border-blue-200' :
-                                                                'bg-orange-50 text-orange-700 border-orange-200'
-                                                            }`}
+                                                            className={`text-sm rounded-lg py-1.5 px-3 border outline-none font-medium cursor-pointer ${order.status === 'Completed' ? 'bg-green-50 text-green-700 border-green-200' :
+                                                                    order.status === 'Reviewed' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                                                                        'bg-orange-50 text-orange-700 border-orange-200'
+                                                                }`}
                                                         >
                                                             <option value="Pending">Εκκρεμεί</option>
                                                             <option value="Reviewed">Σε Επεξεργασία</option>
@@ -411,7 +407,7 @@ const AdminDashboard = () => {
                                                     </td>
                                                 </tr>
                                             ))}
-                                {/* No orders empty state handling */}
+                                            {/* No orders empty state handling */}
                                             {orders.length === 0 && (
                                                 <tr>
                                                     <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
@@ -455,9 +451,8 @@ const AdminDashboard = () => {
                                             <div className="flex md:flex-col gap-2 shrink-0 md:w-40 justify-end md:justify-start border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6">
                                                 <button
                                                     onClick={() => handleToggleReadMessage(msg.id)}
-                                                    className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-bold transition-colors w-full ${
-                                                        msg.isRead ? 'bg-gray-100 text-gray-500 hover:bg-gray-200' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
-                                                    }`}
+                                                    className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-bold transition-colors w-full ${msg.isRead ? 'bg-gray-100 text-gray-500 hover:bg-gray-200' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                                                        }`}
                                                 >
                                                     <Check className="w-4 h-4" /> {msg.isRead ? 'Διαβάστηκε' : 'Σήμανση'}
                                                 </button>
@@ -603,19 +598,19 @@ const AdminDashboard = () => {
                         {/* ── Featured / Homepage Tab ── */}
                         {activeTab === 'featured' && (() => {
                             // All products from both shops tagged with shopType
-                            const allWood    = woodProducts.map((p: any)    => ({ ...p, shopType: 'wood'    as const }));
+                            const allWood = woodProducts.map((p: any) => ({ ...p, shopType: 'wood' as const }));
                             const allGallery = galleryProducts.map((p: any) => ({ ...p, shopType: 'gallery' as const }));
 
                             // Currently featured across BOTH shops
                             const featured = [...allWood, ...allGallery].filter(p => p.isFeatured);
 
                             // Browse pool — right panel
-                            const browseCats  = featuredShop === 'wood' ? woodCategories    : galleryCategories;
-                            const mainCatsF   = browseCats.filter((c: any) => c.level === 1);
-                            const subCatsF    = featuredFilterCat
+                            const browseCats = featuredShop === 'wood' ? woodCategories : galleryCategories;
+                            const mainCatsF = browseCats.filter((c: any) => c.level === 1);
+                            const subCatsF = featuredFilterCat
                                 ? browseCats.filter((c: any) => Number(c.parentId) === Number(featuredFilterCat) && c.level === 2)
                                 : [];
-                            const browsePool  = (featuredShop === 'wood' ? allWood : allGallery)
+                            const browsePool = (featuredShop === 'wood' ? allWood : allGallery)
                                 .filter((p: any) => {
                                     if (featuredFilterCat && Number(p.mainCategoryId) !== Number(featuredFilterCat)) return false;
                                     if (featuredFilterSub && Number(p.subCategoryId1) !== Number(featuredFilterSub)) return false;
@@ -652,7 +647,7 @@ const AdminDashboard = () => {
                                                 )}
 
                                                 {featured.length === 0 ? (
-                                                    <p className="text-sm text-amber-700 text-center py-6 opacity-70">Δεν υπάρχουν προτεινόμενα προϊόντα.<br/>Επιλέξτε από τη λίστα δεξιά.</p>
+                                                    <p className="text-sm text-amber-700 text-center py-6 opacity-70">Δεν υπάρχουν προτεινόμενα προϊόντα.<br />Επιλέξτε από τη λίστα δεξιά.</p>
                                                 ) : (
                                                     <ul className="space-y-3">
                                                         {featured.map((p: any) => (
@@ -694,7 +689,7 @@ const AdminDashboard = () => {
                                                     onClick={() => { setFeaturedShop('gallery'); setFeaturedFilterCat(''); setFeaturedFilterSub(''); }}
                                                     className={`flex-1 py-2.5 rounded-xl font-semibold text-sm border transition-all ${featuredShop === 'gallery' ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'}`}
                                                 >
-                                                    🪑 Εκθεση - Gallery
+                                                    🪑 ΠΡΟΪΟΝΤΑ ΚΙΓΚΑΛΕΡΙΑΣ
                                                 </button>
                                             </div>
 
@@ -752,13 +747,12 @@ const AdminDashboard = () => {
                                                                 <p className="text-xs text-gray-500">{p.price.toFixed(2)}€</p>
                                                                 <button
                                                                     onClick={() => handleToggleFeaturedAny(p.shopType, p)}
-                                                                    className={`mt-auto w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${
-                                                                        p.isFeatured
+                                                                    className={`mt-auto w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all ${p.isFeatured
                                                                             ? 'bg-amber-400 text-white hover:bg-amber-500'
                                                                             : 'bg-gray-100 text-gray-600 hover:bg-amber-50 hover:text-amber-700'
-                                                                    }`}
+                                                                        }`}
                                                                 >
-                                                            <Star className={`w-3.5 h-3.5 ${p.isFeatured ? 'fill-white' : ''}`} />
+                                                                    <Star className={`w-3.5 h-3.5 ${p.isFeatured ? 'fill-white' : ''}`} />
                                                                     {p.isFeatured ? 'Αφαίρεση από Αρχική' : 'Προσθήκη στην Αρχική'}
                                                                 </button>
                                                             </div>

@@ -18,7 +18,7 @@ function Header() {
     { title: 'Αρχική', href: '/' },
     { title: 'Η Εταιρεία Μας', href: '/about' },
     { title: 'Βιομηχανική Ξυλεία', href: '/wood' },
-    { title: 'Εκθεση - Gallery', href: '/gallery' },
+    { title: 'ΠΡΟΪΟΝΤΑ ΚΙΓΚΑΛΕΡΙΑΣ', href: '/gallery' },
     { title: 'Επικοινωνία', href: '/contact' },
   ];
 
@@ -78,13 +78,13 @@ function Header() {
                     location.pathname === item.href && "text-green-400 font-semibold"
                   )}
                 >
-                {item.title}
-                {location.pathname === item.href && (
-                  <motion.div
-                    layoutId="underline"
-                    className="absolute left-0 right-0 bottom-[-4px] h-[2px] bg-green-400 rounded-full"
-                  />
-                )}
+                  {item.title}
+                  {location.pathname === item.href && (
+                    <motion.div
+                      layoutId="underline"
+                      className="absolute left-0 right-0 bottom-[-4px] h-[2px] bg-green-400 rounded-full"
+                    />
+                  )}
                 </Link>
               </motion.div>
             ))}

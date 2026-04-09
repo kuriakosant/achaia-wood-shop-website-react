@@ -15,7 +15,7 @@ export function Footer() {
 
   const productLinks = [
     { name: 'ΒΙΟΜΗΧΑΝΙΚΗ ΞΥΛΕΙΑ', href: '/wood' },
-    { name: 'ΕΚΘΕΣΗ - GALLERY', href: '/gallery' },
+    { name: 'ΠΡΟΪΟΝΤΑ ΚΙΓΚΑΛΕΡΙΑΣ', href: '/gallery' },
   ]
 
   const handleButtonClick = (route: string, setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
